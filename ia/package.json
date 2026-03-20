@@ -1,0 +1,11 @@
+{
+  "name": "ia",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install": "uv sync",
+    "dev": "uv run fastapi dev src/main.py",
+    "build": "echo 'Python não precisa de build'",
+    "add": "uv add"
+  }
+}

@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 Rodando Lint-Staged (Web e Server)..."
+npm run precommit -w server
+npm run precommit -w web
+
+echo "🔎 Checando tipagens do Monorepo (Turbo)..."
+npm run type-check

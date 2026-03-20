@@ -1,0 +1,222 @@
+name: CI (Quality & Tests)
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev, main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  # ====================================================
+  # 1. SERVER – QUALIDADE E TESTES
+  # ====================================================
+  server-check:
+    name: Server (Lint, Types, Tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+
+    services:
+      postgres:
+        image: postgres:17-alpine # Atualizado para v18 conforme seu dev
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: ecommerce_test
+        ports:
+          - 5432:5432
+        options: >-
+          --mount type=tmpfs,destination=/var/lib/postgresql/data
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          # Caminho corrigido para a raiz onde está o lockfile do monorepo
+          cache-dependency-path: package-lock.json
+
+      - name: Create env files
+        run: |
+          # Removido ?schema=public para bater com o que validamos no Docker
+          echo "DATABASE_URL=postgresql://user:password@localhost:5432/ecommerce_test" > .env
+          echo "JWT_SECRET=ci-secret" >> .env
+          echo "NODE_ENV=test" >> .env
+          cp .env .env.test
+
+      - name: Install deps
+        # Como é monorepo, instalamos a partir da raiz para garantir o workspace
+        run: cd .. && npm ci --ignore-scripts --no-audit
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/ecommerce_test
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Tests
+        run: npm run test
+
+  # ====================================================
+  # 2. WEB – QUALIDADE E TESTES
+  # ====================================================
+  web-check:
+    name: Web (Lint, Types, Tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install deps
+        run: cd .. && npm ci --ignore-scripts --no-audit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Tests
+        run: npm run test
+        env:
+          # Evita que o T3 Env barre o build/teste por falta de envs de prod
+          SKIP_ENV_VALIDATION: true
+    
+  # ====================================================
+  # 3. E2E TESTS (DOCKER + PLAYWRIGHT)
+  # ====================================================
+  e2e-tests:
+    name: E2E Tests (Playwright & Docker)
+    runs-on: ubuntu-latest
+    needs: [server-check, web-check] # Só roda se os testes rápidos passarem
+    
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --no-audit
+
+      - name: Install Playwright Browsers
+        # Instala os navegadores do Playwright (Chromium, Firefox, Webkit) e dependências do Linux
+        working-directory: ./web
+        run: npx playwright install --with-deps
+
+      - name: Create .env.prod files for Docker Compose
+        run: |
+          echo "PORT=3333" >> server/.env.prod
+          echo "DATABASE_URL=postgresql://user:pass@postgres:5432/db" > server/.env.prod
+          echo "JWT_SECRET=ci-secret" >> server/.env.prod
+          echo "NODE_ENV=production" >> server/.env.prod
+
+          # 2. Cria o env do Frontend (Web)
+          echo "NEXT_PUBLIC_API_URL=http://localhost:3333" > web/.env.prod
+          echo "API_INTERNAL_URL=http://api:3333" >> web/.env.prod
+
+          echo "DATABASE_URL=postgresql://user:pass@localhost:5432/db" > server/.env
+          echo "NODE_ENV=production" >> server/.env
+
+      - name: Generate Prisma Client
+        run: npm run db:gen
+
+      - name: Run E2E Tests
+        # Esse comando chama o seu global-setup.ts, que sobe o Docker, roda os testes e limpa tudo!
+        run: npm run test:e2e
+
+      - name: Upload Playwright Report
+        # Se o teste falhar no CI, ele salva o HTML com o print do erro para você baixar e investigar
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: playwright-report
+          path: web/playwright-report/
+          retention-days: 7
+
+  # ====================================================
+  # 4. BUILD DE PRODUÇÃO (DOCKERFILES)
+  # ====================================================
+  docker-build-check:
+    name: Verify Production Docker Builds
+    runs-on: ubuntu-latest
+    needs: [server-check, web-check]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build server image
+        run: |
+          docker build \
+            -f server/Dockerfile \
+            -t portifolio-server:ci .
+
+      - name: Build web image
+        run: |
+          docker build \
+            -f web/Dockerfile \
+            --build-arg NEXT_PUBLIC_API_URL=http://localhost:3333 \
+            --build-arg API_INTERNAL_URL=http://api:3333 \
+            -t portifolio-web:ci .
+
+  # ====================================================
+  # 5. AUTO PR DEV → MAIN
+  # ====================================================
+  auto-pr:
+    name: Open PR to Main
+    runs-on: ubuntu-latest
+    needs: [docker-build-check, e2e-tests]
+    if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check existing PR
+        id: check_pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          count=$(gh pr list --base main --head dev --json id --jq '. | length')
+          echo "exists=$([ "$count" -gt 0 ] && echo true || echo false)" >> $GITHUB_OUTPUT
+
+      - name: Create PR
+        if: steps.check_pr.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --base main \
+            --head dev \
+            --title "Release: Merge dev to main" \
+            --body "Automated PR after CI passed (tests + prod docker builds)."

@@ -1,0 +1,65 @@
+services:
+  
+  postgres:
+    image: postgres:18-alpine
+    container_name: fastify_pg_dev
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=db
+    ports:
+      - "5432:5432" 
+    volumes:
+      - pgdata_dev:/var/lib/postgresql 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - portifolio-network
+
+
+  api:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: api
+    restart: unless-stopped
+    depends_on:
+      postgres: 
+        condition: service_healthy
+    env_file:
+      - ./server/.env.prod
+    ports:
+      - "3333:3333"
+    networks:
+      - portifolio-network
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      args:
+        # Passando exatamente os args do seu comando 'docker build'
+        - NEXT_PUBLIC_API_URL=http://localhost:3333
+        - API_INTERNAL_URL=http://api:3333
+    container_name: portifolio-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    env_file:
+      - ./web/.env.prod
+    ports:
+      - "3000:3000"
+    networks:
+      - portifolio-network
+
+volumes:
+  pgdata_dev:
+
+networks:
+  portifolio-network:
+    name: portifolio-network
+    driver: bridge

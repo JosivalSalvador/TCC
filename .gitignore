@@ -1,0 +1,29 @@
+# Dependências
+node_modules/
+
+# Turborepo
+.turbo/
+
+# Builds e outputs globais
+dist/
+.next/
+out/
+
+# Variáveis de ambiente (Segurança)
+.env
+.env.*
+!.env.example
+!.env.test.example
+!.env.prod.example
+
+# Logs
+npm-debug.log*
+*.log
+
+# Sistema e IDEs
+.DS_Store
+.vscode/
+.idea/
+
+# Pasta de testes/cobertura
+coverage/

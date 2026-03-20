@@ -1,0 +1,86 @@
+name: CD (Build & Publish)
+
+on:
+  push:
+    branches: [main] # Só roda quando o PR do dev é aprovado e mergeado na main
+
+jobs:
+  # ---------------------------------------------------
+  # JOB 1: BUILD & PUSH DA API (BACKEND)
+  # ---------------------------------------------------
+  build-push-api:
+    name: API - Build & Push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push API
+        uses: docker/build-push-action@v6 # Versão mais atual
+        with:
+          context: .
+          file: server/Dockerfile
+          push: true
+          # Garante compatibilidade com diversos servidores
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/portifolio-api:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/portifolio-api:${{ github.sha }}
+          # Cache inteligente do GitHub Actions para builds mais rápidos
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ---------------------------------------------------
+  # JOB 2: BUILD & PUSH DA WEB (FRONTEND)
+  # ---------------------------------------------------
+  build-push-web:
+    name: Web - Build & Push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Web
+        uses: docker/build-push-action@v6 # Versão mais atual
+        with:
+          context: .
+          file: web/Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/portifolio-web:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/portifolio-web:${{ github.sha }}
+          
+          # Aqui entram as URLs reais do seu domínio de produção
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ secrets.WEB_PUBLIC_API_URL }}
+            API_INTERNAL_URL=${{ secrets.WEB_INTERNAL_API_URL }}
+          
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

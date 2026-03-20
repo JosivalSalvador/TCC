@@ -1,0 +1,26 @@
+# Dependências
+node_modules/
+
+# Compilação e Build
+dist/
+
+# Prisma
+/src/generated/prisma
+*.db
+*.db-journal
+
+# Variáveis de Ambiente (Segurança)
+.env
+.env.*
+# Permite apenas os modelos de exemplo no Git
+!.env.example
+!.env.test.example
+!.env.prod.example
+
+# Logs e Cache
+*.log
+.turbo/
+.eslintcache
+
+# Testes
+coverage/

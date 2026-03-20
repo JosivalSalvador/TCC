@@ -1,0 +1,43 @@
+# Dependências
+node_modules/
+.pnp
+.pnp.*
+
+# Next.js build e output
+.next/
+out/
+build/
+
+# Variáveis de Ambiente (Segurança)
+.env
+.env.*
+# Permite que os exemplos de configuração subam para o Git
+!.env.example
+!.env.prod.example
+
+# Testes
+coverage/
+
+# Logs e Debug
+*.log
+npm-debug.log*
+.pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Sistema e IDEs
+.DS_Store
+.vscode/
+.vercel
+
+# Turborepo local cache
+.turbo/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    /* --- 1. Módulos e Resolução (O Padrão Moderno) --- */
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    
+    /* --- 2. Estrutura --- */
+    "rootDir": ".",
+    "outDir": "./dist",
+    "sourceMap": true,
+
+    /* --- 3. Interoperabilidade --- */
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    
+    /* --- 4. Rigor Técnico (Strict) --- */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    
+    /* --- 5. Ajustes para ESM --- */
+    "verbatimModuleSyntax": true,
+    
+    /* --- 6. Tipos para o Vitest --- */
+    "types": ["node", "vitest/globals"]
+  },
+  
+  "include": [
+    "src/**/*",
+    "prisma/**/*",
+    "prisma.config.ts",
+    "vitest.config.ts"
+  ]
+}
