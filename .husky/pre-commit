@@ -4,6 +4,7 @@
 echo "🚀 Rodando Lint-Staged (Web e Server)..."
 npm run precommit -w server
 npm run precommit -w web
+npm run precommit -w ia
 
 echo "🔎 Checando tipagens do Monorepo (Turbo)..."
 npm run type-check
