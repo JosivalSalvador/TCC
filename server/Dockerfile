@@ -16,11 +16,11 @@ RUN npm ci --ignore-scripts
 # Copia todo o código fonte
 COPY . . 
 
-# Cria o .env FALSO por segurança, apenas para o Prisma Generate (db:gen) funcionar
+# Cria o .env FALSO por segurança, apenas para o Prisma Generate funcionar
 WORKDIR /app/server
 RUN echo "DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy" > .env
 
-# Executa o build do server (gera a pasta dist e os tipos do Prisma)
+# Executa o build do server (gera a pasta dist)
 RUN npm run build
 
 
@@ -46,17 +46,21 @@ RUN chown -R fastifyuser:nodejs /app
 
 WORKDIR /app/server
 
-# Copia do builder APENAS os arquivos finais necessários para rodar
-COPY --from=builder --chown=fastifyuser:nodejs /app/server/dist ./dist
+# Copia do builder os arquivos de configuração do Prisma e package.json
 COPY --from=builder --chown=fastifyuser:nodejs /app/server/package.json ./package.json
 COPY --from=builder --chown=fastifyuser:nodejs /app/server/prisma ./prisma
 COPY --from=builder --chown=fastifyuser:nodejs /app/server/prisma.config.ts ./prisma.config.ts
 
+# GERAÇÃO DO PRISMA CLIENT EM PRODUÇÃO
+# Passa a variável falsa direto na memória apenas para o comando rodar, sem precisar de arquivo .env
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npx prisma generate
+
+# Copia do builder APENAS os arquivos finais compilados (dist)
+COPY --from=builder --chown=fastifyuser:nodejs /app/server/dist ./dist
+
 USER fastifyuser
 EXPOSE 3333
 
-# Cria o arquivo vazio para a flag --env-file do seu script start não quebrar.
-# As variáveis reais (DATABASE_URL, JWT_SECRET, etc) virão do seu docker-compose!
-RUN touch .env.prod
-
-CMD ["sh", "-c", "npm run db:deploy:prod && npm run start"]
+# Comando final limpo: roda as migrations e inicia o servidor diretamente pelo Node
+# Isso evita o `npm run start` que usava a flag `--env-file` problemática
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/server.js"]

@@ -20,8 +20,7 @@
     "db:seed": "dotenv -e .env -- prisma db seed",
     "db:deploy": "dotenv -e .env -- prisma migrate deploy",
     "db:reset": "dotenv -e .env -- prisma migrate reset --force --skip-seed",
-    "db:format": "prisma format",
-    "db:deploy:prod": "prisma migrate deploy"
+    "db:format": "prisma format"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
