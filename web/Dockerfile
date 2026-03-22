@@ -27,7 +27,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Roda o build apenas do web
-RUN npm run build -w web
+RUN npm run build -w web --ignore-scripts
 
 # ========== 3. RUNTIME (Imagem final minúscula) ==========
 FROM node:24-alpine AS runner

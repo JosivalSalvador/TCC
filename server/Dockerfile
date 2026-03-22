@@ -39,7 +39,7 @@ COPY package.json package-lock.json ./
 COPY server/package.json ./server/
 
 # O PULO DO GATO: Instala APENAS dependências de produção e APENAS do workspace server
-RUN npm ci --omit=dev -w server
+RUN npm ci --omit=dev -w server --ignore-scripts
 
 # Muda a posse da pasta app para o usuário seguro
 RUN chown -R fastifyuser:nodejs /app
