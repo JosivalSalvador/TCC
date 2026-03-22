@@ -104,6 +104,7 @@ jobs:
 
       - name: Create .env.prod files for Docker Compose
         run: |
+          echo "# Placeholder para o CI" > ia/.env.prod
           echo "PORT=3333" > server/.env.prod
           echo "DATABASE_URL=postgresql://user:pass@postgres:5432/db" >> server/.env.prod
           echo "JWT_SECRET=ci-secret" >> server/.env.prod
