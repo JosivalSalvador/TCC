@@ -84,7 +84,6 @@ jobs:
     name: E2E Tests (Playwright & Docker)
     runs-on: ubuntu-latest
     needs: [quality-check]
-    if: false
     
     steps:
       - uses: actions/checkout@v6
@@ -167,7 +166,7 @@ jobs:
   auto-pr:
     name: Open PR to Main
     runs-on: ubuntu-latest
-    needs: [docker-build-check]
+    needs: [docker-build-check, e2e-tests]
     if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
 
     steps:
