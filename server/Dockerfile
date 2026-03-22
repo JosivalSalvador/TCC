@@ -11,7 +11,7 @@ COPY web/package.json ./web/
 COPY ia/package.json ./ia/
 
 # Instala TODAS as dependências (incluindo devDependencies como TypeScript)
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 # Copia todo o código fonte
 COPY . . 

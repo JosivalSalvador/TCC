@@ -9,7 +9,7 @@ COPY web/package.json web/
 COPY server/package.json server/
 COPY ia/package.json ia/
 
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 # ========== 2. BUILD (Compila e gera o Standalone) ==========
 FROM node:24-alpine AS build
@@ -27,7 +27,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Roda o build apenas do web
-RUN npm run build -w web --ignore-scripts
+RUN npm run build -w web
 
 # ========== 3. RUNTIME (Imagem final minúscula) ==========
 FROM node:24-alpine AS runner
