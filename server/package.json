@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "precommit": "lint-staged",
-    "dev": "dotenv -e .env -- prisma generate && tsx watch --env-file .env src/server.ts | pino-pretty",
+    "dev": "npm run db:gen && npm run db:migrate && npm run db:seed && tsx watch --env-file .env src/server.ts | pino-pretty",
     "build": "npm run db:gen && tsc",
-    "start": "node dist/src/server.js",
+    "start": "npm run db:deploy:prod && npm run db:seed:prod && node --env-file-if-exists=.env.prod dist/src/server.js",
     "type-check": "tsc --noEmit",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
@@ -17,8 +17,11 @@
     "db:gen": "dotenv -e .env -- prisma generate",
     "db:migrate": "dotenv -e .env -- prisma migrate dev",
     "db:studio": "dotenv -e .env -- prisma studio",
+    "db:studio:prod": "dotenv -e .env.prod -- prisma studio",
     "db:seed": "dotenv -e .env -- prisma db seed",
+    "db:seed:prod": "dotenv -e .env.prod -- prisma db seed",
     "db:deploy": "dotenv -e .env -- prisma migrate deploy",
+    "db:deploy:prod": "dotenv -e .env.prod -- prisma migrate deploy",
     "db:reset": "dotenv -e .env -- prisma migrate reset --force --skip-seed",
     "db:format": "prisma format"
   },
