@@ -1,31 +1,36 @@
 services:
-  
+  # ==========================================
+  # 1. BANCO DE DADOS
+  # ==========================================
   postgres:
     image: postgres:18-alpine
-    container_name: fastify_pg_dev
+    container_name: tcc-postgres
     restart: unless-stopped
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=pass
       - POSTGRES_DB=db
+    # Trava de segurança: expõe a porta apenas para a própria máquina (localhost do servidor)
+    # Isso impede que hackers acessem seu banco pela internet pública
     ports:
-      - "5432:5432" 
+      - "127.0.0.1:5432:5432" 
     volumes:
-      - pgdata_dev:/var/lib/postgresql 
+      - pgdata_prod:/var/lib/postgresql/data 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d db"]
       interval: 5s
       timeout: 5s
       retries: 5
     networks:
-      - portifolio-network
+      - tcc-network
 
-
-  api:
-    build:
-      context: .
-      dockerfile: server/Dockerfile
-    container_name: api
+  # ==========================================
+  # 2. SERVER (NODE + FASTIFY)
+  # ==========================================
+  server:
+    # Puxa a imagem pronta que o GitHub Actions enviou pro Docker Hub
+    image: josivaljunior/tcc-server:latest 
+    container_name: tcc-server
     restart: unless-stopped
     depends_on:
       postgres: 
@@ -35,31 +40,44 @@ services:
     ports:
       - "3333:3333"
     networks:
-      - portifolio-network
+      - tcc-network
 
+  # ==========================================
+  # 3. IA (PYTHON + FASTAPI)
+  # ==========================================
+  ia:
+    # Puxa a imagem pronta do Python
+    image: josivaljunior/tcc-ia:latest 
+    container_name: tcc-ia
+    restart: unless-stopped
+    env_file:
+      - ./ia/.env.prod
+    ports:
+      - "8000:8000"
+    networks:
+      - tcc-network
+
+  # ==========================================
+  # 4. WEB (NEXT.JS)
+  # ==========================================
   web:
-    build:
-      context: .
-      dockerfile: web/Dockerfile
-      args:
-        # Passando exatamente os args do seu comando 'docker build'
-        - NEXT_PUBLIC_API_URL=http://localhost:3333
-        - API_INTERNAL_URL=http://api:3333
-    container_name: portifolio-web
+    # Puxa a imagem pronta do Frontend
+    image: josivaljunior/tcc-web:latest 
+    container_name: tcc-web
     restart: unless-stopped
     depends_on:
-      - api
+      - server
     env_file:
       - ./web/.env.prod
     ports:
       - "3000:3000"
     networks:
-      - portifolio-network
+      - tcc-network
 
 volumes:
-  pgdata_dev:
+  pgdata_prod:
 
 networks:
-  portifolio-network:
-    name: portifolio-network
+  tcc-network:
+    name: tcc-network
     driver: bridge

@@ -13,7 +13,7 @@ build/
 .env.*
 # Permite que os exemplos de configuração subam para o Git
 !.env.example
-!.env.prod.example
+!.env.production.example
 
 # Testes
 coverage/

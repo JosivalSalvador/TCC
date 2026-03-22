@@ -1,47 +1,62 @@
-# --- 1. DEPS ---
-FROM node:24-alpine AS deps
-RUN apk add --no-cache libc6-compat
-WORKDIR /app
-COPY package.json package-lock.json ./
-COPY server/package.json ./server/package.json
-RUN npm ci
-
-# --- 2. BUILD ---
+# ==========================================
+# ESTÁGIO 1: BUILDER (Fica pesado, mas é descartado)
+# ==========================================
 FROM node:24-alpine AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . . 
-ARG DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
-ENV DATABASE_URL=$DATABASE_URL
-WORKDIR /app/server
-RUN npx prisma generate
-RUN npm run build
-RUN npm prune --production
 
-# --- 3. RUNTIME ---
+# Copia arquivos de dependência
+COPY package.json package-lock.json ./
+COPY server/package.json ./server/
+COPY web/package.json ./web/
+COPY ia/package.json ./ia/
+
+# Instala TODAS as dependências (incluindo devDependencies como TypeScript)
+RUN npm ci
+
+# Copia todo o código fonte
+COPY . . 
+
+# Cria o .env FALSO por segurança, apenas para o Prisma Generate (db:gen) funcionar
+WORKDIR /app/server
+RUN echo "DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy" > .env
+
+# Executa o build do server (gera a pasta dist e os tipos do Prisma)
+RUN npm run build
+
+
+# ==========================================
+# ESTÁGIO 2: RUNTIME (Minúsculo e Seguro)
+# ==========================================
 FROM node:24-alpine AS runner
 WORKDIR /app
 
-# Criamos o usuário e grupo de segurança
+# Cria usuário sem privilégios para segurança
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 fastifyuser
 
-# --- CORREÇÃO DE PERMISSÃO ---
-# Damos a posse da pasta /app para o fastifyuser ANTES das cópias
-# para que ele possa criar o arquivo .env no CMD sem dar "Permission Denied"
+# Copia APENAS os pacotes necessários para instalar as dependências de produção
+COPY package.json package-lock.json ./
+COPY server/package.json ./server/
+
+# O PULO DO GATO: Instala APENAS dependências de produção e APENAS do workspace server
+RUN npm ci --omit=dev -w server
+
+# Muda a posse da pasta app para o usuário seguro
 RUN chown -R fastifyuser:nodejs /app
 
-# Artefatos do server (copiando com as permissões certas)
+WORKDIR /app/server
+
+# Copia do builder APENAS os arquivos finais necessários para rodar
 COPY --from=builder --chown=fastifyuser:nodejs /app/server/dist ./dist
 COPY --from=builder --chown=fastifyuser:nodejs /app/server/package.json ./package.json
 COPY --from=builder --chown=fastifyuser:nodejs /app/server/prisma ./prisma
 COPY --from=builder --chown=fastifyuser:nodejs /app/server/prisma.config.ts ./prisma.config.ts
-COPY --from=builder --chown=fastifyuser:nodejs /app/node_modules ./node_modules
 
 USER fastifyuser
 EXPOSE 3333
 
-# O echo agora funciona porque o usuário é o dono da pasta. 
-# Isso resolve o erro "datasource.url property is required" do Prisma.
-# Usamos aspas simples no shell para proteger o valor da variável de expansões erradas
-CMD ["sh", "-c", "echo DATABASE_URL=$DATABASE_URL > .env && npx prisma migrate deploy && node dist/src/server.js"]
+# Cria o arquivo vazio para a flag --env-file do seu script start não quebrar.
+# As variáveis reais (DATABASE_URL, JWT_SECRET, etc) virão do seu docker-compose!
+RUN touch .env.prod
+
+CMD ["sh", "-c", "npm run db:deploy:prod && npm run start"]

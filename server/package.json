@@ -6,8 +6,8 @@
   "scripts": {
     "precommit": "lint-staged",
     "dev": "dotenv -e .env -- prisma generate && tsx watch --env-file .env src/server.ts | pino-pretty",
-    "build": "tsc",
-    "start": "node dist/src/server.js",
+    "build": "npm run db:gen && tsc",
+    "start": "node --env-file=.env.prod dist/src/server.js",
     "type-check": "tsc --noEmit",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
@@ -20,7 +20,8 @@
     "db:seed": "dotenv -e .env -- prisma db seed",
     "db:deploy": "dotenv -e .env -- prisma migrate deploy",
     "db:reset": "dotenv -e .env -- prisma migrate reset --force --skip-seed",
-    "db:format": "prisma format"
+    "db:format": "prisma format",
+    "db:deploy:prod": "dotenv -e .env.prod -- prisma migrate deploy"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
