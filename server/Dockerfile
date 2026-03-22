@@ -52,10 +52,8 @@ COPY --from=builder --chown=fastifyuser:nodejs /app/server/prisma ./prisma
 COPY --from=builder --chown=fastifyuser:nodejs /app/server/prisma.config.ts ./prisma.config.ts
 
 # GERAÇÃO DO PRISMA CLIENT EM PRODUÇÃO
-# Cria o .env falso para o prisma.config.ts não quebrar, gera os tipos e apaga o .env falso
-RUN echo "DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy" > .env && \
-    npx prisma generate && \
-    rm .env
+# Passa a variável falsa direto na memória apenas para o comando rodar, sem precisar de arquivo .env
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npx prisma generate
 
 # Copia do builder APENAS os arquivos finais compilados (dist)
 COPY --from=builder --chown=fastifyuser:nodejs /app/server/dist ./dist
