@@ -5,7 +5,7 @@
   "scripts": {
     "install": "uv sync",
     "dev": "uv run --env-file .env fastapi dev src/main.py",
-    "start": "uv run --env-file .env.prod fastapi run src/main.py",
+    "start": "uv run fastapi run src/main.py",
     "build": "echo 'Python não precisa de build'",
     "add": "uv add",
     "add:dev": "uv add --dev",
