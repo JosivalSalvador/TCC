@@ -68,7 +68,7 @@ services:
     depends_on:
       - server
     env_file:
-      - ./web/.env.prod
+      - ./web/.env.production
     ports:
       - "3000:3000"
     networks:
