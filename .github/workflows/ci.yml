@@ -110,8 +110,8 @@ jobs:
           echo "JWT_SECRET=ci-secret" >> server/.env.prod
           echo "NODE_ENV=production" >> server/.env.prod
 
-          echo "NEXT_PUBLIC_API_URL=http://localhost:3333" > web/.env.prod
-          echo "API_INTERNAL_URL=http://api:3333" >> web/.env.prod
+          echo "NEXT_PUBLIC_API_URL=http://localhost:3333" > web/.env.production
+          echo "API_INTERNAL_URL=http://api:3333" >> web/.env.production
 
           echo "DATABASE_URL=postgresql://user:pass@localhost:5432/db" > server/.env
           echo "NODE_ENV=production" >> server/.env
