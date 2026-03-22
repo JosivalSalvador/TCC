@@ -35,12 +35,10 @@ EXPOSE 8000
 ENV PORT=8000
 ENV HOST="0.0.0.0"
 
-# O truque do arquivo vazio para a flag --env-file não estourar erro
-RUN touch .env.prod
-
 # [MUDANÇA 2026]: Colocamos o ambiente virtual invisível do uv direto no PATH
 # Assim, não precisamos nem rodar "uv run", o contêiner já entende o comando fastapi nativamente!
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Comando final limpo, puro Python/FastAPI, sem Node.js no meio.
-CMD ["sh", "-c", "fastapi run src/main.py --host $HOST --port $PORT --env-file .env.prod"]
+# Comando final limpo, puro Python/FastAPI, sem Node.js no meio.
+CMD ["sh", "-c", "fastapi run src/main.py --host $HOST --port $PORT"]
