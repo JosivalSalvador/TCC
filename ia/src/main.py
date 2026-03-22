@@ -1,6 +1,9 @@
-def main():
-    print("Hello from ia!")
+from fastapi import FastAPI
+
+# É este carinha aqui que o terminal estava procurando!
+app = FastAPI()
 
 
-if __name__ == "__main__":
-    main()
+@app.get("/")
+def read_root():
+    return {"message": "Hello from IA! Rodando no monorepo!"}

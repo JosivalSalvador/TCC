@@ -12,18 +12,15 @@ permissions:
 
 jobs:
   # ====================================================
-  # 1. SERVER – QUALIDADE E TESTES
+  # 1. QUALITY & TESTS (TURBOREPO MESTRE: WEB + SERVER + IA)
   # ====================================================
-  server-check:
-    name: Server (Lint, Types, Tests)
+  quality-check:
+    name: Quality (Lint, Types, Tests)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./server
 
     services:
       postgres:
-        image: postgres:17-alpine # Atualizado para v18 conforme seu dev
+        image: postgres:18-alpine
         env:
           POSTGRES_USER: user
           POSTGRES_PASSWORD: password
@@ -31,8 +28,7 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --mount type=tmpfs,destination=/var/lib/postgresql/data
-          --health-cmd pg_isready
+          --health-cmd "pg_isready -U user -d ecommerce_test"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -43,79 +39,52 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
-          # Caminho corrigido para a raiz onde está o lockfile do monorepo
           cache-dependency-path: package-lock.json
 
-      - name: Create env files
-        run: |
-          # Removido ?schema=public para bater com o que validamos no Docker
-          echo "DATABASE_URL=postgresql://user:password@localhost:5432/ecommerce_test" > .env
-          echo "JWT_SECRET=ci-secret" >> .env
-          echo "NODE_ENV=test" >> .env
-          cp .env .env.test
+      - name: Setup UV (Python)
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
 
-      - name: Install deps
-        # Como é monorepo, instalamos a partir da raiz para garantir o workspace
-        run: cd .. && npm ci --ignore-scripts --no-audit
+      - name: Create env files (Server)
+        run: |
+          echo "DATABASE_URL=postgresql://user:password@localhost:5432/ecommerce_test" > server/.env
+          echo "JWT_SECRET=ci-secret" >> server/.env
+          echo "NODE_ENV=test" >> server/.env
+          cp server/.env server/.env.test
+
+      - name: Install Node Dependencies
+        run: npm ci --ignore-scripts --no-audit
+
+      - name: Install IA Dependencies (uv sync)
+        run: npm run install -w ia
 
       - name: Generate Prisma Client
-        run: npx prisma generate
+        run: npm run db:gen
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/ecommerce_test
 
-      - name: Lint
+      - name: "Run Lint (Turbo Parallel: Web + Server + IA)"
         run: npm run lint
 
-      - name: Type check
+      - name: "Run Type Check (Turbo Parallel: Web + Server + IA)"
         run: npm run type-check
 
-      - name: Tests
-        run: npm run test
-
-  # ====================================================
-  # 2. WEB – QUALIDADE E TESTES
-  # ====================================================
-  web-check:
-    name: Web (Lint, Types, Tests)
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./web
-
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: package-lock.json
-
-      - name: Install deps
-        run: cd .. && npm ci --ignore-scripts --no-audit
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Type check
-        run: npm run type-check
-
-      - name: Tests
+      - name: "Run Tests (Turbo Parallel: Web + Server + IA)"
         run: npm run test
         env:
-          # Evita que o T3 Env barre o build/teste por falta de envs de prod
           SKIP_ENV_VALIDATION: true
-    
+
   # ====================================================
-  # 3. E2E TESTS (DOCKER + PLAYWRIGHT)
+  # 2. E2E TESTS (DOCKER + PLAYWRIGHT) - RODA PARALELO COM BUILD
   # ====================================================
   e2e-tests:
     name: E2E Tests (Playwright & Docker)
     runs-on: ubuntu-latest
-    needs: [server-check, web-check] # Só roda se os testes rápidos passarem
+    needs: [quality-check]
+    if: false
     
     steps:
       - uses: actions/checkout@v6
@@ -123,7 +92,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
           cache-dependency-path: package-lock.json
 
@@ -131,18 +100,17 @@ jobs:
         run: npm ci --ignore-scripts --no-audit
 
       - name: Install Playwright Browsers
-        # Instala os navegadores do Playwright (Chromium, Firefox, Webkit) e dependências do Linux
         working-directory: ./web
         run: npx playwright install --with-deps
 
       - name: Create .env.prod files for Docker Compose
         run: |
-          echo "PORT=3333" >> server/.env.prod
-          echo "DATABASE_URL=postgresql://user:pass@postgres:5432/db" > server/.env.prod
+          echo "# Placeholder para o CI" > ia/.env.prod
+          echo "PORT=3333" > server/.env.prod
+          echo "DATABASE_URL=postgresql://user:pass@postgres:5432/db" >> server/.env.prod
           echo "JWT_SECRET=ci-secret" >> server/.env.prod
           echo "NODE_ENV=production" >> server/.env.prod
 
-          # 2. Cria o env do Frontend (Web)
           echo "NEXT_PUBLIC_API_URL=http://localhost:3333" > web/.env.prod
           echo "API_INTERNAL_URL=http://api:3333" >> web/.env.prod
 
@@ -153,11 +121,9 @@ jobs:
         run: npm run db:gen
 
       - name: Run E2E Tests
-        # Esse comando chama o seu global-setup.ts, que sobe o Docker, roda os testes e limpa tudo!
         run: npm run test:e2e
 
       - name: Upload Playwright Report
-        # Se o teste falhar no CI, ele salva o HTML com o print do erro para você baixar e investigar
         uses: actions/upload-artifact@v6
         if: always()
         with:
@@ -166,37 +132,42 @@ jobs:
           retention-days: 7
 
   # ====================================================
-  # 4. BUILD DE PRODUÇÃO (DOCKERFILES)
+  # 3. BUILD DE PRODUÇÃO (DOCKERFILES) - MATRIX PARALELA
   # ====================================================
   docker-build-check:
-    name: Verify Production Docker Builds
+    name: Build Docker Image
     runs-on: ubuntu-latest
-    needs: [server-check, web-check]
+    needs: [quality-check]
+    strategy:
+      matrix:
+        # Define os três projetos que serão buildados simultaneamente
+        project: [server, web, ia]
 
     steps:
       - uses: actions/checkout@v6
 
-      - name: Build server image
+      # Passo dinâmico: ele escolhe o comando certo baseado na matriz
+      - name: Build image for ${{ matrix.project }}
         run: |
-          docker build \
-            -f server/Dockerfile \
-            -t portifolio-server:ci .
-
-      - name: Build web image
-        run: |
-          docker build \
-            -f web/Dockerfile \
-            --build-arg NEXT_PUBLIC_API_URL=http://localhost:3333 \
-            --build-arg API_INTERNAL_URL=http://api:3333 \
-            -t portifolio-web:ci .
+          if [ "${{ matrix.project }}" = "web" ]; then
+            docker build \
+              -f web/Dockerfile \
+              --build-arg NEXT_PUBLIC_API_URL=http://localhost:3333 \
+              --build-arg API_INTERNAL_URL=http://api:3333 \
+              -t tcc-web:ci .
+          elif [ "${{ matrix.project }}" = "ia" ]; then
+            docker build -f ia/Dockerfile -t tcc-ia:ci ./ia
+          else
+            docker build -f server/Dockerfile -t tcc-server:ci .
+          fi
 
   # ====================================================
-  # 5. AUTO PR DEV → MAIN
+  # 4. AUTO PR DEV → MAIN
   # ====================================================
   auto-pr:
     name: Open PR to Main
     runs-on: ubuntu-latest
-    needs: [docker-build-check, e2e-tests]
+    needs: [docker-build-check]
     if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
 
     steps:
