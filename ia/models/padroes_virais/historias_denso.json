@@ -1,0 +1,176 @@
+{
+  "nicho": "historias_denso",
+  "n_videos": 125,
+  "n_super": 15,
+  "n_frio": 20,
+  "estrutura": {
+    "faixa_duracao_dominante": "short_longo",
+    "estrutura_blocos_dominante": "narrativa",
+    "ritmo_palavras_seg_mediana": 4.92,
+    "densidade_roteiro_mediana": 787,
+    "sentimento_dominante": "positivo",
+    "top3_slots_postagem": [
+      {
+        "dia": "friday",
+        "janela": "noite",
+        "qtd": 5
+      },
+      {
+        "dia": "friday",
+        "janela": "madrugada",
+        "qtd": 2
+      },
+      {
+        "dia": "monday",
+        "janela": "tarde",
+        "qtd": 2
+      }
+    ],
+    "ativar_repeticao_5x": true,
+    "tipo_audio_dominante": "sem_audio",
+    "clickbait_score_mediana": 0.394,
+    "faixa_duracao_evitar": "short_longo",
+    "sentimento_evitar": "positivo"
+  },
+  "textuais": {
+    "termos_gancho_usar": [
+      "asking us",
+      "and saying",
+      "they received",
+      "ago",
+      "who",
+      "for our",
+      "wedding",
+      "about",
+      "accident",
+      "girlfriend why"
+    ],
+    "termos_vocabulario": [
+      "said",
+      "told",
+      "years",
+      "like",
+      "one",
+      "parents",
+      "time",
+      "always",
+      "every",
+      "family"
+    ],
+    "termos_seo_usar": [
+      "blogs",
+      "shorts youtubeshorts",
+      "story redditrelationship",
+      "historiasreales",
+      "reddit redditespanol",
+      "historiasdereddit",
+      "shorts video",
+      "redditespanol shorts",
+      "am",
+      "playing"
+    ],
+    "ngramas_roteiro": [
+      "and",
+      "for",
+      "in",
+      "it",
+      "me",
+      "my",
+      "of",
+      "on",
+      "that",
+      "the"
+    ],
+    "arco_emocional": {
+      "inicio": "positivo",
+      "meio": "positivo",
+      "fim": "positivo"
+    },
+    "exemplos_ganchos": [
+      "my parents continued to offer my medical services for free to relatives, so they received",
+      "when i was one year old, a doctor made such a serious mistake during surgery",
+      "i have rejected all of my husband's name proposals for our baby for six months",
+      "my fiancé's pretentious stepmother insisted on planning our entire wedding without asking us anything and",
+      "i work in a restaurant and i have a huge crush on a customer. i"
+    ],
+    "exemplos_titulos": [
+      "My parents offered my medical services for FREE to family members, so I gave them TRAUMAT DIAGNOSES",
+      "My parents disappeared my MILLIONAIRE COMPENSATION. #reddit #shorts",
+      "I rejected ALL of my husband's name proposals for OUR BABY for six months straight.",
+      "My fiancé's STEPMOTHER insisted on planning our wedding WITHOUT ASKING us anything, and we let her.",
+      "I work at a restaurant and I have a HUGE crush on a customer."
+    ],
+    "termos_gancho_evitar": [
+      "been",
+      "did your",
+      "rule",
+      "had",
+      "years",
+      "because",
+      "an interview",
+      "children",
+      "writes",
+      "that"
+    ],
+    "termos_roteiro_evitar": [
+      "phone",
+      "thought",
+      "their",
+      "completely",
+      "down",
+      "again",
+      "leon",
+      "into",
+      "on the",
+      "made"
+    ]
+  },
+  "thumbnail": {
+    "comprimento_alvo_chars": 27,
+    "termos_thumbnail_usar": [
+      "mikasadoreddit",
+      "don",
+      "and",
+      "because",
+      "bride",
+      "after",
+      "at me",
+      "gift it",
+      "oh",
+      "her cell"
+    ],
+    "termos_thumbnail_evitar": [
+      "the whole",
+      "another",
+      "down",
+      "oddixa",
+      "said",
+      "shy",
+      "saw",
+      "someone",
+      "assets",
+      "share"
+    ],
+    "cenas_visuais_dominantes": [
+      "and",
+      "bubble",
+      "bubble overlay",
+      "chat",
+      "featuring"
+    ],
+    "exemplos_texto_thumbnail": [
+      "WHAT @ELTIPODEREDDIT",
+      "THEY USED THE TYPE OFREDDIT",
+      "OURS",
+      "THREE HUNDRED",
+      "to sit"
+    ],
+    "exemplos_cena_visual": [
+      "A worker in protective gear is spraying foam insulation onto the underside of a metal roof.",
+      "A conveyor belt carries pretzels through a machine that coats them in liquid chocolate.",
+      "A person is using a string trimmer to edge a patch of grass along a gravel path.",
+      "A person is using a squeegee to clean a soapy glass surface.",
+      "A person wearing blue gloves is cracking eggs into a large metal bowl filled with many egg yolks."
+    ]
+  }
+}

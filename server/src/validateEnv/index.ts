@@ -5,6 +5,7 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
   DATABASE_URL: z.url(),
   JWT_SECRET: z.string(),
+  IA_SERVICE_URL: z.url(),
 })
 
 const _env = envSchema.safeParse(process.env)

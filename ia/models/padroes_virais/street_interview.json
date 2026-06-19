@@ -1,0 +1,171 @@
+{
+  "nicho": "street_interview",
+  "n_videos": 25,
+  "n_super": 4,
+  "n_frio": 4,
+  "estrutura": {
+    "faixa_duracao_dominante": "short_longo",
+    "estrutura_blocos_dominante": "esquete",
+    "ritmo_palavras_seg_mediana": 2.99,
+    "densidade_roteiro_mediana": 295,
+    "sentimento_dominante": "negativo",
+    "top3_slots_postagem": [
+      {
+        "dia": "friday",
+        "janela": "manha",
+        "qtd": 1
+      },
+      {
+        "dia": "saturday",
+        "janela": "manha",
+        "qtd": 1
+      },
+      {
+        "dia": "sunday",
+        "janela": "tarde",
+        "qtd": 1
+      }
+    ],
+    "ativar_repeticao_5x": false,
+    "tipo_audio_dominante": "sem_audio",
+    "clickbait_score_mediana": 0.431,
+    "faixa_duracao_evitar": "ultra_curto",
+    "sentimento_evitar": "positivo"
+  },
+  "textuais": {
+    "termos_gancho_usar": [
+      "uh",
+      "are",
+      "been",
+      "price heroin",
+      "pigs",
+      "street cricket",
+      "ve been",
+      "the highway",
+      "good shireen",
+      "hi how"
+    ],
+    "termos_vocabulario": [
+      "like",
+      "also",
+      "also like",
+      "anyone",
+      "anyone enough",
+      "anything",
+      "anything expect",
+      "arrest",
+      "arrest next",
+      "cocaine"
+    ],
+    "termos_seo_usar": [
+      "kabitas kitchen",
+      "foryoupage",
+      "fyp",
+      "panipuri panipuri",
+      "ipl",
+      "crunchy golgappa",
+      "for",
+      "bindaast20creators comedy",
+      "bindaast20creators",
+      "kitchen"
+    ],
+    "ngramas_roteiro": [
+      "and",
+      "be",
+      "but",
+      "he",
+      "is",
+      "it",
+      "like",
+      "look",
+      "my",
+      "no"
+    ],
+    "arco_emocional": {
+      "inicio": "positivo",
+      "meio": "positivo",
+      "fim": "positivo"
+    },
+    "exemplos_ganchos": [
+      "guys, it's a scene today. we were playing street cricket outside on the highway and",
+      "अल्हम्दुलिल्लाह 12 गोलगप्पे होंगे। किसी में तीन ज़ायके होंगे, किसी में दो होंगे, किसी में",
+      "hi, how are you? >> i'm good. shireen, how are you? >> i'm doing great.",
+      "half price heroin. pigs. pigs. >> you've been taking uh illegal substances. >> no, no,"
+    ],
+    "exemplos_titulos": [
+      "MEETING HARDIK PANDYA #shorts #ipl #BindaasT20Creators #funny #mumbaiindians #fun #comedy #cricket",
+      "12 Gol gappay 12 different zaiqa 🤔😱 #shorts #viral",
+      "Beautiful Girl from Mizoram 😍 #shortsfeed #interview #viral #fyp #shorts #mizoram",
+      "He couldn't control his speech.|I Swear (2025)#cinema #movie #shorts"
+    ],
+    "termos_gancho_evitar": [
+      "don",
+      "him",
+      "tall",
+      "bhature of",
+      "but don",
+      "for",
+      "re with",
+      "of delhi",
+      "that",
+      "we re"
+    ],
+    "termos_roteiro_evitar": [
+      "bless",
+      "don",
+      "marty",
+      "tall",
+      "about",
+      "for",
+      "will ask",
+      "excuse me",
+      "what do",
+      "we re"
+    ]
+  },
+  "thumbnail": {
+    "comprimento_alvo_chars": 37,
+    "termos_thumbnail_usar": [
+      "hands",
+      "sharda",
+      "accidental",
+      "me",
+      "call me",
+      "don",
+      "out",
+      "sharda university",
+      "lauritz",
+      "your jumper"
+    ],
+    "termos_thumbnail_evitar": [
+      "this",
+      "release from",
+      "embarrassing no",
+      "but feel",
+      "jail",
+      "on bourbon",
+      "on",
+      "wlbt3",
+      "hours after",
+      "one"
+    ],
+    "cenas_visuais_dominantes": [
+      "all",
+      "all dressed",
+      "an",
+      "an excited",
+      "and"
+    ],
+    "exemplos_texto_thumbnail": [
+      "ACCIDENTAL MEET WITH HARDIK PANDYA, @don't call me a kid, Malaysia Airlines, Lauritz Knudsen, Mumbai Indians, Oaksmith",
+      "CS SHIRIN, VISITOR, SHARDA UNIVERSITY",
+      "Get your hands out of your jumper!"
+    ],
+    "exemplos_cena_visual": [
+      "A young man takes an excited selfie with Indian cricketer Hardik Pandya and another person, all dressed in Mumbai Indians cricket uniforms.",
+      "A man with a long white beard is preparing and serving a plate of Pani Puri at a street food stall.",
+      "A young blonde woman in a brown blazer and pink top smiles while wearing a visitor lanyard outdoors.",
+      "A man in a dark blue tracksuit stands on a city street looking off-camera."
+    ]
+  }
+}

@@ -3,158 +3,242 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, ArrowRight, Eye, EyeOff } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { Loader2, UserPlus, Check, ChevronsUpDown } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useAllNiches } from "@/hooks/use-niches";
 import { registerUserSchema } from "@/schemas/users.schema";
 import { RegisterUserInput } from "@/types/index";
-import { blurFadeIn, staggerContainer, slideUp } from "@/lib/animations/fade";
-
-import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
+  blurFadeIn,
+  staggerContainer,
+  staggerItem,
+} from "@/lib/animations/fade";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils/utils";
 
 export function RegisterForm() {
-  const { register } = useAuth();
-  const [showPassword, setShowPassword] = useState(false);
+  const { register: registerAuth } = useAuth();
+  const { data: nichesData } = useAllNiches();
 
-  const form = useForm<RegisterUserInput>({
+  const [nicheQuery, setNicheQuery] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedNiche, setSelectedNiche] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<RegisterUserInput>({
     resolver: zodResolver(registerUserSchema),
-    defaultValues: { name: "", email: "", password: "" },
   });
 
-  async function onSubmit(data: RegisterUserInput) {
-    await register.mutateAsync(data);
-  }
+  const niches = nichesData?.niches ?? [];
 
-  const isPending = register.isPending;
+  const filtered =
+    nicheQuery.trim().length === 0
+      ? niches
+      : niches.filter((n) =>
+          n.name.toLowerCase().includes(nicheQuery.toLowerCase()),
+        );
+
+  const handleSelectNiche = (name: string) => {
+    setSelectedNiche(name);
+    setNicheQuery(name);
+    setValue("nicheName", name, { shouldValidate: true });
+    setIsDropdownOpen(false);
+  };
+
+  const handleNicheInput = (value: string) => {
+    setNicheQuery(value);
+    setSelectedNiche("");
+    setValue("nicheName", value, { shouldValidate: true });
+    setIsDropdownOpen(true);
+  };
+
+  const onSubmit = (data: RegisterUserInput) => {
+    registerAuth.mutate(data);
+  };
 
   return (
-    <Form {...form}>
-      <motion.form
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4"
-      >
-        <motion.div variants={blurFadeIn}>
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-muted-foreground font-mono text-xs tracking-wider uppercase">
-                  Usuário
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Seu Nome"
-                    disabled={isPending}
-                    className="bg-muted/20 border-border/50 focus-visible:ring-foreground h-11 rounded-md transition-all focus-visible:ring-1"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+    <motion.div
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+      className="w-full max-w-sm"
+    >
+      {/* Header */}
+      <motion.div variants={blurFadeIn} className="mb-8">
+        <h2 className="text-2xl font-bold tracking-tight">Crie sua conta</h2>
+        <p className="text-muted-foreground mt-1 text-sm">
+          Comece a gerar conteúdo viral em minutos
+        </p>
+      </motion.div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+        {/* Nome */}
+        <motion.div variants={staggerItem} className="flex flex-col gap-1.5">
+          <Label htmlFor="name">Nome</Label>
+          <Input
+            id="name"
+            type="text"
+            placeholder="Seu nome"
+            autoComplete="name"
+            {...register("name")}
           />
+          {errors.name && (
+            <span className="text-destructive text-xs">
+              {errors.name.message}
+            </span>
+          )}
         </motion.div>
 
-        <motion.div variants={blurFadeIn}>
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-muted-foreground font-mono text-xs tracking-wider uppercase">
-                  E-mail
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="seu@email.com"
-                    disabled={isPending}
-                    className="bg-muted/20 border-border/50 focus-visible:ring-foreground h-11 rounded-md transition-all focus-visible:ring-1"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+        {/* Email */}
+        <motion.div variants={staggerItem} className="flex flex-col gap-1.5">
+          <Label htmlFor="email">E-mail</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="seu@email.com"
+            autoComplete="email"
+            {...register("email")}
           />
+          {errors.email && (
+            <span className="text-destructive text-xs">
+              {errors.email.message}
+            </span>
+          )}
         </motion.div>
 
-        <motion.div variants={blurFadeIn}>
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-muted-foreground font-mono text-xs tracking-wider uppercase">
-                  Senha Root
-                </FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      disabled={isPending}
-                      className="bg-muted/20 border-border/50 focus-visible:ring-foreground h-11 rounded-md pr-10 transition-all focus-visible:ring-1"
-                      {...field}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors"
-                      tabIndex={-1}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </FormControl>
-                {/* A descrição da sua política de senha mantida e formatada */}
-                <FormDescription className="text-muted-foreground/60 mt-2 font-mono text-[10px] uppercase">
-                  Requisito: Mínimo de 8 caracteres alfanuméricos + Símbolo.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
+        {/* Senha */}
+        <motion.div variants={staggerItem} className="flex flex-col gap-1.5">
+          <Label htmlFor="password">Senha</Label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            autoComplete="new-password"
+            {...register("password")}
           />
+          {errors.password && (
+            <span className="text-destructive text-xs">
+              {errors.password.message}
+            </span>
+          )}
         </motion.div>
 
-        <motion.div variants={slideUp} className="pt-4">
+        {/* Nicho — Combobox */}
+        <motion.div variants={staggerItem} className="flex flex-col gap-1.5">
+          <Label htmlFor="nicheName">Seu nicho</Label>
+          <p className="text-muted-foreground text-xs">
+            Selecione um existente ou digite para criar um novo
+          </p>
+
+          <div className="relative">
+            <div className="relative">
+              <Input
+                id="nicheName"
+                type="text"
+                placeholder="Ex: tecnologia, culinária, finanças..."
+                value={nicheQuery}
+                onChange={(e) => handleNicheInput(e.target.value)}
+                onFocus={() => setIsDropdownOpen(true)}
+                autoComplete="off"
+              />
+              <button
+                type="button"
+                onClick={() => setIsDropdownOpen((prev) => !prev)}
+                className="absolute top-1/2 right-3 -translate-y-1/2"
+              >
+                <ChevronsUpDown className="text-muted-foreground h-4 w-4" />
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {isDropdownOpen && (
+                <motion.ul
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  className="glass-panel absolute z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-md py-1 shadow-lg"
+                >
+                  {filtered.length > 0 ? (
+                    filtered.map((niche) => (
+                      <li
+                        key={niche.id}
+                        onClick={() => handleSelectNiche(niche.name)}
+                        className={cn(
+                          "flex cursor-pointer items-center justify-between px-3 py-2 text-sm transition-colors",
+                          selectedNiche === niche.name
+                            ? "text-primary bg-primary/10"
+                            : "text-foreground hover:bg-accent",
+                        )}
+                      >
+                        {niche.name}
+                        {selectedNiche === niche.name && (
+                          <Check className="text-primary h-3.5 w-3.5" />
+                        )}
+                      </li>
+                    ))
+                  ) : (
+                    <li className="px-3 py-2 text-sm">
+                      <span className="text-muted-foreground">
+                        Criar nicho{" "}
+                      </span>
+                      <span className="text-primary font-medium">
+                        &quot{nicheQuery}&quot
+                      </span>
+                    </li>
+                  )}
+                </motion.ul>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {errors.nicheName && (
+            <span className="text-destructive text-xs">
+              {errors.nicheName.message}
+            </span>
+          )}
+        </motion.div>
+
+        {/* Submit */}
+        <motion.div variants={staggerItem}>
           <Button
             type="submit"
-            disabled={isPending}
-            className="border-foreground bg-foreground text-background hover:bg-background hover:text-foreground group h-11 w-full rounded-md border font-medium shadow-[0_0_10px_rgba(250,250,250,0.05)] transition-all duration-300 hover:shadow-[0_0_20px_rgba(250,250,250,0.15)]"
+            disabled={registerAuth.isPending}
+            className="glow-primary w-full"
           >
-            {isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Alocando...
-              </>
+            {registerAuth.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               <>
-                Registrar Acesso
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-2" />
+                <UserPlus className="h-4 w-4" />
+                Criar conta
               </>
             )}
           </Button>
         </motion.div>
-      </motion.form>
-    </Form>
+      </form>
+
+      {/* Link para login */}
+      <motion.p
+        variants={blurFadeIn}
+        className="text-muted-foreground mt-6 text-center text-sm"
+      >
+        Já tem uma conta?{" "}
+        <Link
+          href="/login"
+          className="text-primary hover:text-primary/80 font-medium transition-colors"
+        >
+          Entrar
+        </Link>
+      </motion.p>
+    </motion.div>
   );
 }

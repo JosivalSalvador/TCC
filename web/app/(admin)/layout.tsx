@@ -1,22 +1,19 @@
 import { ReactNode } from "react";
-import { GridBackground } from "@/components/ui/grid-background";
-
-export const metadata = {
-  title: "Admin Control Panel",
-};
+import { AdminSidebar } from "./dashboard/_components/admin-sidebar";
+import { AdminHeader } from "./dashboard/_components/admin-header";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-background text-foreground relative flex min-h-dvh max-w-[100vw] overflow-hidden">
-      {/* O Motor Visual do Fundo (Grid OLED) */}
-      <GridBackground />
+    <div className="bg-background flex min-h-screen">
+      {/* Sidebar fixa — escondida em mobile */}
+      <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
+        <AdminSidebar />
+      </aside>
 
-      {/* Área Principal (Empurrada 64px = 16rem pra direita no Desktop para dar espaço à Sidebar) */}
-      <div className="relative z-10 flex h-dvh flex-1 flex-col overflow-hidden md:pl-64">
-        {/* Onde as páginas vão renderizar. O overflow-y-auto faz SÓ o meio da tela rolar. */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-10">
-          <div className="mx-auto max-w-6xl">{children}</div>
-        </main>
+      {/* Conteúdo principal */}
+      <div className="flex flex-1 flex-col lg:pl-64">
+        <AdminHeader />
+        <main className="flex-1 px-6 py-8">{children}</main>
       </div>
     </div>
   );

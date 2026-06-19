@@ -1,0 +1,176 @@
+{
+  "nicho": "esquetes",
+  "n_videos": 100,
+  "n_super": 56,
+  "n_frio": 4,
+  "estrutura": {
+    "faixa_duracao_dominante": "short_padrao",
+    "estrutura_blocos_dominante": "esquete",
+    "ritmo_palavras_seg_mediana": 2.05,
+    "densidade_roteiro_mediana": 88,
+    "sentimento_dominante": "positivo",
+    "top3_slots_postagem": [
+      {
+        "dia": "friday",
+        "janela": "manha",
+        "qtd": 6
+      },
+      {
+        "dia": "saturday",
+        "janela": "tarde",
+        "qtd": 6
+      },
+      {
+        "dia": "tuesday",
+        "janela": "tarde",
+        "qtd": 5
+      }
+    ],
+    "ativar_repeticao_5x": true,
+    "tipo_audio_dominante": "sem_audio",
+    "clickbait_score_mediana": 0.531,
+    "faixa_duracao_evitar": "short_padrao",
+    "sentimento_evitar": "positivo"
+  },
+  "textuais": {
+    "termos_gancho_usar": [
+      "been",
+      "quickly",
+      "who",
+      "law",
+      "for",
+      "was",
+      "hey",
+      "money",
+      "am",
+      "his"
+    ],
+    "termos_vocabulario": [
+      "come",
+      "hey",
+      "yes",
+      "look",
+      "mom",
+      "sister",
+      "brought",
+      "get",
+      "one",
+      "let"
+    ],
+    "termos_seo_usar": [
+      "haryanvi haryanvi",
+      "vlogs",
+      "video entertainment",
+      "keshav",
+      "haryanvicomedy",
+      "shortsfeed",
+      "haryanvi comedy",
+      "and",
+      "keshav shashi",
+      "viral comedy"
+    ],
+    "ngramas_roteiro": [
+      "is",
+      "it",
+      "the",
+      "this",
+      "you",
+      "will",
+      "what",
+      "me",
+      "have",
+      "and"
+    ],
+    "arco_emocional": {
+      "inicio": "positivo",
+      "meio": "positivo",
+      "fim": "positivo"
+    },
+    "exemplos_ganchos": [
+      "it's red, your red is red, mahavar is red, red is red, red is red,",
+      "son, what are you playing? does he not come after eating in the morning? no",
+      "look, mom has been busy doing the same work for so long. whether you are",
+      "it is the day of ashtami, dear girl, worship her. it is the day of",
+      "but it will be fun for a second, what is this, where is this nonsense,"
+    ],
+    "exemplos_titulos": [
+      "Jai Gauri Maa 🙏🥰 Shashi Shorts #shorts #viral #song #trending #maa",
+      "That one Strong Student in School 🤣 #shorts #teratrigun #comedy #schoolstudent #teachercomedy",
+      "Sister-in-law and sister-in-law#anandraja #comedy #comedyshorts #funny #comedyvideos #shorts",
+      "Jai Mata di 🙏 social simran #viral #ytshorts #shorts #trending #navratri",
+      "The atmosphere became cloudy in 1 minute 😜🤪 Comedy Shorts #comedy #viral #shorts #funny #trending"
+    ],
+    "termos_gancho_evitar": [
+      "now give",
+      "pot it",
+      "fulfill",
+      "cold",
+      "bike come",
+      "don",
+      "animals",
+      "papa don",
+      "first of",
+      "come here"
+    ],
+    "termos_roteiro_evitar": [
+      "arms",
+      "won feel",
+      "for this",
+      "the potty",
+      "which one",
+      "animals",
+      "no matter",
+      "with diamonds",
+      "would",
+      "go to"
+    ]
+  },
+  "thumbnail": {
+    "comprimento_alvo_chars": 25,
+    "termos_thumbnail_usar": [
+      "are like",
+      "and",
+      "law",
+      "anandraja_86173",
+      "that",
+      "then",
+      "definition",
+      "after",
+      "sister",
+      "dr"
+    ],
+    "termos_thumbnail_evitar": [
+      "prank no",
+      "new york",
+      "york",
+      "of potty",
+      "kite video",
+      "york 23",
+      "kite",
+      "hard",
+      "wait for",
+      "ultimate holi"
+    ],
+    "cenas_visuais_dominantes": [
+      "an",
+      "and",
+      "dressed",
+      "dressed in",
+      "expression"
+    ],
+    "exemplos_texto_thumbnail": [
+      "That one Strong Student in School 🤣, Shree Baba Balak Puri Ji, HAPPY HOLI",
+      "Sister-in-law and sister-in-law",
+      "STYLE",
+      "changed the atmosphere in 1 minute",
+      "pani puri"
+    ],
+    "exemplos_cena_visual": [
+      "A smiling woman wearing a traditional red patterned saree stands in a doorway with her hands pressed together in a greeting gesture.",
+      "A man in a white shirt and tie plays a large bass drum while a woman stands beside him in a decorated room.",
+      "Two individuals dressed in traditional Indian sarees are sitting together in a room, likely filming a comedic skit.",
+      "A woman in traditional Indian attire is applying a tilak on a young girl's forehead during a family gathering.",
+      "A woman in a pink floral outfit is sitting outdoors, seemingly preparing something over a small fire."
+    ]
+  }
+}

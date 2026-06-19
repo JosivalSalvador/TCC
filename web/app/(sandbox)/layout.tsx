@@ -1,16 +1,20 @@
 import { ReactNode } from "react";
-import { GridBackground } from "@/components/ui/grid-background";
+import { Sidebar } from "./_components/sidebar";
+import { Header } from "./_components/header";
 
 export default function SandboxLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-background text-foreground relative flex min-h-dvh max-w-[100vw] flex-col overflow-x-hidden">
-      {/* O Motor Visual do Fundo (Grid OLED) mantido para consistência */}
-      <GridBackground />
+    <div className="bg-background flex min-h-screen">
+      {/* Sidebar fixa — escondida em mobile */}
+      <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
+        <Sidebar />
+      </aside>
 
-      {/* Sem Header ou Footer público. Imersão total no sistema. */}
-      <main className="relative z-10 flex w-full flex-1 flex-col items-center justify-center p-6">
-        {children}
-      </main>
+      {/* Conteúdo principal */}
+      <div className="flex flex-1 flex-col lg:pl-64">
+        <Header />
+        <main className="flex-1 px-6 py-8">{children}</main>
+      </div>
     </div>
   );
 }

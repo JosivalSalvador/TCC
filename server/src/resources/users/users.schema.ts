@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { Role } from '@prisma/client'
+import { nicheNameSchema } from '../niches/niches.schema.js'
 
 // =========================
 // Email
@@ -31,6 +32,10 @@ const passwordSchema = z
 
 // =========================
 // Schema para Cadastro
+//
+// nicheName é obrigatório: todo usuário precisa ter ao menos um nicho desde
+// o momento da criação da conta. Pode ser digitado (nome novo) ou vir de um
+// dropdown (nome existente) — chega aqui da mesma forma como string.
 // =========================
 
 export const registerUserSchema = z.object({
@@ -40,9 +45,9 @@ export const registerUserSchema = z.object({
     .refine((value) => value.length >= 3, {
       message: 'Nome deve ter no mínimo 3 caracteres',
     }),
-
   email: emailSchema,
   password: passwordSchema,
+  nicheName: nicheNameSchema,
 })
 
 // ==========================================

@@ -1,17 +1,17 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  
 }
+
+// ─────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────
 
 enum Role {
   ADMIN
@@ -19,38 +19,123 @@ enum Role {
   USER
 }
 
-// 2. Tipos de Token
 enum TokenType {
   REFRESH_TOKEN
 }
 
-model User {
-  id            String   @id @default(uuid())
-  name          String
-  email         String   @unique
-  password_hash String   // Nome técnico: guarda o hash
-  role          Role     @default(USER)
-  
-  // Mapeamento: CamelCase no código JS, snake_case no Banco (Boas práticas SQL)
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+// NOVO: distingue qual parte da geração recebeu o feedback
+enum FeedbackType {
+  STRUCTURE
+  SCRIPT
+}
 
-  tokens        Token[] 
-  
+// ─────────────────────────────────────────
+// AUTENTICAÇÃO (existente — 1 alteração)
+// ─────────────────────────────────────────
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    
+  password_hash String
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  // NOVO: soft delete — nunca apaga o user fisicamente
+  deletedAt     DateTime? @map("deleted_at")
+
+  tokens      Token[]
+  niches      UserNiche[]
+  generations Generation[]
+
   @@map("users")
 }
 
 model Token {
   id        String    @id @default(uuid())
-  type      TokenType 
+  type      TokenType
   createdAt DateTime  @default(now()) @map("created_at")
-  
-  // Opcional: data para expirar o token no banco
   expiresAt DateTime? @map("expires_at")
 
-  userId    String    @map("user_id")
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("tokens")
 }
 
+// ─────────────────────────────────────────
+// NICHOS (novo)
+// ─────────────────────────────────────────
+
+model Niche {
+  id        String   @id @default(uuid())
+  // name normalizado em lowercase para evitar duplicatas ("Esquetes" == "esquetes")
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  users       UserNiche[]
+  generations Generation[]
+
+  @@map("niches")
+}
+
+// Tabela associativa User <-> Niche (N:N)
+// Restrição de negócio: todo user precisa ter ao menos 1 registro aqui
+model UserNiche {
+  userId    String   @map("user_id")
+  nicheId   String   @map("niche_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  niche Niche @relation(fields: [nicheId], references: [id], onDelete: Restrict)
+
+  @@id([userId, nicheId])
+  @@map("user_niches")
+}
+
+// ─────────────────────────────────────────
+// GERAÇÃO (novo)
+// ─────────────────────────────────────────
+
+model Generation {
+  id              String   @id @default(uuid())
+  // Público-alvo opcional — dropdown fixo no front, string livre no banco
+  audienceCountry String?  @map("audience_country")
+   // NOVO: nome do nicho que o usuário digitou/escolheu originalmente (pode ser diferente do usado, se houve fallback)
+  nicheRequested  String   @map("niche_requested")
+  // NOVO: se o ML não achou o nicho exato e usou similaridade pra resolver pra outro
+  fallbackUsed    Boolean  @default(false) @map("fallback_used")
+  // Conteúdo retornado pelo serviço de IA em JSON
+  // Conteúdo retornado pelo serviço de IA em JSON
+  structureContent Json    @map("structure_content")
+  scriptContent    Json    @map("script_content")
+  isFavorite       Boolean @default(false) @map("is_favorite")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  userId  String @map("user_id")
+  nicheId String @map("niche_id")
+
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Restrict)
+  niche     Niche                @relation(fields: [nicheId], references: [id], onDelete: Restrict)
+  feedbacks GenerationFeedback[]
+
+  @@map("generations")
+}
+
+// ─────────────────────────────────────────
+// FEEDBACK (novo)
+// ─────────────────────────────────────────
+
+model GenerationFeedback {
+  id        String       @id @default(uuid())
+  type      FeedbackType
+  isUseful  Boolean      @map("is_useful")
+  createdAt DateTime     @default(now()) @map("created_at")
+
+  generationId String     @map("generation_id")
+  generation   Generation @relation(fields: [generationId], references: [id], onDelete: Cascade)
+
+  // Garante no banco que não existe dois feedbacks do mesmo tipo para a mesma geração
+  @@unique([generationId, type])
+  @@map("generation_feedbacks")
+}

@@ -12,7 +12,7 @@ import { TOKEN_TTL_CONFIG } from '../tokens/tokens.types.js'
 export async function authenticateUser(input: LoginInput) {
   const { email, password } = input
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: { email },
   })
 

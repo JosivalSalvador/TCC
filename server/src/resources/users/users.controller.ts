@@ -8,8 +8,8 @@ import type { RegisterUserInput, UpdatePasswordInput, UpdateRoleInput, UpdateUse
  */
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   // Ajuste aqui: cast de tipo na variável
-  const { name, email, password } = request.body as RegisterUserInput
-  const { user } = await usersService.registerUser({ name, email, password })
+  const { name, email, password, nicheName } = request.body as RegisterUserInput
+  const { user } = await usersService.registerUser({ name, email, password, nicheName })
 
   return reply.status(StatusCodes.CREATED).send({
     message: 'User created successfully.',

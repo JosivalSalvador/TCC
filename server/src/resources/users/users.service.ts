@@ -5,12 +5,20 @@ import { AppError } from '../../errors/app-error.js'
 import type { RegisterUserInput, UpdatePasswordInput, UpdateRoleInput, UpdateUserInput } from './users.types.js'
 
 /**
- * Cria um novo usuário no sistema
+ * CRIAR CONTA
+ *
+ * Executa numa transaction para garantir atomicidade:
+ * se qualquer etapa falhar, nenhuma alteração persiste no banco.
+ *
+ * Fluxo dentro da transaction:
+ * 1. Cria o User
+ * 2. Faz upsert do Niche pelo nome normalizado (cria se não existir, busca se já existir)
+ * 3. Cria o UserNiche — vínculo obrigatório desde o primeiro momento
  */
 export async function registerUser(input: RegisterUserInput) {
-  const { name, email, password } = input
+  const { name, email, password, nicheName } = input
 
-  const userExists = await prisma.user.findUnique({
+  const userExists = await prisma.user.findFirst({
     where: { email },
   })
 
@@ -20,19 +28,41 @@ export async function registerUser(input: RegisterUserInput) {
 
   const passwordHash = await hash(password, 10)
 
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password_hash: passwordHash,
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      createdAt: true,
-    },
+  const user = await prisma.$transaction(async (tx) => {
+    // 1. Cria o usuário
+    const createdUser = await tx.user.create({
+      data: {
+        name,
+        email,
+        password_hash: passwordHash,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+    })
+
+    // 2. Upsert do nicho no pool global
+    // Se o nome já existir (unique), apenas retorna — senão cria.
+    const niche = await tx.niche.upsert({
+      where: { name: nicheName },
+      update: {},
+      create: { name: nicheName },
+      select: { id: true },
+    })
+
+    // 3. Cria o vínculo User <-> Niche
+    await tx.userNiche.create({
+      data: {
+        userId: createdUser.id,
+        nicheId: niche.id,
+      },
+    })
+
+    return createdUser
   })
 
   return { user }
@@ -40,11 +70,11 @@ export async function registerUser(input: RegisterUserInput) {
 
 /**
  * BUSCAR POR ID (Comum)
- * Usada pelo usuário para ver seu perfil ou pelo Admin para ver detalhes de alguém.
+ * Filtra deletedAt: null para ignorar contas desativadas.
  */
 export async function getUserById(userId: string) {
   const user = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: userId, deletedAt: null },
     select: {
       id: true,
       name: true,
@@ -66,15 +96,17 @@ export async function getUserById(userId: string) {
  * Altera apenas Nome e E-mail. Note que o 'role' não entra aqui por segurança.
  */
 export async function updateUser(userId: string, data: UpdateUserInput) {
-  const user = await prisma.user.findUnique({ where: { id: userId } })
+  const user = await prisma.user.findUnique({ where: { id: userId, deletedAt: null } })
 
   if (!user) {
     throw new AppError('User not found.', StatusCodes.NOT_FOUND)
   }
 
-  // Se estiver tentando mudar o e-mail, verifica se o novo já está em uso
+  // Se estiver tentando mudar o e-mail, verifica se o novo já está em uso por conta ativa
   if (data.email && data.email !== user.email) {
-    const emailExists = await prisma.user.findUnique({ where: { email: data.email } })
+    const emailExists = await prisma.user.findFirst({
+      where: { email: data.email, deletedAt: null },
+    })
     if (emailExists) {
       throw new AppError('E-mail already in use.', StatusCodes.CONFLICT)
     }
@@ -102,7 +134,7 @@ export async function updateUser(userId: string, data: UpdateUserInput) {
  * Valida a senha antiga antes de permitir a troca.
  */
 export async function updatePassword(userId: string, input: UpdatePasswordInput) {
-  const user = await prisma.user.findUnique({ where: { id: userId } })
+  const user = await prisma.user.findUnique({ where: { id: userId, deletedAt: null } })
 
   if (!user) {
     throw new AppError('User not found.', StatusCodes.NOT_FOUND)
@@ -126,25 +158,50 @@ export async function updatePassword(userId: string, input: UpdatePasswordInput)
 }
 
 /**
- * DELETAR CONTA (Comum)
- * Remove o usuário e dispara o Cascade do Prisma (limpa tokens, carrinhos, etc).
+ * SOFT DELETE DE CONTA
+ *
+ * O usuário nunca é apagado fisicamente — preserva histórico e estatísticas.
+ *
+ * O e-mail é liberado para novo cadastro adicionando um sufixo com timestamp:
+ * "user@email.com" → "user@email.com+deleted_1718500000000"
+ * Isso mantém o registro histórico identificável mas libera o e-mail original.
+ *
+ * Os refresh tokens são apagados de fato (não soft delete) — eles não têm
+ * valor de histórico, só precisam parar de funcionar imediatamente. Sem
+ * isso, um token emitido antes da desativação continuaria válido em
+ * outros dispositivos mesmo com a conta desativada.
  */
 export async function deleteUser(userId: string) {
-  const user = await prisma.user.findUnique({ where: { id: userId } })
+  const user = await prisma.user.findUnique({ where: { id: userId, deletedAt: null } })
 
   if (!user) {
     throw new AppError('User not found.', StatusCodes.NOT_FOUND)
   }
 
-  await prisma.user.delete({ where: { id: userId } })
+  const deletedAt = new Date()
+  const releasedEmail = `${user.email}+deleted_${deletedAt.getTime()}`
+
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: userId },
+      data: {
+        deletedAt,
+        email: releasedEmail,
+      },
+    }),
+    prisma.token.deleteMany({
+      where: { userId },
+    }),
+  ])
 }
 
 /**
  * LISTAR TODOS OS USUÁRIOS (Exclusivo Admin)
- * Retorna a lista completa ordenada pelos mais recentes.
+ * Retorna apenas contas ativas (deletedAt: null), ordenadas pelas mais recentes.
  */
 export async function listAllUsers() {
   const users = await prisma.user.findMany({
+    where: { deletedAt: null },
     orderBy: { createdAt: 'desc' },
     select: {
       id: true,
@@ -163,7 +220,7 @@ export async function listAllUsers() {
  * Esta é a única função que tem permissão para mexer no campo 'role'.
  */
 export async function updateUserRole(userId: string, data: UpdateRoleInput) {
-  const user = await prisma.user.findUnique({ where: { id: userId } })
+  const user = await prisma.user.findUnique({ where: { id: userId, deletedAt: null } })
 
   if (!user) {
     throw new AppError('User not found.', StatusCodes.NOT_FOUND)

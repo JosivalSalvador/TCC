@@ -1,0 +1,153 @@
+{
+  "nichos": [
+    "esquetes",
+    "historias_denso",
+    "satisfying",
+    "street_interview",
+    "tech_review"
+  ],
+  "similaridade": {
+    "esquetes": {
+      "historias_denso": 0.0817,
+      "satisfying": 0.0878,
+      "street_interview": 0.0872,
+      "tech_review": 0.0166
+    },
+    "historias_denso": {
+      "esquetes": 0.0817,
+      "satisfying": 0.1338,
+      "street_interview": 0.0803,
+      "tech_review": 0.0256
+    },
+    "satisfying": {
+      "esquetes": 0.0878,
+      "historias_denso": 0.1338,
+      "street_interview": 0.0811,
+      "tech_review": 0.0352
+    },
+    "street_interview": {
+      "esquetes": 0.0872,
+      "historias_denso": 0.0803,
+      "satisfying": 0.0811,
+      "tech_review": 0.0119
+    },
+    "tech_review": {
+      "esquetes": 0.0166,
+      "historias_denso": 0.0256,
+      "satisfying": 0.0352,
+      "street_interview": 0.0119
+    }
+  },
+  "top_termos": {
+    "esquetes": [
+      "comedy",
+      "funny",
+      "haryanvi",
+      "videos",
+      "video",
+      "shorts",
+      "naukrani",
+      "olida",
+      "tok",
+      "comedy video",
+      "funny video",
+      "comedy shorts",
+      "new",
+      "jokes",
+      "vlogs",
+      "imdat",
+      "tik",
+      "tik tok",
+      "film funny",
+      "film"
+    ],
+    "historias_denso": [
+      "reddit",
+      "shorts",
+      "sociology reddit",
+      "entertainment",
+      "entertainment historiasdereddit",
+      "historiasdereddit",
+      "historiasdereddit historiasreales",
+      "historiasreales",
+      "reddit redditespanol",
+      "redditespanol",
+      "redditespanol shorts",
+      "shorts youtubeshorts",
+      "historiasreales lifestyle",
+      "stories",
+      "youtubeshorts",
+      "lifestyle",
+      "lifestyle sociology",
+      "sociology",
+      "game",
+      "historias"
+    ],
+    "satisfying": [
+      "sand",
+      "asmr",
+      "satisfying",
+      "satisfying shorts",
+      "shorts",
+      "lifestyle",
+      "lifestyle sociology",
+      "sociology",
+      "entertainment",
+      "blogs",
+      "people",
+      "people blogs",
+      "funny",
+      "viral",
+      "science",
+      "science technology",
+      "technology",
+      "technology shorts",
+      "videos",
+      "with"
+    ],
+    "street_interview": [
+      "recipe",
+      "pani",
+      "puri",
+      "pani puri",
+      "food",
+      "street",
+      "street food",
+      "shorts",
+      "film",
+      "fyp",
+      "viral",
+      "entertainment",
+      "lifestyle",
+      "lifestyle sociology",
+      "sociology",
+      "comedy",
+      "entertainment film",
+      "fun",
+      "fun funny",
+      "hindi"
+    ],
+    "tech_review": [
+      "honor",
+      "ultra",
+      "iqoo",
+      "15",
+      "win",
+      "honor win",
+      "iqoo 15",
+      "rt",
+      "win rt",
+      "15 ultra",
+      "android",
+      "pro",
+      "smartphone",
+      "technology",
+      "air",
+      "features",
+      "magic pro",
+      "pro air",
+      "17",
+      "best"
+    ]
+  }
+}

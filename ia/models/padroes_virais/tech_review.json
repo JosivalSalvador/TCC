@@ -1,0 +1,143 @@
+{
+  "nicho": "tech_review",
+  "n_videos": 25,
+  "n_super": 11,
+  "n_frio": 0,
+  "estrutura": {
+    "faixa_duracao_dominante": "short_longo",
+    "estrutura_blocos_dominante": "esquete_com_hook",
+    "ritmo_palavras_seg_mediana": 3.21,
+    "densidade_roteiro_mediana": 269,
+    "sentimento_dominante": "positivo",
+    "top3_slots_postagem": [
+      {
+        "dia": "tuesday",
+        "janela": "manha",
+        "qtd": 3
+      },
+      {
+        "dia": "friday",
+        "janela": "manha",
+        "qtd": 1
+      },
+      {
+        "dia": "friday",
+        "janela": "tarde",
+        "qtd": 1
+      }
+    ],
+    "ativar_repeticao_5x": true,
+    "tipo_audio_dominante": "sem_audio",
+    "clickbait_score_mediana": 0.433,
+    "faixa_duracao_evitar": null,
+    "sentimento_evitar": null
+  },
+  "textuais": {
+    "termos_gancho_usar": [
+      "been",
+      "care",
+      "ago",
+      "samsung",
+      "and",
+      "had",
+      "years",
+      "has launched",
+      "for",
+      "hey"
+    ],
+    "termos_vocabulario": [
+      "phone",
+      "also",
+      "friends",
+      "meaning",
+      "display",
+      "let",
+      "look",
+      "mah",
+      "phones",
+      "yes"
+    ],
+    "termos_seo_usar": [
+      "technology trakinshorts",
+      "mo",
+      "shorts technology",
+      "elite",
+      "samsung",
+      "new features",
+      "kharra",
+      "phones",
+      "tech master",
+      "v70"
+    ],
+    "ngramas_roteiro": [
+      "is",
+      "it",
+      "not",
+      "the",
+      "this",
+      "to",
+      "you",
+      "and",
+      "have",
+      "in"
+    ],
+    "arco_emocional": {
+      "inicio": "positivo",
+      "meio": "positivo",
+      "fim": "positivo"
+    },
+    "exemplos_ganchos": [
+      "rickshaw. rickshaw. hey man, not even a rickshaw is stopping. from us? actually from you.",
+      "friends, what can these chinese brands do? there is no trust in them. literally i",
+      "hey brother, i have gone crazy. literally tno has launched such a smartphone. modular is",
+      "surely he must be cheating on me. hold with bare hands. who is this? these",
+      "friends, i am going to show you a phone which according to me is a"
+    ],
+    "exemplos_titulos": [
+      "Badi battery wala Phone for Students 🤩 iQOO Z11x #shorts",
+      "Ye Hain Galaxy S27 Ultra 🔥🔥🔥 #TrakinShorts #Shorts",
+      "This is shaking everyone in India..🤯 #shorts",
+      "World’s First Privacy Display🤯 Galaxy S26 Ultra #shorts",
+      "The Perfect Smartphone Of 2026?⚡️ #TrakinShorts #Shorts"
+    ],
+    "termos_gancho_evitar": [],
+    "termos_roteiro_evitar": []
+  },
+  "thumbnail": {
+    "comprimento_alvo_chars": 36,
+    "termos_thumbnail_usar": [
+      "mah fan",
+      "mwc26",
+      "snapdragon elite",
+      "legend",
+      "elite",
+      "samsung",
+      "squid",
+      "back f1",
+      "secrets android",
+      "10000 mah"
+    ],
+    "termos_thumbnail_evitar": [],
+    "cenas_visuais_dominantes": [
+      "and",
+      "background",
+      "expression",
+      "featuring",
+      "holds"
+    ],
+    "exemplos_texto_thumbnail": [
+      "SQUID GAME",
+      "#MWC26 S27 ULTRA? K ADVANCED OUKITEL CE",
+      "HENGTONG, GYEONGSANGBUK, NIDA, TECNO",
+      "PERFECT SMARTPHONE?!",
+      "THE REAL ULTRA iQOO ULTRA POWERED MONSTER INSIDE"
+    ],
+    "exemplos_cena_visual": [
+      "A man wearing a 'Squid Game' t-shirt is gesturing and talking to another person in an outdoor setting with several people in the background.",
+      "A man with a shocked expression looks at a futuristic, ruggedly designed smartphone featuring multiple cameras and a metallic finish.",
+      "A man with a beard holds a smartphone with a unique modular attachment in a brightly lit tech exhibition space.",
+      "A woman in a purple saree appears to be talking expressively or complaining to a man who is looking at his smartphone.",
+      "A man with a surprised expression holds a smartphone with a pixelated pattern and a large orange camera module against a purple background."
+    ]
+  }
+}

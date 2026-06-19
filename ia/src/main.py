@@ -1,9 +1,25 @@
 from fastapi import FastAPI
 
-# É este carinha aqui que o terminal estava procurando!
-app = FastAPI()
+from src.api.rotas import router
+
+# ════════════════════════════════════════════════════════════════════════════
+# APLICAÇÃO
+# ════════════════════════════════════════════════════════════════════════════
+
+app = FastAPI(
+    title="YouTube Viral API",
+    description="Analisa padrões de vídeos virais por nicho e retorna contexto mastigado para geração de roteiros.",
+    version="1.0.0",
+)
+
+app.include_router(router, prefix="/api/v1")
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello from IA! Rodando no monorepo!"}
+# ════════════════════════════════════════════════════════════════════════════
+# HEALTH CHECK
+# ════════════════════════════════════════════════════════════════════════════
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}

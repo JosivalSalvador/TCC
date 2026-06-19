@@ -1,0 +1,174 @@
+{
+  "nicho": "satisfying",
+  "n_videos": 99,
+  "n_super": 8,
+  "n_frio": 66,
+  "estrutura": {
+    "faixa_duracao_dominante": "ultra_curto",
+    "estrutura_blocos_dominante": "impacto_rapido",
+    "ritmo_palavras_seg_mediana": 0.0,
+    "densidade_roteiro_mediana": 0,
+    "sentimento_dominante": "neutro",
+    "top3_slots_postagem": [
+      {
+        "dia": "monday",
+        "janela": "manha",
+        "qtd": 2
+      },
+      {
+        "dia": "friday",
+        "janela": "manha",
+        "qtd": 1
+      },
+      {
+        "dia": "monday",
+        "janela": "madrugada",
+        "qtd": 1
+      }
+    ],
+    "ativar_repeticao_5x": false,
+    "tipo_audio_dominante": "sem_audio",
+    "clickbait_score_mediana": 0.385,
+    "faixa_duracao_evitar": "ultra_curto",
+    "sentimento_evitar": "neutro"
+  },
+  "textuais": {
+    "termos_gancho_usar": [
+      "on her",
+      "my makeup",
+      "ruined all",
+      "freaking",
+      "gudiya",
+      "as soon",
+      "the girls",
+      "today gudiya",
+      "soon",
+      "on"
+    ],
+    "termos_vocabulario": [
+      "girl",
+      "also",
+      "also cute",
+      "better",
+      "better freaking",
+      "boy",
+      "boy better",
+      "breath",
+      "breath three",
+      "children"
+    ],
+    "termos_seo_usar": [
+      "faces",
+      "makeupkit",
+      "sand kinetic",
+      "joy",
+      "crunchy sounds",
+      "frozen icecream",
+      "crush sand",
+      "funny people",
+      "crushing sand",
+      "crushing cute"
+    ],
+    "ngramas_roteiro": [
+      "but",
+      "boy",
+      "comment",
+      "for",
+      "girl",
+      "if",
+      "if you",
+      "it",
+      "like",
+      "my"
+    ],
+    "arco_emocional": {
+      "inicio": "neutro",
+      "meio": "positivo",
+      "fim": "positivo"
+    },
+    "exemplos_ganchos": [
+      "this one's for the girls. if you're a boy, you better not freaking try this",
+      "today gudiya ruined all my makeup. as soon as i laid eyes on her, i",
+      "hungry-lapper ha, hungry-lapper he, hungry-lapper. i want to crave it but keep eating. i want"
+    ],
+    "exemplos_titulos": [
+      "butter ASMR *with different slime flavors inside*🧈 #asmr #satisfying #shorts #slime",
+      "Let's Setup My our generation spa day playset✨🌈 ASMR Satisfying Video #shorts",
+      "Cute Make up kit 💥🌈 satisfying unboxing AsMR make up kit #shorts #yshorts #makeup #makeupkit",
+      "Satisfying Unboxing Barbie Doll & Travel Playsets, ASMR Video #shorts",
+      "Oddly Satisfying Kinetic Sand Faces Crushing | Cute Shapes Hammer Smash ASMR #shorts"
+    ],
+    "termos_gancho_evitar": [
+      "be thin",
+      "be",
+      "go",
+      "is not",
+      "do",
+      "heapper",
+      "ever done",
+      "dinner anything",
+      "me",
+      "don"
+    ],
+    "termos_roteiro_evitar": [
+      "be thin",
+      "be",
+      "go",
+      "the tree",
+      "is not",
+      "to snack",
+      "do",
+      "that was",
+      "me",
+      "the most"
+    ]
+  },
+  "thumbnail": {
+    "comprimento_alvo_chars": 22,
+    "termos_thumbnail_usar": [
+      "use",
+      "love",
+      "love 4x4",
+      "salted",
+      "korea",
+      "219 love",
+      "chocolate",
+      "marshmallow cherry",
+      "set",
+      "symphony"
+    ],
+    "termos_thumbnail_evitar": [
+      "infrastructure highlighting",
+      "dove",
+      "extracted from",
+      "and",
+      "made in",
+      "end subscribe",
+      "for",
+      "extracted",
+      "dumpling unboxing",
+      "concrete"
+    ],
+    "cenas_visuais_dominantes": [
+      "and",
+      "arranged",
+      "arranged on",
+      "barbie",
+      "hand"
+    ],
+    "exemplos_texto_thumbnail": [
+      "*butter asmr* chocolate marshmallow cherry SALTED BUTTER salted butter mango",
+      "SYMPHONY SET, DESIGNED BY KOREA, makeup set 3rd generation",
+      "Barbie, 219, love, 4x4",
+      "DISCARD AFTER USE MPV",
+      "PETRUS"
+    ],
+    "exemplos_cena_visual": [
+      "A wooden board displays several rectangular blocks of different food items, including chocolate, marshmallow, cherry, butter, and mango, arranged for an ASMR video.",
+      "A close-up view of a miniature toy nail salon set with tiny nail polish bottles and tools arranged on a small table.",
+      "A smiling woman holds up a colorful children's makeup kit featuring unicorn illustrations and various cosmetic shades.",
+      "A Ken and Barbie doll are sitting in a bright pink toy 4x4 vehicle in front of a Barbie dollhouse.",
+      "A collection of kinetic sand molds in various shapes, each decorated with cartoon faces, arranged on a white surface."
+    ]
+  }
+}
