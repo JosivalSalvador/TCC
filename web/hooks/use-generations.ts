@@ -6,6 +6,7 @@ import {
   getGenerationByIdAction,
   createGenerationAction,
   updateFavoriteAction,
+  getGenerationStatsAction,
 } from "../actions/generations.actions";
 import {
   CreateGenerationInput,
@@ -81,4 +82,11 @@ export function useGenerationsMutations() {
     createGeneration,
     updateFavorite,
   };
+}
+
+export function useGenerationStats() {
+  return useQuery({
+    queryKey: ["generations", "stats"],
+    queryFn: () => getGenerationStatsAction(),
+  });
 }

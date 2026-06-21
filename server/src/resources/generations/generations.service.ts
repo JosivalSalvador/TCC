@@ -131,3 +131,36 @@ export async function updateFavorite(userId: string, id: string, input: Favorite
 
   return { generation: updated }
 }
+
+/**
+ * ESTATÍSTICAS DE GERAÇÕES POR NICHO (Admin)
+ *
+ * Agrupa as gerações por nicho e resolve o nome de cada um,
+ * pra alimentar o painel de uso (quais nichos geram mais conteúdo).
+ */
+export async function getGenerationStats() {
+  const totalGenerations = await prisma.generation.count()
+
+  const grouped = await prisma.generation.groupBy({
+    by: ['nicheId'],
+    _count: { _all: true },
+    orderBy: { _count: { nicheId: 'desc' } },
+  })
+
+  const nicheIds = grouped.map((entry) => entry.nicheId)
+
+  const niches = await prisma.niche.findMany({
+    where: { id: { in: nicheIds } },
+    select: { id: true, name: true },
+  })
+
+  const nicheNameById = new Map(niches.map((niche) => [niche.id, niche.name]))
+
+  const byNiche = grouped.map((entry) => ({
+    nicheId: entry.nicheId,
+    nicheName: nicheNameById.get(entry.nicheId) ?? 'Unknown',
+    count: entry._count._all,
+  }))
+
+  return { totalGenerations, byNiche }
+}

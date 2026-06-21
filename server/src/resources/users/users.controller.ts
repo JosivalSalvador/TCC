@@ -102,3 +102,12 @@ export async function adminDelete(request: FastifyRequest, reply: FastifyReply) 
 
   return reply.status(StatusCodes.NO_CONTENT).send()
 }
+
+/**
+ * ESTATÍSTICAS DE USUÁRIOS (Admin)
+ */
+export async function stats(request: FastifyRequest, reply: FastifyReply) {
+  const { total, byRole } = await usersService.getUserStats()
+
+  return reply.status(StatusCodes.OK).send({ total, byRole })
+}

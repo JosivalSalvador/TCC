@@ -85,3 +85,12 @@ export async function updateFavoriteAction(
     };
   }
 }
+
+export async function getGenerationStatsAction() {
+  try {
+    return await generationsService.getStats();
+  } catch (error: unknown) {
+    const httpError = error as HttpError;
+    throw new Error(httpError.message || "Falha ao buscar as estatísticas.");
+  }
+}

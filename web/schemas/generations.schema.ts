@@ -40,3 +40,14 @@ export const generationResponseSchema = z.object({
   isFavorite: z.boolean(),
   createdAt: z.coerce.date().optional(),
 });
+
+export const generationStatsResponseSchema = z.object({
+  totalGenerations: z.number(),
+  byNiche: z.array(
+    z.object({
+      nicheId: z.uuid(),
+      nicheName: z.string(),
+      count: z.number(),
+    }),
+  ),
+});

@@ -4,11 +4,13 @@ import { z } from 'zod'
 import { StatusCodes } from 'http-status-codes'
 import * as generationsController from './generations.controller.js'
 import { verifyJwt } from '../../middlewares/verify-jwt.js'
+import { verifyUserRole } from '../../middlewares/verify-user-role.js'
 import {
   createGenerationSchema,
   listGenerationsQuerySchema,
   favoriteUpdateSchema,
   generationResponseSchema,
+  generationStatsResponseSchema,
 } from './generations.schema.js'
 
 export async function generationsRoutes(app: FastifyInstance) {
@@ -67,6 +69,28 @@ export async function generationsRoutes(app: FastifyInstance) {
       },
     },
     generationsController.list,
+  )
+
+  /**
+   * ROTA: Estatísticas de gerações por nicho
+   * GET /generations/stats
+   *
+   * Exclusiva Admin — precisa vir ANTES de /generations/:id,
+   * senão o Fastify tenta casar "stats" como :id (UUID) e quebra a validação.
+   */
+  router.get(
+    '/generations/stats',
+    {
+      onRequest: [verifyJwt, verifyUserRole('ADMIN')],
+      schema: {
+        tags: ['admin'],
+        summary: 'Get generation statistics by niche (Admin only)',
+        response: {
+          [StatusCodes.OK]: generationStatsResponseSchema,
+        },
+      },
+    },
+    generationsController.stats,
   )
 
   /**

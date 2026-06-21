@@ -3,6 +3,7 @@ import {
   CreateGenerationInput,
   FavoriteUpdateInput,
   GenerationResponse,
+  GenerationStats,
   ListGenerationsQuery,
 } from "../types/index";
 
@@ -58,5 +59,14 @@ export const generationsService = {
         body: JSON.stringify(data),
       },
     );
+  },
+
+  /**
+   * Busca as estatísticas de gerações por nicho (Admin)
+   */
+  getStats: async () => {
+    return httpClient<GenerationStats>("/generations/stats", {
+      method: "GET",
+    });
   },
 };

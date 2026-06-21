@@ -4,7 +4,8 @@ import { z } from 'zod'
 import { StatusCodes } from 'http-status-codes'
 import * as nichesController from './niches.controller.js'
 import { verifyJwt } from '../../middlewares/verify-jwt.js'
-import { nicheInputSchema, nicheResponseSchema, removeNicheSchema } from './niches.schema.js'
+import { verifyUserRole } from '../../middlewares/verify-user-role.js'
+import { nicheInputSchema, nicheResponseSchema, removeNicheSchema, nicheStatsResponseSchema } from './niches.schema.js'
 
 export async function nichesRoutes(app: FastifyInstance) {
   const router = app.withTypeProvider<ZodTypeProvider>()
@@ -109,5 +110,28 @@ export async function nichesRoutes(app: FastifyInstance) {
       },
     },
     nichesController.removeNiche,
+  )
+
+  /**
+   * ROTA: Estatísticas do pool de nichos
+   * GET /niches/stats
+   *
+   * Exclusiva Admin — total atual do pool global + crescimento mensal
+   * (nichos criados por mês), para acompanhar se o pool está se
+   * expandindo rápido demais.
+   */
+  router.get(
+    '/niches/stats',
+    {
+      onRequest: [verifyJwt, verifyUserRole('ADMIN')],
+      schema: {
+        tags: ['admin'],
+        summary: 'Get niche pool statistics (Admin only)',
+        response: {
+          [StatusCodes.OK]: nicheStatsResponseSchema,
+        },
+      },
+    },
+    nichesController.stats,
   )
 }

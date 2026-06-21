@@ -4,7 +4,8 @@ import { z } from 'zod'
 import { StatusCodes } from 'http-status-codes'
 import * as feedbacksController from './feedbacks.controller.js'
 import { verifyJwt } from '../../middlewares/verify-jwt.js'
-import { feedbackInputSchema, feedbackResponseSchema } from './feedbacks.schema.js'
+import { verifyUserRole } from '../../middlewares/verify-user-role.js'
+import { feedbackInputSchema, feedbackResponseSchema, feedbackStatsResponseSchema } from './feedbacks.schema.js'
 
 export async function feedbacksRoutes(app: FastifyInstance) {
   const router = app.withTypeProvider<ZodTypeProvider>()
@@ -12,9 +13,6 @@ export async function feedbacksRoutes(app: FastifyInstance) {
   /**
    * ROTA: Enviar feedback de uma geração
    * POST /generations/:id/feedback
-   *
-   * Aninhada em generations porque feedback não existe sem uma geração.
-   * Upsert: se o usuário já avaliou esse type antes, atualiza em vez de duplicar.
    */
   router.post(
     '/generations/:id/feedback',
@@ -37,5 +35,28 @@ export async function feedbacksRoutes(app: FastifyInstance) {
       },
     },
     feedbacksController.create,
+  )
+
+  /**
+   * ROTA: Estatísticas de feedbacks
+   * GET /feedbacks/stats
+   */
+  router.get(
+    '/feedbacks/stats',
+    {
+      onRequest: [verifyJwt, verifyUserRole('ADMIN')],
+      schema: {
+        tags: ['admin'],
+        summary: 'Get feedback statistics (Admin only)',
+        response: {
+          [StatusCodes.OK]: z.object({
+            total: z.number(),
+            byType: feedbackStatsResponseSchema.shape.byType,
+            byNiche: feedbackStatsResponseSchema.shape.byNiche,
+          }),
+        },
+      },
+    },
+    feedbacksController.stats,
   )
 }

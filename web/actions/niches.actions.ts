@@ -2,7 +2,12 @@
 
 import { nichesService } from "../services/niches.service";
 import { revalidatePath } from "next/cache";
-import { NicheInput, NicheResponse, HttpError } from "../types/index";
+import {
+  NicheInput,
+  NicheResponse,
+  NicheStats,
+  HttpError,
+} from "../types/index";
 
 type ActionResponse<T = void> =
   | { success: true; data?: T; message?: string }
@@ -68,6 +73,33 @@ export async function removeNicheAction(id: string): Promise<ActionResponse> {
     return {
       success: false,
       error: httpError.message || "Erro ao remover nicho.",
+    };
+  }
+}
+
+// ==========================================
+// 🛡️ ACTIONS DE ADMIN
+// ==========================================
+
+/**
+ * Busca o total do pool global + crescimento mensal de nichos
+ * Exclusivo para Admin
+ */
+export async function getNicheStatsAction(): Promise<
+  ActionResponse<NicheStats>
+> {
+  try {
+    const response = await nichesService.getStats();
+
+    return {
+      success: true,
+      data: response,
+    };
+  } catch (error: unknown) {
+    const httpError = error as HttpError;
+    return {
+      success: false,
+      error: httpError.message || "Erro ao buscar estatísticas de nichos.",
     };
   }
 }

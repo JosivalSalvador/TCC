@@ -44,3 +44,20 @@ export const generationResponseSchema = z.object({
   isFavorite: z.boolean(),
   createdAt: z.coerce.date().optional(),
 })
+
+// ==========================================
+// Schema de Resposta (Estatísticas — Admin)
+// Quantidade de gerações por nicho, com o nome já resolvido
+// (evita o front ter que cruzar com a lista de nichos pra exibir).
+// ==========================================
+
+export const generationStatsResponseSchema = z.object({
+  totalGenerations: z.number(),
+  byNiche: z.array(
+    z.object({
+      nicheId: z.uuid(),
+      nicheName: z.string(),
+      count: z.number(),
+    }),
+  ),
+})

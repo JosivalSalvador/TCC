@@ -54,3 +54,13 @@ export async function removeNiche(request: FastifyRequest, reply: FastifyReply) 
 
   return reply.status(StatusCodes.NO_CONTENT).send()
 }
+
+/**
+ * ESTATÍSTICAS DO POOL DE NICHOS (Admin)
+ * Retorna o total atual + crescimento mensal do pool global de nichos.
+ */
+export async function stats(request: FastifyRequest, reply: FastifyReply) {
+  const { total, monthlyGrowth } = await nichesService.getNicheStats()
+
+  return reply.status(StatusCodes.OK).send({ total, monthlyGrowth })
+}

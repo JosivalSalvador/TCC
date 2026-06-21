@@ -239,3 +239,28 @@ export async function updateUserRole(userId: string, data: UpdateRoleInput) {
 
   return { user: updatedUser }
 }
+
+/**
+ * ESTATÍSTICAS DE USUÁRIOS (Admin)
+ *
+ * Retorna o total de contas ativas + contagem por cargo,
+ * para acompanhar a distribuição de roles no sistema.
+ */
+export async function getUserStats() {
+  const total = await prisma.user.count({
+    where: { deletedAt: null },
+  })
+
+  const grouped = await prisma.user.groupBy({
+    by: ['role'],
+    where: { deletedAt: null },
+    _count: { _all: true },
+  })
+
+  const byRole = grouped.map((entry) => ({
+    role: entry.role,
+    count: entry._count._all,
+  }))
+
+  return { total, byRole }
+}

@@ -92,3 +92,19 @@ export const userResponseSchema = z.object({
   role: z.string(),
   createdAt: z.coerce.date().optional(),
 })
+
+// ==========================================
+// Schema de Resposta (Estatísticas — Admin)
+// total = usuários ativos (deletedAt: null)
+// byRole = contagem por cargo
+// ==========================================
+
+export const userStatsResponseSchema = z.object({
+  total: z.number(),
+  byRole: z.array(
+    z.object({
+      role: z.enum([Role.ADMIN, Role.SUPPORTER, Role.USER]),
+      count: z.number(),
+    }),
+  ),
+})

@@ -167,3 +167,30 @@ export async function removeNicheFromUser(userId: string, input: RemoveNicheInpu
     },
   })
 }
+
+/**
+ * ESTATÍSTICAS DO POOL DE NICHOS (Admin)
+ *
+ * Retorna o total atual do pool global + o crescimento mensal
+ * (quantos nichos foram criados em cada mês), para visualizar
+ * se o pool está se expandindo rápido demais.
+ */
+export async function getNicheStats() {
+  const total = await prisma.niche.count()
+
+  const monthlyGrowthRaw = await prisma.$queryRaw<{ month: string; count: bigint }[]>`
+    SELECT
+      to_char(date_trunc('month', "created_at"), 'YYYY-MM') AS month,
+      COUNT(*) AS count
+    FROM "niches"
+    GROUP BY date_trunc('month', "created_at")
+    ORDER BY date_trunc('month', "created_at") ASC
+  `
+
+  const monthlyGrowth = monthlyGrowthRaw.map((row) => ({
+    month: row.month,
+    count: Number(row.count),
+  }))
+
+  return { total, monthlyGrowth }
+}

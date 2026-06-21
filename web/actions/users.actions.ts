@@ -143,3 +143,12 @@ export async function adminDeleteUserAction(
     };
   }
 }
+
+export async function getUserStatsAction() {
+  try {
+    return await usersService.getStats();
+  } catch (error: unknown) {
+    const httpError = error as HttpError;
+    throw new Error(httpError.message || "Falha ao buscar estatísticas.");
+  }
+}

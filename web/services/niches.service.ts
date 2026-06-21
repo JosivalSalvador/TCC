@@ -1,5 +1,5 @@
 import { httpClient } from "../lib/api/http-client";
-import { NicheInput, NicheResponse } from "../types/index";
+import { NicheInput, NicheResponse, NicheStats } from "../types/index";
 
 export const nichesService = {
   /**
@@ -37,6 +37,16 @@ export const nichesService = {
   removeNiche: async (id: string) => {
     return httpClient<void>(`/niches/me/${id}`, {
       method: "DELETE",
+    });
+  },
+
+  /**
+   * Retorna o total do pool global + crescimento mensal de nichos
+   * Exclusivo para Admin
+   */
+  getStats: async () => {
+    return httpClient<NicheStats>("/niches/stats", {
+      method: "GET",
     });
   },
 };

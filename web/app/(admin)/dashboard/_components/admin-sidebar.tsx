@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Layers, LayoutDashboard, Users, FolderOpen } from "lucide-react";
+import {
+  Layers,
+  LayoutDashboard,
+  Users,
+  FolderOpen,
+  Sparkles,
+  MessageSquare,
+} from "lucide-react";
 import { AdminNavItem } from "./admin-nav-item";
 
 const navItems = [
@@ -20,6 +27,16 @@ const navItems = [
     href: "/dashboard/niches",
     label: "Nichos",
     icon: FolderOpen,
+  },
+  {
+    href: "/dashboard/generations",
+    label: "Gerações",
+    icon: Sparkles,
+  },
+  {
+    href: "/dashboard/feedbacks",
+    label: "Feedbacks",
+    icon: MessageSquare,
   },
 ];
 

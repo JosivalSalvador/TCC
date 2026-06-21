@@ -66,7 +66,13 @@ export function GenerationResult({ generation }: GenerationResultProps) {
                   {key}
                 </span>
                 <span className="text-foreground text-sm leading-relaxed">
-                  {String(value)}
+                  {Array.isArray(value)
+                    ? value.join(", ")
+                    : typeof value === "object" && value !== null
+                      ? Object.entries(value)
+                          .map(([k, v]) => `${k}: ${v}`)
+                          .join(" | ")
+                      : String(value)}
                 </span>
               </div>
             ))}

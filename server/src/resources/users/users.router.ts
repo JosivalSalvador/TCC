@@ -5,13 +5,13 @@ import { StatusCodes } from 'http-status-codes'
 import * as usersController from './users.controller.js'
 import { verifyJwt } from '../../middlewares/verify-jwt.js'
 import { verifyUserRole } from '../../middlewares/verify-user-role.js'
-// Importando TUDO do seu arquivo de schemas
 import {
   registerUserSchema,
   updateUserSchema,
   updatePasswordSchema,
   updateRoleSchema,
   userResponseSchema,
+  userStatsResponseSchema,
 } from './users.schema.js'
 
 export async function usersRoutes(app: FastifyInstance) {
@@ -74,7 +74,7 @@ export async function usersRoutes(app: FastifyInstance) {
       schema: {
         tags: ['users'],
         summary: 'Update profile info',
-        body: updateUserSchema, // Schema importado
+        body: updateUserSchema,
         response: {
           [StatusCodes.OK]: z.object({
             message: z.string(),
@@ -97,7 +97,7 @@ export async function usersRoutes(app: FastifyInstance) {
       schema: {
         tags: ['users'],
         summary: 'Change account password',
-        body: updatePasswordSchema, // Schema importado
+        body: updatePasswordSchema,
         response: {
           [StatusCodes.OK]: z.object({
             message: z.string(),
@@ -112,7 +112,7 @@ export async function usersRoutes(app: FastifyInstance) {
   )
 
   /**
-   * ROTA: Deletar própria conta (Usuário Logado)
+   * ROTA: Deletar própria conta
    * DELETE /users/me
    */
   router.delete(
@@ -128,6 +128,27 @@ export async function usersRoutes(app: FastifyInstance) {
       },
     },
     usersController.deleteAccount,
+  )
+
+  /**
+   * ROTA: Estatísticas de usuários
+   * GET /users/stats
+   *
+   * Vem ANTES de /users para evitar conflito de rota com parâmetros dinâmicos.
+   */
+  router.get(
+    '/users/stats',
+    {
+      onRequest: [verifyJwt, verifyUserRole('ADMIN')],
+      schema: {
+        tags: ['admin'],
+        summary: 'Get user statistics (Admin only)',
+        response: {
+          [StatusCodes.OK]: userStatsResponseSchema,
+        },
+      },
+    },
+    usersController.stats,
   )
 
   /**
@@ -163,11 +184,11 @@ export async function usersRoutes(app: FastifyInstance) {
         tags: ['admin'],
         summary: 'Change user role (Admin only)',
         params: z.object({ id: z.uuid() }),
-        body: updateRoleSchema, // Schema importado
+        body: updateRoleSchema,
         response: {
           [StatusCodes.OK]: z.object({
             message: z.string(),
-            user: userResponseSchema, // Reaproveitando o schema de resposta
+            user: userResponseSchema,
           }),
         },
       },

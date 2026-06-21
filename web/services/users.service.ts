@@ -6,8 +6,7 @@ import {
   UpdatePasswordInput,
   UpdateRoleInput,
   UserResponse,
-  // Certifique-se de que exportou o infer do userResponseSchema no seu types/users.types.ts
-  // export type UserResponse = z.infer<typeof userResponseSchema>;
+  UserStats,
 } from "../types/index";
 
 export const usersService = {
@@ -85,6 +84,15 @@ export const usersService = {
   adminDelete: async (id: string) => {
     return httpClient<void>(`/users/${id}`, {
       method: "DELETE",
+    });
+  },
+
+  /**
+   * Busca estatísticas de usuários
+   */
+  getStats: async () => {
+    return httpClient<UserStats>("/users/stats", {
+      method: "GET",
     });
   },
 };

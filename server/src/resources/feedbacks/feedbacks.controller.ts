@@ -18,3 +18,12 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     feedback,
   })
 }
+
+/**
+ * ESTATÍSTICAS DE FEEDBACKS (Admin)
+ */
+export async function stats(request: FastifyRequest, reply: FastifyReply) {
+  const { total, byType, byNiche } = await feedbacksService.getFeedbackStats()
+
+  return reply.status(StatusCodes.OK).send({ total, byType, byNiche })
+}

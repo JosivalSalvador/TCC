@@ -43,3 +43,9 @@ def analisar_nicho(request: NichoRequest) -> NichoResponse:
         structure_content=conteudo["structure_content"],
         script_content=conteudo["script_content"],
     )
+
+
+@router.post("/debug-ml")
+def debug_ml(request: NichoRequest):
+    resultado = inferir(request.nicho)
+    return resultado

@@ -1,7 +1,12 @@
 "use server";
 
 import { feedbacksService } from "../services/feedbacks.service";
-import { FeedbackInput, FeedbackResponse, HttpError } from "../types/index";
+import {
+  FeedbackInput,
+  FeedbackResponse,
+  FeedbackStats,
+  HttpError,
+} from "../types/index";
 
 type ActionResponse<T = void> =
   | { success: true; data?: T; message?: string }
@@ -24,6 +29,23 @@ export async function upsertFeedbackAction(
     return {
       success: false,
       error: httpError.message || "Erro ao enviar feedback.",
+    };
+  }
+}
+
+export async function getStatsAction(): Promise<ActionResponse<FeedbackStats>> {
+  try {
+    const data = await feedbacksService.getStats();
+
+    return {
+      success: true,
+      data,
+    };
+  } catch (error: unknown) {
+    const httpError = error as HttpError;
+    return {
+      success: false,
+      error: httpError.message || "Erro ao buscar estatísticas.",
     };
   }
 }

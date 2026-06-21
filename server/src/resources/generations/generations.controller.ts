@@ -55,3 +55,12 @@ export async function updateFavorite(request: FastifyRequest, reply: FastifyRepl
     generation,
   })
 }
+
+/**
+ * ESTATÍSTICAS DE GERAÇÕES POR NICHO (Admin)
+ */
+export async function stats(request: FastifyRequest, reply: FastifyReply) {
+  const { totalGenerations, byNiche } = await generationsService.getGenerationStats()
+
+  return reply.status(StatusCodes.OK).send({ totalGenerations, byNiche })
+}

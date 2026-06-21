@@ -37,3 +37,13 @@ export const nicheResponseSchema = z.object({
   name: z.string(),
   createdAt: z.coerce.date().optional(),
 });
+
+export const nicheStatsResponseSchema = z.object({
+  total: z.number(),
+  monthlyGrowth: z.array(
+    z.object({
+      month: z.string(),
+      count: z.number(),
+    }),
+  ),
+});

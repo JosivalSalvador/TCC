@@ -6,6 +6,7 @@ import {
   getMyNichesAction,
   addNicheAction,
   removeNicheAction,
+  getNicheStatsAction,
 } from "../actions/niches.actions";
 import { NicheInput } from "../types/index";
 import { toast } from "sonner";
@@ -66,4 +67,11 @@ export function useNichesMutations() {
     addNiche,
     removeNiche,
   };
+}
+
+export function useNicheStats() {
+  return useQuery({
+    queryKey: ["niches", "stats"],
+    queryFn: () => getNicheStatsAction(),
+  });
 }

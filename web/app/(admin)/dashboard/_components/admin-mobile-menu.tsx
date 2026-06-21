@@ -3,15 +3,24 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Layers } from "lucide-react";
+import {
+  Menu,
+  Layers,
+  LayoutDashboard,
+  Users,
+  FolderOpen,
+  Sparkles,
+  MessageSquare,
+} from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { AdminNavItem } from "./admin-nav-item";
-import { LayoutDashboard, Users, FolderOpen } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Visão geral", icon: LayoutDashboard },
   { href: "/dashboard/users", label: "Usuários", icon: Users },
   { href: "/dashboard/niches", label: "Nichos", icon: FolderOpen },
+  { href: "/dashboard/generations", label: "Gerações", icon: Sparkles },
+  { href: "/dashboard/feedbacks", label: "Feedbacks", icon: MessageSquare },
 ];
 
 export function AdminMobileMenu() {
