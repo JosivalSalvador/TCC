@@ -8,6 +8,7 @@ dependencies = [
     "deep-translator>=1.11.4",
     "emoji>=2.15.0",
     "fastapi[standard]>=0.135.1",
+    "google-genai>=2.9.0",
     "langdetect>=1.0.9",
     "matplotlib>=3.10.8",
     "nltk>=3.9.4",

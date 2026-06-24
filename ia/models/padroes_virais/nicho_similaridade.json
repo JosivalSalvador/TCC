@@ -8,34 +8,34 @@
   ],
   "similaridade": {
     "esquetes": {
-      "historias_denso": 0.0817,
-      "satisfying": 0.0878,
-      "street_interview": 0.0872,
+      "historias_denso": 0.082,
+      "satisfying": 0.0881,
+      "street_interview": 0.0859,
       "tech_review": 0.0166
     },
     "historias_denso": {
-      "esquetes": 0.0817,
+      "esquetes": 0.082,
       "satisfying": 0.1338,
-      "street_interview": 0.0803,
-      "tech_review": 0.0256
+      "street_interview": 0.0789,
+      "tech_review": 0.0255
     },
     "satisfying": {
-      "esquetes": 0.0878,
+      "esquetes": 0.0881,
       "historias_denso": 0.1338,
-      "street_interview": 0.0811,
-      "tech_review": 0.0352
+      "street_interview": 0.0797,
+      "tech_review": 0.0351
     },
     "street_interview": {
-      "esquetes": 0.0872,
-      "historias_denso": 0.0803,
-      "satisfying": 0.0811,
-      "tech_review": 0.0119
+      "esquetes": 0.0859,
+      "historias_denso": 0.0789,
+      "satisfying": 0.0797,
+      "tech_review": 0.0109
     },
     "tech_review": {
       "esquetes": 0.0166,
-      "historias_denso": 0.0256,
-      "satisfying": 0.0352,
-      "street_interview": 0.0119
+      "historias_denso": 0.0255,
+      "satisfying": 0.0351,
+      "street_interview": 0.0109
     }
   },
   "top_termos": {
@@ -56,10 +56,10 @@
       "jokes",
       "vlogs",
       "imdat",
+      "olida imdat",
       "tik",
       "tik tok",
-      "film funny",
-      "film"
+      "film funny"
     ],
     "historias_denso": [
       "reddit",
@@ -98,12 +98,12 @@
       "people blogs",
       "funny",
       "viral",
+      "cute",
       "science",
       "science technology",
       "technology",
       "technology shorts",
-      "videos",
-      "with"
+      "videos"
     ],
     "street_interview": [
       "recipe",
@@ -113,6 +113,7 @@
       "food",
       "street",
       "street food",
+      "puri recipe",
       "shorts",
       "film",
       "fyp",
@@ -124,8 +125,7 @@
       "comedy",
       "entertainment film",
       "fun",
-      "fun funny",
-      "hindi"
+      "fun funny"
     ],
     "tech_review": [
       "honor",

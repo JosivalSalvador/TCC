@@ -6,9 +6,10 @@
   "estrutura": {
     "faixa_duracao_dominante": "short_longo",
     "estrutura_blocos_dominante": "esquete",
-    "ritmo_palavras_seg_mediana": 2.99,
+    "ritmo_palavras_seg_mediana": 2.986,
     "densidade_roteiro_mediana": 295,
     "sentimento_dominante": "negativo",
+    "hora_postagem_mediana": 11.0,
     "top3_slots_postagem": [
       {
         "dia": "friday",
@@ -29,62 +30,151 @@
     "ativar_repeticao_5x": false,
     "tipo_audio_dominante": "sem_audio",
     "clickbait_score_mediana": 0.431,
+    "velocidade_views_mediana": 11.045,
+    "taxa_conversao_mediana": 3.824,
+    "taxa_discussao_mediana": 0.051,
+    "completude_seo_mediana": 9.0,
     "faixa_duracao_evitar": "ultra_curto",
     "sentimento_evitar": "positivo"
   },
   "textuais": {
     "termos_gancho_usar": [
-      "uh",
-      "are",
-      "been",
-      "price heroin",
       "pigs",
-      "street cricket",
-      "ve been",
-      "the highway",
-      "good shireen",
-      "hi how"
+      "लल 12",
+      "लगपप यक",
+      "लगपप",
+      "यक",
+      "अलहमद लल",
+      "अलहमद",
+      "shireen",
+      "shireen doing",
+      "लल"
     ],
     "termos_vocabulario": [
       "like",
-      "also",
-      "also like",
-      "anyone",
-      "anyone enough",
-      "anything",
-      "anything expect",
-      "arrest",
-      "arrest next",
-      "cocaine"
+      "okay",
+      "mizoram impress",
+      "mizoram",
+      "man",
+      "man sugar",
+      "like mizoram",
+      "impress expect",
+      "impress",
+      "expect good"
     ],
     "termos_seo_usar": [
-      "kabitas kitchen",
-      "foryoupage",
-      "fyp",
-      "panipuri panipuri",
-      "ipl",
-      "crunchy golgappa",
-      "for",
-      "bindaast20creators comedy",
-      "bindaast20creators",
-      "kitchen"
+      "film",
+      "recipe",
+      "pani",
+      "puri",
+      "mizoram",
+      "entertainment fyp",
+      "interview lifestyle",
+      "mizoram shorts",
+      "fyp interview",
+      "viral"
     ],
     "ngramas_roteiro": [
-      "and",
-      "be",
-      "but",
-      "he",
-      "is",
-      "it",
       "like",
-      "look",
-      "my",
-      "no"
+      "ve",
+      "don",
+      "mizoram",
+      "crack cocaine",
+      "yes",
+      "और",
+      "got",
+      "okay",
+      "चटन"
+    ],
+    "termos_descricao_usar": [
+      "starsports",
+      "lahore",
+      "gol",
+      "watch tata",
+      "time got",
+      "time",
+      "10 captains",
+      "bcci making",
+      "28th",
+      "bcci"
+    ],
+    "termos_gancho_evitar": [
+      "like",
+      "tall",
+      "date",
+      "guy date",
+      "guy",
+      "does",
+      "does guy",
+      "tall does",
+      "sir like",
+      "think"
+    ],
+    "termos_roteiro_evitar": [
+      "indian",
+      "delhi",
+      "god",
+      "god bless",
+      "bless",
+      "good",
+      "date",
+      "marty",
+      "marty gro",
+      "gro"
+    ],
+    "emojis_usar": [
+      "😱",
+      "🤔",
+      "😍"
+    ],
+    "emojis_evitar": [
+      "😳",
+      "🇮🇳",
+      "💍"
     ],
     "arco_emocional": {
       "inicio": "positivo",
       "meio": "positivo",
       "fim": "positivo"
+    },
+    "vocabulario_por_terco": {
+      "inicio": [
+        "ve",
+        "hi",
+        "good",
+        "embarrassing things",
+        "embarrassing",
+        "doing",
+        "doing great",
+        "got"
+      ],
+      "meio": [
+        "impress",
+        "sugar",
+        "cricket",
+        "cocaine",
+        "crack cocaine",
+        "crack",
+        "like",
+        "ll"
+      ],
+      "fim": [
+        "like",
+        "okay",
+        "mizoram",
+        "yes",
+        "और",
+        "चटन",
+        "sorry",
+        "free"
+      ]
+    },
+    "comprimento_medio_gancho": 15.0,
+    "comprimento_medio_frase": 37.7,
+    "padrao_abertura_dominante": "afirmacao",
+    "densidade_pontuacao": {
+      "super_viral": 0.0,
+      "frio": 0.0
     },
     "exemplos_ganchos": [
       "guys, it's a scene today. we were playing street cricket outside on the highway and",
@@ -98,63 +188,48 @@
       "Beautiful Girl from Mizoram 😍 #shortsfeed #interview #viral #fyp #shorts #mizoram",
       "He couldn't control his speech.|I Swear (2025)#cinema #movie #shorts"
     ],
-    "termos_gancho_evitar": [
-      "don",
-      "him",
-      "tall",
-      "bhature of",
-      "but don",
-      "for",
-      "re with",
-      "of delhi",
-      "that",
-      "we re"
+    "exemplos_descricoes": [
+      "For the first time we got to meet all 10 Captains. Thank you @starsports and BCCI for making this possible. Watch Tata IPL from 28th March only on @JioHotstar ​⁠& @starsports",
+      "An elderly uncle is serving very unique gol gappay / pani puri in the food street of Lahore. The most special thing about this is that more than twenty four sauces are used here like mango sauce, sweet sauce, green chilli sauce, cilantro sauce, honey sauce, alo bukhara and pomegranate sauce. The taste of every Gol Gappa is completely different from the others. Gol gappay is filled with boiled aloo, pakoriyan and fresh salad and different sauces and yogurt are added, which makes every bite taste completely new and amazing.\n\ngol gappa Lahore, pani puri Lahore, Lahore street food, gol gappa street food Pakistan, pani puri Pakistan, Lahore food street gol gappa, best gol gappa Lahore, unique gol gappa Lahore, sauce gol gappa, spicy pani puri Pakistan, Pakistani street food, Lahore food vlog, lahori street food, Lahore food review, Pakistan street food vlog, viral street food Lahore, lahori pani puri, desi street food Pakistan\n\n#foryou #fyp #foryoupage #viral #trending"
     ],
-    "termos_roteiro_evitar": [
-      "bless",
-      "don",
-      "marty",
-      "tall",
-      "about",
-      "for",
-      "will ask",
-      "excuse me",
-      "what do",
-      "we re"
+    "exemplos_thumbnails": [
+      "ACCIDENTAL MEET WITH HARDIK PANDYA, @don't call me a kid, Malaysia Airlines, Lauritz Knudsen, Mumbai Indians, Oaksmith",
+      "CS SHIRIN, VISITOR, SHARDA UNIVERSITY",
+      "Get your hands out of your jumper!"
     ]
   },
   "thumbnail": {
     "comprimento_alvo_chars": 37,
     "termos_thumbnail_usar": [
+      "jumper",
+      "hands jumper",
       "hands",
+      "visitor sharda",
+      "shirin visitor",
+      "shirin",
+      "university",
       "sharda",
-      "accidental",
-      "me",
-      "call me",
-      "don",
-      "out",
-      "sharda university",
-      "lauritz",
-      "your jumper"
+      "visitor",
+      "cs shirin"
     ],
     "termos_thumbnail_evitar": [
-      "this",
-      "release from",
-      "embarrassing no",
-      "but feel",
-      "jail",
-      "on bourbon",
-      "on",
-      "wlbt3",
-      "hours after",
-      "one"
+      "subscribed",
+      "subscribed salim",
+      "salim",
+      "like",
+      "like subscribed",
+      "feel like",
+      "feel",
+      "street",
+      "sus shia",
+      "seen"
     ],
     "cenas_visuais_dominantes": [
-      "all",
-      "all dressed",
-      "an",
-      "an excited",
-      "and"
+      "man",
+      "street",
+      "young",
+      "outdoors",
+      "blonde woman"
     ],
     "exemplos_texto_thumbnail": [
       "ACCIDENTAL MEET WITH HARDIK PANDYA, @don't call me a kid, Malaysia Airlines, Lauritz Knudsen, Mumbai Indians, Oaksmith",

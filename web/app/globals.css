@@ -17,9 +17,6 @@
 
 @layer base {
   :root {
-    /* Paleta Dark Índigo — SaaS de criação de conteúdo para creators */
-
-    /* Superfícies: escuro com leve toque azul-violeta para profundidade */
     --background: #0d0d14;
     --foreground: #f0f0f8;
 
@@ -29,32 +26,25 @@
     --popover: #12121c;
     --popover-foreground: #f0f0f8;
 
-    /* Primary: violeta vibrante — cor da ação, geração, IA */
     --primary: #7c3aed;
     --primary-foreground: #ffffff;
 
-    /* Secondary: superfície elevada sutil */
     --secondary: #1a1a28;
     --secondary-foreground: #f0f0f8;
 
-    /* Muted: áreas de baixo contraste */
     --muted: #1a1a28;
     --muted-foreground: #8b8ba8;
 
-    /* Accent: highlight leve, índigo suave */
     --accent: #1e1e30;
     --accent-foreground: #a78bfa;
 
-    /* Destrutivo */
     --destructive: #ef4444;
     --destructive-foreground: #ffffff;
 
-    /* Bordas e inputs com leve toque de índigo */
     --border: #2a2a3d;
     --input: #2a2a3d;
     --ring: #7c3aed;
 
-    /* Cor de sucesso para toasts e badges */
     --success: #10b981;
     --success-foreground: #ffffff;
   }
@@ -71,7 +61,14 @@
     overflow-y: scroll;
   }
 
-  /* Seleção de texto com a cor primária do produto */
+  button,
+  [role="button"],
+  label[for],
+  select,
+  a {
+    cursor: pointer;
+  }
+
   ::selection {
     background-color: rgba(124, 58, 237, 0.35);
     color: var(--foreground);
@@ -94,20 +91,17 @@
 }
 
 @layer utilities {
-  /* Grid de fundo — traço índigo bem sutil */
   .bg-grid-subtle {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgba(124, 58, 237, 0.06)'%3E%3Cpath d='M0 .5H31.5V32'/%3E%3C/svg%3E");
   }
 
-  /* Painel de vidro com toque de índigo */
+  /* Fundo sólido — sem transparência que vaza conteúdo atrás */
   .glass-panel {
-    background-color: rgba(13, 13, 20, 0.75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(42, 42, 61, 0.6);
+    background-color: #16161f;
+    border: 1px solid rgba(42, 42, 61, 0.8);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
-  /* Borda com glow violeta no hover */
   .glow-border {
     position: relative;
     transition:
@@ -119,7 +113,6 @@
     box-shadow: 0 0 20px rgba(124, 58, 237, 0.12);
   }
 
-  /* Glow no primary button */
   .glow-primary {
     box-shadow: 0 0 24px rgba(124, 58, 237, 0.3);
   }
@@ -127,7 +120,6 @@
     box-shadow: 0 0 32px rgba(124, 58, 237, 0.45);
   }
 
-  /* Gradiente de texto: violeta → índigo (para headings de destaque) */
   .text-gradient {
     background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 50%, #6366f1 100%);
     -webkit-background-clip: text;
@@ -135,7 +127,6 @@
     background-clip: text;
   }
 
-  /* Badge de IA / geração */
   .badge-ai {
     background: linear-gradient(
       135deg,

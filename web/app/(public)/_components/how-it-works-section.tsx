@@ -12,29 +12,29 @@ const steps = [
   {
     step: "01",
     icon: Layers,
-    title: "Escolha seu nicho",
+    title: "Escolha o nicho",
     description:
-      "Selecione um nicho já existente ou crie um novo. Você pode ter mais de um nicho vinculado à sua conta.",
+      "Selecione um nicho já existente ou cria um novo. Pode ter mais de um na conta — alterna na hora de gerar, sem burocracia.",
   },
   {
     step: "02",
     icon: Sparkles,
-    title: "Defina seu público",
+    title: "Informe o público (opcional)",
     description:
-      "Informe opcionalmente a nacionalidade do seu público-alvo para um conteúdo ainda mais personalizado.",
+      "Se quiser, diz a nacionalidade do seu público. O título, o horário de postagem e as referências do roteiro mudam pra esse contexto.",
   },
   {
     step: "03",
     icon: ScrollText,
-    title: "Receba estrutura e roteiro",
+    title: "Receba título, hashtags e roteiro",
     description:
-      "Em segundos a IA retorna título, hashtags, descrição, horário de postagem e o roteiro completo do vídeo.",
+      "Em segundos: título com alto potencial de clique, hashtags do nicho, horário ideal de postagem, duração recomendada e o hook do roteiro. Tudo baseado nos vídeos que já viralizaram.",
   },
 ];
 
 export function HowItWorksSection() {
   return (
-    <section className="px-6 py-24">
+    <section className="px-6 py-16">
       <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
@@ -42,11 +42,11 @@ export function HowItWorksSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
-          className="mb-16 flex flex-col items-center text-center"
+          className="mb-12 flex flex-col items-center text-center"
         >
           <motion.span
             variants={blurFadeIn}
-            className="badge-ai mb-4 inline-flex rounded-full px-4 py-1.5 text-xs font-medium"
+            className="badge-ai mb-3 inline-flex rounded-full px-3.5 py-1 text-xs font-medium"
           >
             Como funciona
           </motion.span>
@@ -54,14 +54,15 @@ export function HowItWorksSection() {
             variants={blurFadeIn}
             className="text-3xl font-bold tracking-tight md:text-4xl"
           >
-            Simples assim
+            Do nicho ao conteúdo pronto em{" "}
+            <span className="text-gradient">menos de 30 segundos</span>
           </motion.h2>
           <motion.p
             variants={blurFadeIn}
-            className="text-muted-foreground mt-3 max-w-md text-sm leading-relaxed"
+            className="text-muted-foreground mt-3 max-w-sm text-sm leading-relaxed"
           >
-            Três passos para sair do zero e chegar a um conteúdo pronto para
-            gravar.
+            Sem templates genéricos. A geração é baseada nos padrões reais dos
+            vídeos mais virais do seu nicho.
           </motion.p>
         </motion.div>
 
@@ -71,31 +72,36 @@ export function HowItWorksSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
-          className="grid gap-6 md:grid-cols-3"
+          className="grid gap-4 md:grid-cols-3"
         >
-          {steps.map(({ step, icon: Icon, title, description }) => (
+          {steps.map(({ step, icon: Icon, title, description }, index) => (
             <motion.div
               key={step}
               variants={staggerItem}
               className="glass-panel glow-border relative flex flex-col gap-4 rounded-xl p-6"
             >
-              {/* Step number */}
-              <span className="text-primary/30 font-mono text-4xl leading-none font-bold">
-                {step}
-              </span>
-
-              {/* Icon */}
-              <div className="badge-ai flex h-10 w-10 items-center justify-center rounded-lg">
-                <Icon className="h-5 w-5" />
+              {/* Número e ícone lado a lado */}
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-4xl leading-none font-bold text-[#7c3aed]/20">
+                  {step}
+                </span>
+                <div className="badge-ai flex h-9 w-9 items-center justify-center rounded-lg">
+                  <Icon className="h-4 w-4" />
+                </div>
               </div>
 
-              {/* Content */}
+              {/* Conteúdo */}
               <div className="flex flex-col gap-1.5">
                 <h3 className="text-foreground font-semibold">{title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
                   {description}
                 </p>
               </div>
+
+              {/* Conector entre cards (apenas desktop, não no último) */}
+              {index < steps.length - 1 && (
+                <div className="absolute top-1/2 -right-2.5 hidden h-px w-5 -translate-y-1/2 bg-[#2a2a3d] md:block" />
+              )}
             </motion.div>
           ))}
         </motion.div>

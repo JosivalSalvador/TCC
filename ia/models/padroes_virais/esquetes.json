@@ -6,9 +6,10 @@
   "estrutura": {
     "faixa_duracao_dominante": "short_padrao",
     "estrutura_blocos_dominante": "esquete",
-    "ritmo_palavras_seg_mediana": 2.05,
+    "ritmo_palavras_seg_mediana": 2.051,
     "densidade_roteiro_mediana": 88,
     "sentimento_dominante": "positivo",
+    "hora_postagem_mediana": 11.0,
     "top3_slots_postagem": [
       {
         "dia": "friday",
@@ -29,62 +30,155 @@
     "ativar_repeticao_5x": true,
     "tipo_audio_dominante": "sem_audio",
     "clickbait_score_mediana": 0.531,
-    "faixa_duracao_evitar": "short_padrao",
-    "sentimento_evitar": "positivo"
+    "velocidade_views_mediana": 12.814,
+    "taxa_conversao_mediana": 1.292,
+    "taxa_discussao_mediana": 0.003,
+    "completude_seo_mediana": 11.0,
+    "faixa_duracao_evitar": null,
+    "sentimento_evitar": null
   },
   "textuais": {
     "termos_gancho_usar": [
-      "been",
       "quickly",
-      "who",
+      "brought",
+      "tillu",
+      "yes",
+      "mom",
+      "didi",
       "law",
-      "for",
-      "was",
+      "son",
       "hey",
-      "money",
-      "am",
-      "his"
+      "sister"
     ],
     "termos_vocabulario": [
-      "come",
       "hey",
+      "let",
       "yes",
+      "come",
       "look",
       "mom",
       "sister",
       "brought",
-      "get",
-      "one",
-      "let"
+      "mother",
+      "tillu"
     ],
     "termos_seo_usar": [
-      "haryanvi haryanvi",
-      "vlogs",
-      "video entertainment",
-      "keshav",
-      "haryanvicomedy",
-      "shortsfeed",
-      "haryanvi comedy",
-      "and",
-      "keshav shashi",
-      "viral comedy"
+      "haryanvi",
+      "video",
+      "olida",
+      "tok",
+      "naukrani",
+      "comedy video",
+      "comedy shorts",
+      "jokes",
+      "olida imdat",
+      "imdat"
     ],
     "ngramas_roteiro": [
-      "is",
-      "it",
-      "the",
-      "this",
-      "you",
-      "will",
-      "what",
-      "me",
-      "have",
-      "and"
+      "come",
+      "tillu",
+      "hey",
+      "sister",
+      "let",
+      "yes",
+      "oh",
+      "brought",
+      "look",
+      "son"
+    ],
+    "termos_descricao_usar": [
+      "comedy",
+      "shorts",
+      "video",
+      "comedy video",
+      "funny video",
+      "videos",
+      "video funny",
+      "new",
+      "love",
+      "youtube"
+    ],
+    "termos_gancho_evitar": [
+      "come",
+      "come come",
+      "don want",
+      "animals",
+      "don",
+      "papa",
+      "better",
+      "animals look",
+      "animals better",
+      "feats animals"
+    ],
+    "termos_roteiro_evitar": [
+      "come come",
+      "come",
+      "animals",
+      "friend",
+      "love",
+      "pot",
+      "ready",
+      "say",
+      "want",
+      "happened"
+    ],
+    "emojis_usar": [
+      "🙏",
+      "❤️",
+      "🚫",
+      "😜",
+      "🤪"
+    ],
+    "emojis_evitar": [
+      "🎃",
+      "🫟",
+      "💔",
+      "😢",
+      "🪁"
     ],
     "arco_emocional": {
       "inicio": "positivo",
       "meio": "positivo",
       "fim": "positivo"
+    },
+    "vocabulario_por_terco": {
+      "inicio": [
+        "sister",
+        "yes",
+        "look",
+        "come",
+        "mom",
+        "tillu",
+        "hey",
+        "today"
+      ],
+      "meio": [
+        "hey",
+        "come",
+        "tillu",
+        "sister",
+        "just",
+        "yes",
+        "let",
+        "fun"
+      ],
+      "fim": [
+        "come",
+        "sister",
+        "hey",
+        "let",
+        "oh",
+        "mom",
+        "holi",
+        "tell"
+      ]
+    },
+    "comprimento_medio_gancho": 14.4,
+    "comprimento_medio_frase": 10.6,
+    "padrao_abertura_dominante": "afirmacao",
+    "densidade_pontuacao": {
+      "super_viral": 0.0,
+      "frio": 0.0
     },
     "exemplos_ganchos": [
       "it's red, your red is red, mahavar is red, red is red, red is red,",
@@ -100,62 +194,52 @@
       "Jai Mata di 🙏 social simran #viral #ytshorts #shorts #trending #navratri",
       "The atmosphere became cloudy in 1 minute 😜🤪 Comedy Shorts #comedy #viral #shorts #funny #trending"
     ],
-    "termos_gancho_evitar": [
-      "now give",
-      "pot it",
-      "fulfill",
-      "cold",
-      "bike come",
-      "don",
-      "animals",
-      "papa don",
-      "first of",
-      "come here"
+    "exemplos_descricoes": [
+      "Jai Gauri Maa 🙏🥰 Shashi Shorts #shorts #viral #song #trending #maa \n\nKeywords:-\nkeshav shashi vlogs,\nKeshav shashi vlog,\nKeshav shashi block,\nkeshav shashi shorts,\nkeshav shashi funny video,\nhansi wali video,\ntik tok video,\ntiktok,\ntiktok new video,\ntwist in end,\ntwist in end shorts,\ntry not to laugh,\ntry not to laugh challenge,\nViral Shorts Video,\nTrending Shorts Video,\nViral Prank Video,\nTrending Prank Video,\nnitin mridul,\n\nfunny video funny video,\nfunny video movie scene,\nfunny video reaction,\nfunny video sab lool hai,\nfunny video bhojpuri,\nfunny video short,\nfunny video comedy,\nfunny video tik tok,\nfunny video statuss,\nfunny video 2025,\nfunny shorts,\nfunny shorts video,\nfunny shorts tiktok,\nfunny shorts in hindi,\nfunny shorts dushyant kukreja,\nfunny shorts memes,\ncomedy video tik tok,\n\ncomedy video kapil sharma,\ncomedy video movie,\ncomedy video short,\ncomedy video comedy video,\ncomedy video status,\nhindi comedy video,\ncomedy shorts,\ncomedy shorts video,\ncomedy shorts in hindi,\nkaam wali comedy shorts,\nstand up comedy,\n\n#comedy #haryanvicomedy #haryanvi #ytshort #haryana #shortsfeed #shortsyoutube #shortsvideo \n\n#sasbahukicomedy #sasbahukinokjhok #sasbahustory #sasbahucomedy \n\n#parashthakralvlogs #pubgmobile #soravjoshi #souravjoshivlogs #familyfitness #family #familyvlog #themridul #myfamily \n\n#shortsbreak #keshavshashivlogs",
+      "That one Strong Student in School 🤣 #shorts #teratrigun #comedy #schoolstudent #teachercomedy",
+      "Jai Mata di 🙏 social simran #viral #ytshorts #shorts #trending #navratri \n\nKeywords:-\nsocial simran vlogs,\nsocial simran,\nsimran vlogs,\nkeshav shashi vlogs,\nKeshav shashi vlog,\nKeshav shashi block,\nkeshav shashi shorts,\nkeshav shashi funny video,\nhansi wali video,\ntik tok video,\ntiktok,\ntiktok new video,\ntwist in end,\ntwist in end shorts,\ntry not to laugh,\ntry not to laugh challenge,\nViral Shorts Video,\nTrending Shorts Video,\nViral Prank Video,\nTrending Prank Video,\nnitin mridul,\n\nfunny video funny video,\nfunny video movie scene,\nfunny video reaction,\nfunny video sab lool hai,\nfunny video bhojpuri,\nfunny video short,\nfunny video comedy,\nfunny video tik tok,\nfunny video statuss,\nfunny video 2023,\nfunny shorts,\nfunny shorts video,\nfunny shorts tiktok,\nfunny shorts in hindi,\nfunny shorts dushyant kukreja,\nfunny shorts memes,\ncomedy video tik tok,\n\ncomedy video kapil sharma,\ncomedy video movie,\ncomedy video short,\ncomedy video comedy video,\ncomedy video status,\nhindi comedy video,\ncomedy shorts,\ncomedy shorts video,\ncomedy shorts in hindi,\nkaam wali comedy shorts,\nstand up comedy,\n\n#comedy #haryanvicomedy #haryanvi #ytshort #haryana #shortsfeed #shortsyoutube #shortsvideo \n\n#sasbahukicomedy #sasbahukinokjhok #sasbahustory #sasbahucomedy \n\n#parashthakralvlogs #pubgmobile #soravjoshi #souravjoshivlogs #familyfitness #family #familyvlog #themridul #myfamily \n\n#shortsbreak #keshavshashivlogs \n       @MYFAMILYComedy @amitffytcomedy @shemaroobollywoodcomedy @goldminesgreatindiancomedy2048 @keshavshashivlogs",
+      "1 मिनट में महौल बादल दिया 😜🤪 Comedy Shorts #comedy #viral #shorts #funny #trending \n\nKeywords:-\nkeshav shashi vlogs,\nKeshav shashi vlog,\nKeshav shashi block,\nkeshav shashi shorts,\nkeshav shashi funny video,\nhansi wali video,\ntik tok video,\ntiktok,\ntiktok new video,\ntwist in end,\ntwist in end shorts,\ntry not to laugh,\ntry not to laugh challenge,\nViral Shorts Video,\nTrending Shorts Video,\nViral Prank Video,\nTrending Prank Video,\nnitin mridul,\n\nfunny video funny video,\nfunny video movie scene,\nfunny video reaction,\nfunny video sab lool hai,\nfunny video bhojpuri,\nfunny video short,\nfunny video comedy,\nfunny video tik tok,\nfunny video statuss,\nfunny video 2025,\nfunny shorts,\nfunny shorts video,\nfunny shorts tiktok,\nfunny shorts in hindi,\nfunny shorts dushyant kukreja,\nfunny shorts memes,\ncomedy video tik tok,\n\ncomedy video kapil sharma,\ncomedy video movie,\ncomedy video short,\ncomedy video comedy video,\ncomedy video status,\nhindi comedy video,\ncomedy shorts,\ncomedy shorts video,\ncomedy shorts in hindi,\nkaam wali comedy shorts,\nstand up comedy,\n\n#comedy #haryanvicomedy #haryanvi #ytshort #haryana #shortsfeed #shortsyoutube #shortsvideo \n\n#sasbahukicomedy #sasbahukinokjhok #sasbahustory #sasbahucomedy \n\n#parashthakralvlogs #pubgmobile #soravjoshi #souravjoshivlogs #familyfitness #family #familyvlog #themridul #myfamily \n\n#shortsbreak #keshavshashivlogs",
+      "पापा की परी🧚‍♀️की व्रत की खुराक 😜🤪 Comedy Shorts #comedy #funny #shorts #viral #trending \n\nKeywords:-\nkeshav shashi vlogs,\nKeshav shashi vlog,\nKeshav shashi block,\nkeshav shashi shorts,\nkeshav shashi funny video,\nhansi wali video,\ntik tok video,\ntiktok,\ntiktok new video,\ntwist in end,\ntwist in end shorts,\ntry not to laugh,\ntry not to laugh challenge,\nViral Shorts Video,\nTrending Shorts Video,\nViral Prank Video,\nTrending Prank Video,\nnitin mridul,\n\nfunny video funny video,\nfunny video movie scene,\nfunny video reaction,\nfunny video sab lool hai,\nfunny video bhojpuri,\nfunny video short,\nfunny video comedy,\nfunny video tik tok,\nfunny video statuss,\nfunny video 2025,\nfunny shorts,\nfunny shorts video,\nfunny shorts tiktok,\nfunny shorts in hindi,\nfunny shorts dushyant kukreja,\nfunny shorts memes,\ncomedy video tik tok,\n\ncomedy video kapil sharma,\ncomedy video movie,\ncomedy video short,\ncomedy video comedy video,\ncomedy video status,\nhindi comedy video,\ncomedy shorts,\ncomedy shorts video,\ncomedy shorts in hindi,\nkaam wali comedy shorts,\nstand up comedy,\n\n#comedy #haryanvicomedy #haryanvi #ytshort #haryana #shortsfeed #shortsyoutube #shortsvideo \n\n#sasbahukicomedy #sasbahukinokjhok #sasbahustory #sasbahucomedy \n\n#parashthakralvlogs #pubgmobile #soravjoshi #souravjoshivlogs #familyfitness #family #familyvlog #themridul #myfamily \n\n#shortsbreak #keshavshashivlogs"
     ],
-    "termos_roteiro_evitar": [
-      "arms",
-      "won feel",
-      "for this",
-      "the potty",
-      "which one",
-      "animals",
-      "no matter",
-      "with diamonds",
-      "would",
-      "go to"
+    "exemplos_thumbnails": [
+      "That one Strong Student in School 🤣, Shree Baba Balak Puri Ji, HAPPY HOLI",
+      "Sister-in-law and sister-in-law",
+      "STYLE",
+      "changed the atmosphere in 1 minute",
+      "pani puri"
     ]
   },
   "thumbnail": {
     "comprimento_alvo_chars": 25,
     "termos_thumbnail_usar": [
-      "are like",
-      "and",
-      "law",
-      "anandraja_86173",
-      "that",
-      "then",
       "definition",
-      "after",
-      "sister",
-      "dr"
+      "fear",
+      "wife",
+      "laddua",
+      "puri",
+      "angel",
+      "papa angel",
+      "papa",
+      "indian",
+      "ha"
     ],
     "termos_thumbnail_evitar": [
-      "prank no",
-      "new york",
-      "york",
-      "of potty",
       "kite video",
-      "york 23",
       "kite",
-      "hard",
-      "wait for",
-      "ultimate holi"
+      "level",
+      "prank",
+      "end rr",
+      "rr",
+      "potty",
+      "potty hard",
+      "hard level",
+      "level potty"
     ],
     "cenas_visuais_dominantes": [
-      "an",
-      "and",
-      "dressed",
-      "dressed in",
+      "woman",
+      "young",
+      "man",
+      "stands",
       "expression"
     ],
     "exemplos_texto_thumbnail": [

@@ -9,6 +9,7 @@
     "ritmo_palavras_seg_mediana": 0.0,
     "densidade_roteiro_mediana": 0,
     "sentimento_dominante": "neutro",
+    "hora_postagem_mediana": 10.5,
     "top3_slots_postagem": [
       {
         "dia": "monday",
@@ -29,62 +30,154 @@
     "ativar_repeticao_5x": false,
     "tipo_audio_dominante": "sem_audio",
     "clickbait_score_mediana": 0.385,
-    "faixa_duracao_evitar": "ultra_curto",
-    "sentimento_evitar": "neutro"
+    "velocidade_views_mediana": 12.749,
+    "taxa_conversao_mediana": 0.763,
+    "taxa_discussao_mediana": 0.001,
+    "completude_seo_mediana": 8.0,
+    "faixa_duracao_evitar": null,
+    "sentimento_evitar": null
   },
   "textuais": {
     "termos_gancho_usar": [
-      "on her",
-      "my makeup",
-      "ruined all",
+      "try",
+      "boy",
+      "better",
+      "better freaking",
+      "boy better",
       "freaking",
-      "gudiya",
-      "as soon",
-      "the girls",
-      "today gudiya",
-      "soon",
-      "on"
+      "freaking try",
+      "girls",
+      "girls boy",
+      "hungry lapper"
     ],
     "termos_vocabulario": [
       "girl",
-      "also",
-      "also cute",
-      "better",
-      "better freaking",
-      "boy",
-      "boy better",
-      "breath",
-      "breath three",
-      "children"
+      "remember",
+      "hungry lapper",
+      "hungry",
+      "lapper crave",
+      "lapper",
+      "diet",
+      "diet dinner",
+      "dinner",
+      "remember snack"
     ],
     "termos_seo_usar": [
-      "faces",
-      "makeupkit",
-      "sand kinetic",
-      "joy",
-      "crunchy sounds",
-      "frozen icecream",
-      "crush sand",
-      "funny people",
-      "crushing sand",
-      "crushing cute"
+      "toys",
+      "asmr entertainment",
+      "lifestyle",
+      "sociology",
+      "lifestyle sociology",
+      "hobby lifestyle",
+      "blogs satisfying",
+      "hobby",
+      "funny",
+      "people blogs"
     ],
     "ngramas_roteiro": [
-      "but",
-      "boy",
-      "comment",
-      "for",
       "girl",
-      "if",
-      "if you",
-      "it",
+      "small",
+      "want",
+      "makeup",
+      "cute",
+      "hungry lapper",
+      "hungry",
+      "lapper",
+      "like video",
+      "like"
+    ],
+    "termos_descricao_usar": [
+      "unboxing",
+      "fun",
+      "make",
+      "asmr video",
+      "channel",
+      "moments",
+      "video",
+      "cute",
+      "makeup",
+      "relaxing"
+    ],
+    "termos_gancho_evitar": [
+      "heat",
+      "heat heat",
+      "tor",
+      "lover",
+      "higher",
+      "brown",
+      "ah",
       "like",
-      "my"
+      "wow",
+      "help"
+    ],
+    "termos_roteiro_evitar": [
+      "heat",
+      "heat heat",
+      "tor",
+      "just",
+      "ah",
+      "time",
+      "wow",
+      "yeah",
+      "okay",
+      "want eating"
+    ],
+    "emojis_usar": [
+      "🌈",
+      "🧈",
+      "✨",
+      "💥",
+      "❤️"
+    ],
+    "emojis_evitar": [
+      "❤",
+      "🔹",
+      "🧼",
+      "😱"
     ],
     "arco_emocional": {
       "inicio": "neutro",
       "meio": "positivo",
       "fim": "positivo"
+    },
+    "vocabulario_por_terco": {
+      "inicio": [
+        "girls",
+        "lapper",
+        "hungry lapper",
+        "hungry",
+        "makeup",
+        "slapped",
+        "snatched",
+        "snatched makeup"
+      ],
+      "meio": [
+        "cute",
+        "want",
+        "eating want",
+        "crave eating",
+        "eating",
+        "crave",
+        "girl",
+        "small cute"
+      ],
+      "fim": [
+        "small",
+        "want dinner",
+        "remember",
+        "want",
+        "diet",
+        "dinner remember",
+        "diet want",
+        "dinner"
+      ]
+    },
+    "comprimento_medio_gancho": 15.0,
+    "comprimento_medio_frase": 7.9,
+    "padrao_abertura_dominante": "afirmacao",
+    "densidade_pontuacao": {
+      "super_viral": 0.0,
+      "frio": 0.0
     },
     "exemplos_ganchos": [
       "this one's for the girls. if you're a boy, you better not freaking try this",
@@ -98,63 +191,52 @@
       "Satisfying Unboxing Barbie Doll & Travel Playsets, ASMR Video #shorts",
       "Oddly Satisfying Kinetic Sand Faces Crushing | Cute Shapes Hammer Smash ASMR #shorts"
     ],
-    "termos_gancho_evitar": [
-      "be thin",
-      "be",
-      "go",
-      "is not",
-      "do",
-      "heapper",
-      "ever done",
-      "dinner anything",
-      "me",
-      "don"
+    "exemplos_descricoes": [
+      "Cute Make up kit 💥🌈 satisfying unboxing AsMR make up kit #shorts #yshorts #makeup #makeupkit",
+      "Satisfying Unboxing Barbie Doll & Travel Playsets, ASMR Video #shorts",
+      "Watch these cute kinetic sand face shapes get crushed and smashed with a hammer for the most satisfying ASMR experience! The soft sand breaking, cracking, and crumbling sounds are super relaxing and oddly satisfying to watch.\n\nPerfect for stress relief, ASMR lovers, and kinetic sand fans. Don’t blink or you’ll miss the best crush moments!\n\nLike ❤️ Comment 💬 Subscribe 🔔 for more daily satisfying sand videos.\n\n⸻\n\n🔥 Hashtags\n\n#shorts #asmr #kineticsand #satisfying #oddlysatisfying #sandcrush #sandcutting #relaxing #stressrelief #sandasmr #crushing #satisfyingvideo #asmrsounds #sandshapes #viralshorts",
+      "This is a humorous channel about Crayon Shin-chan and his friends.\nWe hope that we can provide everyone with a fun and relaxing time.\nThis is a fun and humorous Shin-chan and friends channel.\nWe hope it brings you relaxing and enjoyable moments"
     ],
-    "termos_roteiro_evitar": [
-      "be thin",
-      "be",
-      "go",
-      "the tree",
-      "is not",
-      "to snack",
-      "do",
-      "that was",
-      "me",
-      "the most"
+    "exemplos_thumbnails": [
+      "*butter asmr* chocolate marshmallow cherry SALTED BUTTER salted butter mango",
+      "SYMPHONY SET, DESIGNED BY KOREA, makeup set 3rd generation",
+      "Barbie, 219, love, 4x4",
+      "DISCARD AFTER USE MPV",
+      "PETRUS"
     ]
   },
   "thumbnail": {
     "comprimento_alvo_chars": 22,
     "termos_thumbnail_usar": [
-      "use",
-      "love",
-      "love 4x4",
-      "salted",
-      "korea",
-      "219 love",
-      "chocolate",
-      "marshmallow cherry",
+      "petrus",
+      "butter",
       "set",
-      "symphony"
+      "use mpv",
+      "mpv",
+      "discard",
+      "discard use",
+      "use",
+      "love 4x4",
+      "219 love"
     ],
     "termos_thumbnail_evitar": [
-      "infrastructure highlighting",
-      "dove",
-      "extracted from",
-      "and",
-      "made in",
-      "end subscribe",
-      "for",
-      "extracted",
-      "dumpling unboxing",
-      "concrete"
+      "subscribe",
+      "satisfying",
+      "big",
+      "lady farrier",
+      "lady",
+      "farrier",
+      "washing",
+      "small",
+      "makeupofthings",
+      "garden"
     ],
     "cenas_visuais_dominantes": [
-      "and",
-      "arranged",
-      "arranged on",
-      "barbie",
-      "hand"
+      "toy",
+      "holds",
+      "hand",
+      "miniature",
+      "barbie"
     ],
     "exemplos_texto_thumbnail": [
       "*butter asmr* chocolate marshmallow cherry SALTED BUTTER salted butter mango",

@@ -1,10 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Loader2, LogIn } from "lucide-react";
+import { Loader2, LogIn, Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { loginSchema } from "@/schemas/sessions.schema";
 import { LoginInput } from "@/types/index";
@@ -19,6 +20,7 @@ import { Button } from "@/components/ui/button";
 
 export function LoginForm() {
   const { login } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -53,13 +55,17 @@ export function LoginForm() {
         {/* Email */}
         <motion.div variants={staggerItem} className="flex flex-col gap-1.5">
           <Label htmlFor="email">E-mail</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="seu@email.com"
-            autoComplete="email"
-            {...register("email")}
-          />
+          <div className="relative">
+            <Mail className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+            <Input
+              id="email"
+              type="email"
+              placeholder="seu@email.com"
+              autoComplete="email"
+              className="pl-9"
+              {...register("email")}
+            />
+          </div>
           {errors.email && (
             <span className="text-destructive text-xs">
               {errors.email.message}
@@ -70,13 +76,30 @@ export function LoginForm() {
         {/* Senha */}
         <motion.div variants={staggerItem} className="flex flex-col gap-1.5">
           <Label htmlFor="password">Senha</Label>
-          <Input
-            id="password"
-            type="password"
-            placeholder="••••••••"
-            autoComplete="current-password"
-            {...register("password")}
-          />
+          <div className="relative">
+            <Lock className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••"
+              autoComplete="current-password"
+              className="px-9"
+              {...register("password")}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors"
+              tabIndex={-1}
+              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+            >
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          </div>
           {errors.password && (
             <span className="text-destructive text-xs">
               {errors.password.message}

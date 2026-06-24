@@ -6,9 +6,10 @@
   "estrutura": {
     "faixa_duracao_dominante": "short_longo",
     "estrutura_blocos_dominante": "esquete_com_hook",
-    "ritmo_palavras_seg_mediana": 3.21,
+    "ritmo_palavras_seg_mediana": 3.211,
     "densidade_roteiro_mediana": 269,
     "sentimento_dominante": "positivo",
+    "hora_postagem_mediana": 10.0,
     "top3_slots_postagem": [
       {
         "dia": "tuesday",
@@ -29,62 +30,127 @@
     "ativar_repeticao_5x": true,
     "tipo_audio_dominante": "sem_audio",
     "clickbait_score_mediana": 0.433,
+    "velocidade_views_mediana": 10.075,
+    "taxa_conversao_mediana": 4.986,
+    "taxa_discussao_mediana": 0.04,
+    "completude_seo_mediana": 9.0,
     "faixa_duracao_evitar": null,
     "sentimento_evitar": null
   },
   "textuais": {
     "termos_gancho_usar": [
-      "been",
-      "care",
-      "ago",
+      "phone",
+      "friends",
+      "rickshaw",
+      "amazing",
       "samsung",
-      "and",
-      "had",
+      "literally",
       "years",
-      "has launched",
-      "for",
-      "hey"
+      "android",
+      "features",
+      "launched"
     ],
     "termos_vocabulario": [
       "phone",
-      "also",
-      "friends",
       "meaning",
-      "display",
-      "let",
       "look",
       "mah",
-      "phones",
+      "friends",
+      "let",
+      "want",
+      "brother",
+      "display",
       "yes"
     ],
     "termos_seo_usar": [
-      "technology trakinshorts",
-      "mo",
-      "shorts technology",
-      "elite",
+      "technology",
+      "smartphone",
+      "iqoo",
+      "best",
       "samsung",
-      "new features",
-      "kharra",
-      "phones",
-      "tech master",
-      "v70"
+      "ultra",
+      "trakintech",
+      "shorts",
+      "trakinshorts trakintech",
+      "trakinshorts"
     ],
     "ngramas_roteiro": [
-      "is",
-      "it",
-      "not",
-      "the",
-      "this",
-      "to",
-      "you",
-      "and",
-      "have",
-      "in"
+      "phone",
+      "hey",
+      "comes",
+      "meaning",
+      "yes",
+      "battery",
+      "50",
+      "look",
+      "let",
+      "000"
     ],
+    "termos_descricao_usar": [
+      "http",
+      "trakintech",
+      "twitter",
+      "com",
+      "com trakintech",
+      "http www",
+      "www",
+      "use",
+      "galaxy",
+      "instagram"
+    ],
+    "termos_gancho_evitar": [],
+    "termos_roteiro_evitar": [],
+    "emojis_usar": [
+      "⚡",
+      "👇",
+      "🤯",
+      "🥹",
+      "🤩"
+    ],
+    "emojis_evitar": [],
     "arco_emocional": {
       "inicio": "positivo",
       "meio": "positivo",
       "fim": "positivo"
+    },
+    "vocabulario_por_terco": {
+      "inicio": [
+        "meaning",
+        "phone",
+        "friends",
+        "days",
+        "android",
+        "look",
+        "rickshaw",
+        "score"
+      ],
+      "meio": [
+        "battery",
+        "comes",
+        "yes",
+        "phone",
+        "know",
+        "want",
+        "50",
+        "let"
+      ],
+      "fim": [
+        "phones",
+        "hey",
+        "available",
+        "phone",
+        "india",
+        "plus",
+        "price",
+        "come"
+      ]
+    },
+    "comprimento_medio_gancho": 15.0,
+    "comprimento_medio_frase": 8.4,
+    "padrao_abertura_dominante": "afirmacao",
+    "densidade_pontuacao": {
+      "super_viral": 0.0,
+      "frio": null
     },
     "exemplos_ganchos": [
       "rickshaw. rickshaw. hey man, not even a rickshaw is stopping. from us? actually from you.",
@@ -100,30 +166,42 @@
       "World’s First Privacy Display🤯 Galaxy S26 Ultra #shorts",
       "The Perfect Smartphone Of 2026?⚡️ #TrakinShorts #Shorts"
     ],
-    "termos_gancho_evitar": [],
-    "termos_roteiro_evitar": []
+    "exemplos_descricoes": [
+      "The Most Value for Money Smartphone under 20000 🤩 iQOO Z11x #shorts #iqooz11x #amazonspecials #tech #smartphone \nSUBSCRIBE THE CHANNEL FOR MORE VIDEOS\n\n DON'T FORGET LIKE COMMENT & SHARE\n\ninstagram-👇\n\n https://Instagram.com/techmasterco\n\nMain Channel-👇\n\nhttps://youtube.com/c/TechMasterAK\n\nbusiness inquiry:- itstechmaster@gmail.com\n\nDisclaimer\ncopyright disclaimer under Section 107 of the Copyright Act 1976, allowance is made for fair use for purposes such as criticism,comment, news,reporting teaching, scholarship, and research. fair use is a use permitted by copyright statute that might otherwise be infringing non-profit educational or personal use tips the balance in favor of fair use. No copyright infringement intended....\n#shorts",
+      "Friends welcome to the world of Trakin Shorts. Here you will get to see many interesting videos so subscribe quickly and don't forget to like and share the video.\n\n#TrakinShorts​ #Shorts​ #TrakinTech​\n\nSocial Media Handles\n**********************************************************************\nFollow us on:\nWeb: http://trak.in​\nTelegram: https://t.me/officialtrakintech​\nInstagram: http://instagram.com/trakintech​\nTwitter: http://www.twitter.com/trakintech​\nTwitter personal: http://www.twitter.com/8ap​\nFacebook: http://www.facebook.com/TrakinTech",
+      "#TecnoModular   #MWC2026  #technoruhez \n\nAt MWC 2026 in Barcelona, Tecno unveiled a new ultra-thin modular smartphone concept featuring a magnetic interconnection system that lets users snap on accessories like additional batteries, telephoto lenses and action cameras without adding bulk.\n\nThe base device measures about 4.9 mm thick and is designed as a flexible platform that adapts to different use cases through easily attachable modules.",
+      "SUBSCRIBE THE CHANNEL FOR MORE VIDEOS\n\n DON'T FORGET LIKE COMMENT & SHARE\n\ninstagram-👇\n\n https://Instagram.com/techmasterco\n\nMain Channel-👇\n\nhttps://youtube.com/c/TechMasterAK\n\nbusiness inquiry:- itstechmaster@gmail.com\n\nDisclaimer\ncopyright disclaimer under Section 107 of the Copyright Act 1976, allowance is made for fair use for purposes such as criticism,comment, news,reporting teaching, scholarship, and research. fair use is a use permitted by copyright statute that might otherwise be infringing non-profit educational or personal use tips the balance in favor of fair use. No copyright infringement intended....\nGalaxy S26 Ultra\n\n#shorts \n#smartphone \n#samsung \n#galaxyai \n#galaxys26 \n#galaxys26ultra \n#collab \n#tech",
+      "Friends welcome to the world of Trakin Shorts. Here you will get to see many interesting videos so subscribe quickly and don't forget to like and share the video.\n\n#TrakinShorts​ #Shorts​ #TrakinTech​\n\nSocial Media Handles\n**********************************************************************\nFollow us on:\nWeb: http://trak.in​\nTelegram: https://t.me/officialtrakintech​\nInstagram: http://instagram.com/trakintech​\nTwitter: http://www.twitter.com/trakintech​\nTwitter personal: http://www.twitter.com/8ap​\nFacebook: http://www.facebook.com/TrakinTech"
+    ],
+    "exemplos_thumbnails": [
+      "SQUID GAME",
+      "#MWC26 S27 ULTRA? K ADVANCED OUKITEL CE",
+      "HENGTONG, GYEONGSANGBUK, NIDA, TECNO",
+      "PERFECT SMARTPHONE?!",
+      "THE REAL ULTRA iQOO ULTRA POWERED MONSTER INSIDE"
+    ]
   },
   "thumbnail": {
     "comprimento_alvo_chars": 36,
     "termos_thumbnail_usar": [
-      "mah fan",
-      "mwc26",
-      "snapdragon elite",
-      "legend",
-      "elite",
-      "samsung",
+      "ultra",
+      "samsung phone",
+      "perfect smartphone",
+      "smartphone",
       "squid",
-      "back f1",
-      "secrets android",
-      "10000 mah"
+      "squid game",
+      "samsung",
+      "perfect",
+      "game",
+      "phone"
     ],
     "termos_thumbnail_evitar": [],
     "cenas_visuais_dominantes": [
-      "and",
-      "background",
-      "expression",
-      "featuring",
-      "holds"
+      "man",
+      "smartphone",
+      "holds",
+      "holds smartphone",
+      "background"
     ],
     "exemplos_texto_thumbnail": [
       "SQUID GAME",

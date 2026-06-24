@@ -6,9 +6,10 @@
   "estrutura": {
     "faixa_duracao_dominante": "short_longo",
     "estrutura_blocos_dominante": "narrativa",
-    "ritmo_palavras_seg_mediana": 4.92,
+    "ritmo_palavras_seg_mediana": 4.915,
     "densidade_roteiro_mediana": 787,
     "sentimento_dominante": "positivo",
+    "hora_postagem_mediana": 19.0,
     "top3_slots_postagem": [
       {
         "dia": "friday",
@@ -29,62 +30,154 @@
     "ativar_repeticao_5x": true,
     "tipo_audio_dominante": "sem_audio",
     "clickbait_score_mediana": 0.394,
-    "faixa_duracao_evitar": "short_longo",
-    "sentimento_evitar": "positivo"
+    "velocidade_views_mediana": 8.16,
+    "taxa_conversao_mediana": 6.229,
+    "taxa_discussao_mediana": 0.027,
+    "completude_seo_mediana": 9.0,
+    "faixa_duracao_evitar": null,
+    "sentimento_evitar": null
   },
   "textuais": {
     "termos_gancho_usar": [
-      "asking us",
-      "and saying",
-      "they received",
-      "ago",
-      "who",
-      "for our",
-      "wedding",
-      "about",
+      "husband",
       "accident",
-      "girlfriend why"
+      "girlfriend taking",
+      "girlfriend",
+      "bro",
+      "job",
+      "failure",
+      "job failure",
+      "baby",
+      "baby months"
     ],
     "termos_vocabulario": [
       "said",
       "told",
       "years",
       "like",
-      "one",
-      "parents",
       "time",
-      "always",
-      "every",
-      "family"
+      "parents",
+      "son",
+      "going",
+      "man",
+      "love"
     ],
     "termos_seo_usar": [
-      "blogs",
+      "entertainment",
+      "youtubeshorts",
+      "redditespanol",
       "shorts youtubeshorts",
-      "story redditrelationship",
+      "historiasdereddit historiasreales",
       "historiasreales",
       "reddit redditespanol",
-      "historiasdereddit",
-      "shorts video",
       "redditespanol shorts",
-      "am",
-      "playing"
+      "historiasdereddit",
+      "entertainment historiasdereddit"
     ],
     "ngramas_roteiro": [
-      "and",
-      "for",
-      "in",
-      "it",
-      "me",
-      "my",
-      "of",
-      "on",
-      "that",
-      "the"
+      "said",
+      "just",
+      "parents",
+      "family",
+      "told",
+      "brother",
+      "bro",
+      "going",
+      "know",
+      "don"
+    ],
+    "termos_descricao_usar": [
+      "comments",
+      "told",
+      "shocking stories",
+      "youtubeshorts",
+      "want read",
+      "want",
+      "way",
+      "way details",
+      "situation want",
+      "situation"
+    ],
+    "termos_gancho_evitar": [
+      "did",
+      "boyfriend",
+      "inmate",
+      "fired",
+      "boss",
+      "ve",
+      "parents",
+      "great",
+      "15",
+      "children"
+    ],
+    "termos_roteiro_evitar": [
+      "completely",
+      "year",
+      "asleep",
+      "austin",
+      "frank",
+      "leon",
+      "lauren",
+      "bryce",
+      "hand",
+      "just"
+    ],
+    "emojis_usar": [
+      "⚠️",
+      "👀",
+      "👉",
+      "💬",
+      "📖"
+    ],
+    "emojis_evitar": [
+      "👍",
+      "😌",
+      "😂",
+      "🥺"
     ],
     "arco_emocional": {
       "inicio": "positivo",
       "meio": "positivo",
       "fim": "positivo"
+    },
+    "vocabulario_por_terco": {
+      "inicio": [
+        "family",
+        "know",
+        "going",
+        "years",
+        "bro",
+        "just",
+        "man",
+        "parents"
+      ],
+      "meio": [
+        "said",
+        "really",
+        "didn",
+        "like",
+        "just",
+        "know",
+        "don",
+        "brother"
+      ],
+      "fim": [
+        "said",
+        "just",
+        "wanted",
+        "parents",
+        "brother",
+        "son",
+        "don",
+        "going"
+      ]
+    },
+    "comprimento_medio_gancho": 15.0,
+    "comprimento_medio_frase": 11.0,
+    "padrao_abertura_dominante": "afirmacao",
+    "densidade_pontuacao": {
+      "super_viral": 0.0,
+      "frio": 0.0
     },
     "exemplos_ganchos": [
       "my parents continued to offer my medical services for free to relatives, so they received",
@@ -100,63 +193,53 @@
       "My fiancé's STEPMOTHER insisted on planning our wedding WITHOUT ASKING us anything, and we let her.",
       "I work at a restaurant and I have a HUGE crush on a customer."
     ],
-    "termos_gancho_evitar": [
-      "been",
-      "did your",
-      "rule",
-      "had",
-      "years",
-      "because",
-      "an interview",
-      "children",
-      "writes",
-      "that"
+    "exemplos_descricoes": [
+      "📖 Shocking stories inspired by Reddit, told in an intense and involving way.\n\nSome details such as names, ages or situations can be modified to improve the narrative.\n \n⚠️ This content is published for entertainment purposes only.\n\n👀 If you made it this far, you are already part of the community.\n\n👉Subscribe now and activate the bell so you don't miss the next one.\n\n💬 Leave me in the comments what you would do in this situation, I want to read you in the next story.\n\n#redditstories #realstories #reddit #redditespañol #shorts #youtubeshorts",
+      "📖 Shocking stories inspired by Reddit, told in an intense and involving way.\r\n\r\nSome details such as names, ages or situations can be modified to improve the narrative.\r\n\r\n⚠️ This content is published for entertainment purposes only.\r\n\r\n👀 If you made it this far, you are already part of the community.\r\n\r\n👉Subscribe now and activate the bell so you don't miss the next one.\r\n\r\n💬 Leave me in the comments what you would do in this situation, I want to read you in the next story.\r\n\r\n#redditstories #realstories #reddit #redditespañol #shorts #youtubeshorts",
+      "📖 Shocking stories inspired by Reddit, told in an intense and involving way.\r\n\r\nSome details such as names, ages or situations can be modified to improve the narrative.\r\n\r\n⚠️ This content is published for entertainment purposes only.\r\n\r\n👀 If you made it this far, you are already part of the community.\r\n\r\n👉Subscribe now and activate the bell so you don't miss the next one.\r\n\r\n💬 Leave me in the comments what you would do in this situation, I want to read you in the next story.\r\n\r\n#redditstories #realstories #reddit #redditespañol #shorts #youtubeshorts",
+      "📖 Shocking stories inspired by Reddit, told in an intense and involving way.\r\n\r\nSome details such as names, ages or situations can be modified to improve the narrative.\r\n\r\n⚠️ This content is published for entertainment purposes only.\r\n\r\n👀 If you made it this far, you are already part of the community.\r\n\r\n👉Subscribe now and activate the bell so you don't miss the next one.\r\n\r\n💬 Leave me in the comments what you would do in this situation, I want to read you in the next story.\r\n\r\n#redditstories #realstories #reddit #redditespañol #shorts #youtubeshorts",
+      "This is a Reddit story! \nAnd there? Tell me your opinion in the comments! 🔬\n\n\n#shorts #reddit #AITAH #stories #confession"
     ],
-    "termos_roteiro_evitar": [
-      "phone",
-      "thought",
-      "their",
-      "completely",
-      "down",
-      "again",
-      "leon",
-      "into",
-      "on the",
-      "made"
+    "exemplos_thumbnails": [
+      "WHAT @ELTIPODEREDDIT",
+      "THEY USED THE TYPE OFREDDIT",
+      "OURS",
+      "THREE HUNDRED",
+      "to sit"
     ]
   },
   "thumbnail": {
     "comprimento_alvo_chars": 27,
     "termos_thumbnail_usar": [
+      "sit",
+      "security",
+      "eltipodereddit",
+      "hold",
+      "type ofreddit",
+      "type",
       "mikasadoreddit",
-      "don",
-      "and",
-      "because",
-      "bride",
-      "after",
-      "at me",
-      "gift it",
-      "oh",
-      "her cell"
+      "mikasa red",
+      "used",
+      "used type"
     ],
     "termos_thumbnail_evitar": [
-      "the whole",
-      "another",
-      "down",
-      "oddixa",
-      "said",
+      "tradition",
+      "weeks",
+      "sitting",
       "shy",
-      "saw",
-      "someone",
+      "strict",
+      "said",
+      "publicity",
       "assets",
-      "share"
+      "embarrassing",
+      "entered"
     ],
     "cenas_visuais_dominantes": [
-      "and",
-      "bubble",
-      "bubble overlay",
-      "chat",
-      "featuring"
+      "person",
+      "using",
+      "reddit",
+      "person using",
+      "textured"
     ],
     "exemplos_texto_thumbnail": [
       "WHAT @ELTIPODEREDDIT",

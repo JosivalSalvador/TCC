@@ -12,15 +12,19 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <MotionConfig reducedMotion="user">{children}</MotionConfig>
-
       <Toaster
-        richColors
         closeButton
         position="bottom-right"
         theme="dark"
         toastOptions={{
-          className:
-            "rounded-md border-border/50 bg-card text-foreground shadow-xl",
+          classNames: {
+            toast:
+              "!bg-[#12121c] !border !border-[#2a2a3d] !text-[#f0f0f8] !shadow-xl !rounded-lg !font-sans",
+            title: "!text-sm !font-medium",
+            description: "!text-xs !text-[#8b8ba8]",
+            success: "!border-[#7c3aed]/30 [&>[data-icon]]:!text-[#a78bfa]",
+            error: "!border-[#ef4444]/30 [&>[data-icon]]:!text-[#ef4444]",
+          },
         }}
       />
     </QueryClientProvider>
