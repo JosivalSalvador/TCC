@@ -1,0 +1,503 @@
+{
+  "nicho": "historias denso",
+  "structure_content": {
+    "titulo": {
+      "formula_construcao": "afirmacao",
+      "comprimento_alvo_chars": 76,
+      "termos_obrigatorios": [
+        "sister",
+        "parents",
+        "family",
+        "brother",
+        "story",
+        "daughter",
+        "stories",
+        "mother",
+        "craziest"
+      ],
+      "caps_intensidade": 0.091,
+      "emojis": [
+        {
+          "emoji": "😳",
+          "posicao": "meio",
+          "frequencia": 5
+        },
+        {
+          "emoji": "🏙",
+          "posicao": "fim",
+          "frequencia": 2
+        },
+        {
+          "emoji": "🚫",
+          "posicao": "fim",
+          "frequencia": 2
+        },
+        {
+          "emoji": "😂",
+          "posicao": "meio",
+          "frequencia": 2
+        },
+        {
+          "emoji": "🙄",
+          "posicao": "meio",
+          "frequencia": 2
+        }
+      ],
+      "usar_pontuacao_impacto": true,
+      "sentimento_alvo": "negativo",
+      "molde_estrutura": {
+        "formula": "afirmacao",
+        "caps_intensidade": 0.091,
+        "clickbait_score_mediano": 0.438,
+        "usar_pontuacao": true,
+        "sentimento_alvo": "negativo",
+        "emojis_sugeridos": [
+          {
+            "emoji": "😳",
+            "posicao": "meio",
+            "frequencia": 5
+          },
+          {
+            "emoji": "🏙",
+            "posicao": "fim",
+            "frequencia": 2
+          }
+        ]
+      },
+      "exemplos_reais": [
+        "Parents Didn't Want Me At Our Family Vacation, Because I'm In A Wheelchair Now And Said I Would",
+        "My mother ABANDONED me when I was 12 to START her “PERFECT life” with her NEW HUSBAND and her",
+        "My Parents Refused Blood For My Surgery It's Sister's Birthday—Doctor Revealed The Truth #reddit"
+      ]
+    },
+    "descricao": {
+      "comprimento_alvo_chars": 79,
+      "primeira_linha_comprimento_alvo": 76,
+      "sentimento_primeira_linha": "neutro",
+      "termos_seo_obrigatorios": [
+        "shorts",
+        "redditstories",
+        "reddit",
+        "story",
+        "stories",
+        "redditstory",
+        "redditrelationship",
+        "viral",
+        "emotionalreddit"
+      ],
+      "moldes_frase": [
+        "redditstories aitareddit",
+        "shorts redditstories",
+        "redditstories satisfying",
+        "shorts redditstories satisfying",
+        "shorts reddit",
+        "redditstories aitareddit redditrelationship",
+        "aitareddit redditrelationship",
+        "aitareddit redditrelationship shorts",
+        "redditrelationship shorts",
+        "satisfying story"
+      ],
+      "emojis": [
+        {
+          "emoji": "👉",
+          "frequencia": 8
+        },
+        {
+          "emoji": "💬",
+          "frequencia": 8
+        },
+        {
+          "emoji": "📖",
+          "frequencia": 6
+        },
+        {
+          "emoji": "⚠",
+          "frequencia": 6
+        },
+        {
+          "emoji": "👀",
+          "frequencia": 6
+        }
+      ],
+      "cta_posicao": "ausente",
+      "cta_intensidade": "ausente",
+      "cta_score_mediano": 0.0,
+      "usar_links": false,
+      "hashtags": [
+        "shorts",
+        "lifestyle sociology",
+        "reddit",
+        "redditstories",
+        "comedy",
+        "satisfying",
+        "people blogs",
+        "entertainment",
+        "reddit stories",
+        "aitareddit",
+        "redditrelationship",
+        "geschichte",
+        "storytime",
+        "aita reddit",
+        "story"
+      ],
+      "quantidade_hashtags": 4,
+      "exemplos_reais": [
+        "What did your MOTHER do for you? ! #shorts #redditstories #satisfying #story",
+        "ONLY ONE COULD SURVIVE?! #shorts #satisfying #relaxation #redditstory",
+        "My parents ignored me my whole life, then tried to move my grown brother into my apartment to trap me. They called it “family responsibility.” I called it the last mistake they’d ever make with my name.\n#redditstories  #aitareddit   #redditrelationship  #shorts #reddit"
+      ]
+    },
+    "palavras_chave": {
+      "shorttail": [
+        "shorts",
+        "reddit",
+        "redditstories",
+        "comedy",
+        "satisfying",
+        "entertainment",
+        "aitareddit",
+        "redditrelationship",
+        "geschichte",
+        "storytime",
+        "story",
+        "food",
+        "hobby",
+        "redditstorie",
+        "viral"
+      ],
+      "midtail": [
+        "lifestyle sociology",
+        "people blogs",
+        "reddit stories",
+        "aita reddit",
+        "reddit recap",
+        "aita stories",
+        "reddit drama",
+        "reddit story",
+        "aita narration",
+        "emotional story",
+        "reddit posts",
+        "reddit content",
+        "reddit shorts",
+        "reddit narration",
+        "reddit reading"
+      ],
+      "longtail": [
+        "video game culture",
+        "trending reddit stories",
+        "viral reddit story",
+        "kowloon walled city",
+        "action adventure game",
+        "role playing video game",
+        "reddit short story",
+        "automotive air conditioning",
+        "bate papo tecnico",
+        "dense distribution center",
+        "event for mechanics",
+        "santa barbara d oeste",
+        "tech center denso",
+        "automotive technical training",
+        "curiosities about the human body"
+      ],
+      "proporcao_ideal": {
+        "shorttail": 0.833,
+        "midtail": 0.167,
+        "longtail": 0.0
+      }
+    },
+    "thumbnail": {
+      "texto_capa": {
+        "comprimento_alvo_chars": 9,
+        "termos_obrigatorios": [
+          "level",
+          "told",
+          "denso",
+          "hear",
+          "took",
+          "stage",
+          "rina",
+          "dinner",
+          "deal",
+          "crossed",
+          "secret",
+          "partner"
+        ],
+        "caps_intensidade": 0.0,
+        "emojis": [
+          {
+            "emoji": "💀",
+            "frequencia": 2
+          },
+          {
+            "emoji": "🚀",
+            "frequencia": 1
+          },
+          {
+            "emoji": "🎂",
+            "frequencia": 1
+          },
+          {
+            "emoji": "😎",
+            "frequencia": 1
+          },
+          {
+            "emoji": "❄",
+            "frequencia": 1
+          }
+        ],
+        "sentimento_alvo": "neutro"
+      },
+      "cena_visual": {
+        "elementos_obrigatorios": [
+          "person",
+          "wearing",
+          "wooden",
+          "hand",
+          "gloves",
+          "metal",
+          "colorful",
+          "character",
+          "surface",
+          "holding",
+          "knife",
+          "machine",
+          "food",
+          "tool",
+          "chocolate"
+        ],
+        "presenca_humana": 0.597
+      },
+      "sentimento_visual_alvo": "neutro",
+      "exemplos_reais": [
+        "Someone saw me in the",
+        "He was working at Denso",
+        "Reddit-rina The judge granted my ex everything, and I smiled."
+      ]
+    },
+    "postagem": {
+      "top_3_slots": [
+        {
+          "dia": "monday",
+          "janela": "tarde",
+          "quantidade_virais": 12,
+          "justificativa": "8.6% dos vídeos virais desse nicho foram postados nesse slot."
+        },
+        {
+          "dia": "friday",
+          "janela": "noite",
+          "quantidade_virais": 9,
+          "justificativa": "6.5% dos vídeos virais desse nicho foram postados nesse slot."
+        },
+        {
+          "dia": "tuesday",
+          "janela": "tarde",
+          "quantidade_virais": 9,
+          "justificativa": "6.5% dos vídeos virais desse nicho foram postados nesse slot."
+        }
+      ]
+    }
+  },
+  "script_content": {
+    "estrutura_geral": {
+      "estrutura_blocos": "esquete_com_hook",
+      "faixa_duracao": "short_longo",
+      "limite_palavras": 821,
+      "usa_dialogo": false,
+      "taxa_dialogo_no_nicho": 0.05,
+      "usa_repeticao": true
+    },
+    "gancho": {
+      "formula_abertura": "afirmacao",
+      "comprimento_alvo_palavras": 15,
+      "comprimento_alvo_chars": 75,
+      "sentimento_alvo": "negativo",
+      "termos_obrigatorios": [
+        "parents",
+        "sister",
+        "child",
+        "husband",
+        "family",
+        "dinner",
+        "daughter",
+        "mother",
+        "wife",
+        "school"
+      ],
+      "usar_pontuacao_impacto": false,
+      "exemplos_reais": [
+        "what is the biggest promise your parents ever broke when i was ten my dad",
+        "jail valuers have you ever met an inmate you had great respect for the inmate",
+        "what kills the nozzle is the system the filter the diesel oil for example a"
+      ]
+    },
+    "ritmo_linguagem": {
+      "palavras_por_segundo": 4.785,
+      "comprimento_medio_frase": 62.667,
+      "variancia_ritmo": 2596.149,
+      "densidade_pontuacao_impacto": 0.0,
+      "moldes_frase": [
+        "didn_t",
+        "don_t",
+        "wasn_t",
+        "couldn_t",
+        "t_know",
+        "year_old",
+        "mom_s",
+        "p_m",
+        "cell_phone",
+        "doesn_t"
+      ]
+    },
+    "arco_emocional": {
+      "inicio": {
+        "tom": "negativo",
+        "vocabulario_obrigatorio": [
+          "said",
+          "family",
+          "didn",
+          "just",
+          "parents",
+          "like",
+          "mom",
+          "dad",
+          "sister",
+          "mother"
+        ]
+      },
+      "meio": {
+        "tom": "neutro",
+        "vocabulario_obrigatorio": [
+          "said",
+          "family",
+          "didn",
+          "just",
+          "mom",
+          "dad",
+          "like",
+          "parents",
+          "house",
+          "sister"
+        ]
+      },
+      "fim": {
+        "tom": "negativo",
+        "vocabulario_obrigatorio": [
+          "said",
+          "family",
+          "didn",
+          "parents",
+          "mom",
+          "like",
+          "just",
+          "dad",
+          "door",
+          "sister"
+        ]
+      }
+    },
+    "audio": {
+      "tipo_dominante": "[music]",
+      "clima_sonoro": [
+        {
+          "pista": "[music]",
+          "frequencia": 18
+        },
+        {
+          "pista": "[clear throat]",
+          "frequencia": 2
+        }
+      ],
+      "frequencia_uso_no_nicho": 0.144
+    },
+    "repeticao": {
+      "ativar": true,
+      "taxa_no_nicho": 0.878,
+      "frequencia_media": 10
+    },
+    "cta": {
+      "intensidade": "moderado",
+      "estilo": "ausente",
+      "ativar_gatilho_debate": false,
+      "taxa_discussao_mediana": 0.013,
+      "cta_score_mediano": 0.0,
+      "posicao": "ausente",
+      "molde_termos": []
+    },
+    "vocabulario_geral": {
+      "termos_obrigatorios": [
+        "said",
+        "didn",
+        "family",
+        "mom",
+        "just",
+        "like",
+        "parents",
+        "dad",
+        "sister",
+        "told",
+        "house",
+        "went",
+        "school",
+        "mother",
+        "door",
+        "husband",
+        "time",
+        "called",
+        "son",
+        "thought",
+        "brother",
+        "asked",
+        "party",
+        "car",
+        "got",
+        "daughter",
+        "home",
+        "completely",
+        "years",
+        "day"
+      ],
+      "coocorrencias_obrigatorias": [
+        [
+          "dad",
+          "said"
+        ],
+        [
+          "like",
+          "said"
+        ],
+        [
+          "mom",
+          "said"
+        ],
+        [
+          "looked",
+          "said"
+        ],
+        [
+          "two",
+          "years"
+        ],
+        [
+          "said",
+          "told"
+        ],
+        [
+          "know",
+          "said"
+        ],
+        [
+          "said",
+          "sister"
+        ],
+        [
+          "like",
+          "mom"
+        ],
+        [
+          "best",
+          "friend"
+        ]
+      ]
+    }
+  }
+}

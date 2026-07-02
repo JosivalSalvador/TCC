@@ -1,221 +1,465 @@
 {
   "nicho": "tech_review",
-  "n_videos": 25,
-  "n_super": 11,
-  "n_frio": 0,
-  "estrutura": {
-    "faixa_duracao_dominante": "short_longo",
-    "estrutura_blocos_dominante": "esquete_com_hook",
-    "ritmo_palavras_seg_mediana": 3.211,
-    "densidade_roteiro_mediana": 269,
-    "sentimento_dominante": "positivo",
-    "hora_postagem_mediana": 10.0,
-    "top3_slots_postagem": [
-      {
-        "dia": "tuesday",
-        "janela": "manha",
-        "qtd": 3
-      },
-      {
-        "dia": "friday",
-        "janela": "manha",
-        "qtd": 1
-      },
-      {
-        "dia": "friday",
-        "janela": "tarde",
-        "qtd": 1
-      }
-    ],
-    "ativar_repeticao_5x": true,
-    "tipo_audio_dominante": "sem_audio",
-    "clickbait_score_mediana": 0.433,
-    "velocidade_views_mediana": 10.075,
-    "taxa_conversao_mediana": 4.986,
-    "taxa_discussao_mediana": 0.04,
-    "completude_seo_mediana": 9.0,
-    "faixa_duracao_evitar": null,
-    "sentimento_evitar": null
-  },
-  "textuais": {
-    "termos_gancho_usar": [
-      "phone",
-      "friends",
-      "rickshaw",
-      "amazing",
-      "samsung",
-      "literally",
-      "years",
-      "android",
-      "features",
-      "launched"
-    ],
-    "termos_vocabulario": [
-      "phone",
-      "meaning",
-      "look",
-      "mah",
-      "friends",
-      "let",
-      "want",
-      "brother",
-      "display",
-      "yes"
-    ],
-    "termos_seo_usar": [
-      "technology",
-      "smartphone",
-      "iqoo",
-      "best",
-      "samsung",
-      "ultra",
-      "trakintech",
-      "shorts",
-      "trakinshorts trakintech",
-      "trakinshorts"
-    ],
-    "ngramas_roteiro": [
-      "phone",
-      "hey",
-      "comes",
-      "meaning",
-      "yes",
-      "battery",
-      "50",
-      "look",
-      "let",
-      "000"
-    ],
-    "termos_descricao_usar": [
-      "http",
-      "trakintech",
-      "twitter",
-      "com",
-      "com trakintech",
-      "http www",
-      "www",
-      "use",
-      "galaxy",
-      "instagram"
-    ],
-    "termos_gancho_evitar": [],
-    "termos_roteiro_evitar": [],
-    "emojis_usar": [
-      "⚡",
-      "👇",
-      "🤯",
-      "🥹",
-      "🤩"
-    ],
-    "emojis_evitar": [],
-    "arco_emocional": {
-      "inicio": "positivo",
-      "meio": "positivo",
-      "fim": "positivo"
-    },
-    "vocabulario_por_terco": {
-      "inicio": [
-        "meaning",
+  "structure_content": {
+    "titulo": {
+      "formula_construcao": "afirmacao",
+      "comprimento_alvo_chars": 55,
+      "termos_obrigatorios": [
+        "ultra",
         "phone",
-        "friends",
-        "days",
-        "android",
-        "look",
-        "rickshaw",
-        "score"
+        "samsung",
+        "galaxy",
+        "iphone",
+        "apple",
+        "gadgets"
       ],
-      "meio": [
-        "battery",
-        "comes",
-        "yes",
-        "phone",
-        "know",
-        "want",
-        "50",
-        "let"
+      "caps_intensidade": 0.0,
+      "emojis": [
+        {
+          "emoji": "🔥",
+          "posicao": "meio",
+          "frequencia": 3
+        },
+        {
+          "emoji": "⚡",
+          "posicao": "meio",
+          "frequencia": 3
+        },
+        {
+          "emoji": "🔥",
+          "posicao": "fim",
+          "frequencia": 3
+        },
+        {
+          "emoji": "🤯",
+          "posicao": "fim",
+          "frequencia": 2
+        },
+        {
+          "emoji": "🤯",
+          "posicao": "meio",
+          "frequencia": 2
+        }
       ],
-      "fim": [
-        "phones",
-        "hey",
-        "available",
-        "phone",
-        "india",
-        "plus",
-        "price",
-        "come"
+      "usar_pontuacao_impacto": false,
+      "sentimento_alvo": "neutro",
+      "molde_estrutura": {
+        "formula": "afirmacao",
+        "caps_intensidade": 0.0,
+        "clickbait_score_mediano": 0.417,
+        "usar_pontuacao": false,
+        "emojis_sugeridos": [
+          {
+            "emoji": "🔥",
+            "posicao": "meio",
+            "frequencia": 3
+          },
+          {
+            "emoji": "⚡",
+            "posicao": "meio",
+            "frequencia": 3
+          }
+        ]
+      },
+      "exemplos_reais": [
+        "Ye Hain Galaxy S27 Ultra 🔥🔥🔥 #TrakinShorts #Shorts",
+        "iPhone 17 Pro Max vs Samsung S26 Ultra which has faster charge🤯",
+        "This is shaking everyone in India..🤯 #shorts"
       ]
     },
-    "comprimento_medio_gancho": 15.0,
-    "comprimento_medio_frase": 8.4,
-    "padrao_abertura_dominante": "afirmacao",
-    "densidade_pontuacao": {
-      "super_viral": 0.0,
-      "frio": null
+    "descricao": {
+      "comprimento_alvo_chars": 636,
+      "primeira_linha_comprimento_alvo": 67,
+      "sentimento_primeira_linha": "neutro",
+      "termos_seo_obrigatorios": [
+        "copyright",
+        "fair",
+        "trakintech",
+        "twitter",
+        "https",
+        "instagram",
+        "channel",
+        "disclaimer",
+        "iphone",
+        "shorts",
+        "facebook",
+        "subscribe",
+        "videos",
+        "share",
+        "personal",
+        "techmasterak",
+        "techmasterco",
+        "youtube",
+        "purposes",
+        "research"
+      ],
+      "moldes_frase": [
+        "fair use",
+        "com trakintech",
+        "twitter com",
+        "instagram com",
+        "instagram https",
+        "youtube com",
+        "www twitter",
+        "trakintech twitter",
+        "www twitter com",
+        "com trakintech twitter"
+      ],
+      "emojis": [
+        {
+          "emoji": "👇",
+          "frequencia": 22
+        },
+        {
+          "emoji": "🎥",
+          "frequencia": 2
+        },
+        {
+          "emoji": "🚫",
+          "frequencia": 1
+        },
+        {
+          "emoji": "🤯",
+          "frequencia": 1
+        },
+        {
+          "emoji": "😱",
+          "frequencia": 1
+        }
+      ],
+      "cta_posicao": "inicio",
+      "cta_intensidade": "moderado",
+      "usar_links": true,
+      "hashtags": [
+        "shorts",
+        "science & technology",
+        "technology",
+        "lifestyle (sociology)",
+        "amazingtipsandtricks",
+        "arvind kharra",
+        "facts",
+        "tech master",
+        "tech",
+        "apple",
+        "trakinshorts",
+        "trakintech",
+        "entertainment",
+        "samsung",
+        "tech master shorts"
+      ],
+      "quantidade_hashtags": 3,
+      "exemplos_reais": [
+        "Remember Samsung mid range era phones like Galaxy A50, Galaxy A52, Galaxy M51, m52 etc\n\n#gyantherapy \n#gyantherapyshorts",
+        "Apple MacBook\nMacBook Neo\nMacOS\nMacBook Neo Unboxing\nMacBook vs Windows\n\n#gyantherapy \n#Apple",
+        "#TechBar #Gadgets #Samsung\n\n\n\nCREDITS:\nCinematographer: Vishal Sharma, Praveenkar, Ankit, Lakshya & Jatin Chopra \nEditing: Kashish, Praveen, Anil, Harsh, Vansh, Amit & Yash Shokeen\nThumbnail: Ayush Pathak\nContent: Parth Monish Kohli"
+      ]
     },
-    "exemplos_ganchos": [
-      "rickshaw. rickshaw. hey man, not even a rickshaw is stopping. from us? actually from you.",
-      "friends, what can these chinese brands do? there is no trust in them. literally i",
-      "hey brother, i have gone crazy. literally tno has launched such a smartphone. modular is",
-      "surely he must be cheating on me. hold with bare hands. who is this? these",
-      "friends, i am going to show you a phone which according to me is a"
-    ],
-    "exemplos_titulos": [
-      "Badi battery wala Phone for Students 🤩 iQOO Z11x #shorts",
-      "Ye Hain Galaxy S27 Ultra 🔥🔥🔥 #TrakinShorts #Shorts",
-      "This is shaking everyone in India..🤯 #shorts",
-      "World’s First Privacy Display🤯 Galaxy S26 Ultra #shorts",
-      "The Perfect Smartphone Of 2026?⚡️ #TrakinShorts #Shorts"
-    ],
-    "exemplos_descricoes": [
-      "The Most Value for Money Smartphone under 20000 🤩 iQOO Z11x #shorts #iqooz11x #amazonspecials #tech #smartphone \nSUBSCRIBE THE CHANNEL FOR MORE VIDEOS\n\n DON'T FORGET LIKE COMMENT & SHARE\n\ninstagram-👇\n\n https://Instagram.com/techmasterco\n\nMain Channel-👇\n\nhttps://youtube.com/c/TechMasterAK\n\nbusiness inquiry:- itstechmaster@gmail.com\n\nDisclaimer\ncopyright disclaimer under Section 107 of the Copyright Act 1976, allowance is made for fair use for purposes such as criticism,comment, news,reporting teaching, scholarship, and research. fair use is a use permitted by copyright statute that might otherwise be infringing non-profit educational or personal use tips the balance in favor of fair use. No copyright infringement intended....\n#shorts",
-      "Friends welcome to the world of Trakin Shorts. Here you will get to see many interesting videos so subscribe quickly and don't forget to like and share the video.\n\n#TrakinShorts​ #Shorts​ #TrakinTech​\n\nSocial Media Handles\n**********************************************************************\nFollow us on:\nWeb: http://trak.in​\nTelegram: https://t.me/officialtrakintech​\nInstagram: http://instagram.com/trakintech​\nTwitter: http://www.twitter.com/trakintech​\nTwitter personal: http://www.twitter.com/8ap​\nFacebook: http://www.facebook.com/TrakinTech",
-      "#TecnoModular   #MWC2026  #technoruhez \n\nAt MWC 2026 in Barcelona, Tecno unveiled a new ultra-thin modular smartphone concept featuring a magnetic interconnection system that lets users snap on accessories like additional batteries, telephoto lenses and action cameras without adding bulk.\n\nThe base device measures about 4.9 mm thick and is designed as a flexible platform that adapts to different use cases through easily attachable modules.",
-      "SUBSCRIBE THE CHANNEL FOR MORE VIDEOS\n\n DON'T FORGET LIKE COMMENT & SHARE\n\ninstagram-👇\n\n https://Instagram.com/techmasterco\n\nMain Channel-👇\n\nhttps://youtube.com/c/TechMasterAK\n\nbusiness inquiry:- itstechmaster@gmail.com\n\nDisclaimer\ncopyright disclaimer under Section 107 of the Copyright Act 1976, allowance is made for fair use for purposes such as criticism,comment, news,reporting teaching, scholarship, and research. fair use is a use permitted by copyright statute that might otherwise be infringing non-profit educational or personal use tips the balance in favor of fair use. No copyright infringement intended....\nGalaxy S26 Ultra\n\n#shorts \n#smartphone \n#samsung \n#galaxyai \n#galaxys26 \n#galaxys26ultra \n#collab \n#tech",
-      "Friends welcome to the world of Trakin Shorts. Here you will get to see many interesting videos so subscribe quickly and don't forget to like and share the video.\n\n#TrakinShorts​ #Shorts​ #TrakinTech​\n\nSocial Media Handles\n**********************************************************************\nFollow us on:\nWeb: http://trak.in​\nTelegram: https://t.me/officialtrakintech​\nInstagram: http://instagram.com/trakintech​\nTwitter: http://www.twitter.com/trakintech​\nTwitter personal: http://www.twitter.com/8ap​\nFacebook: http://www.facebook.com/TrakinTech"
-    ],
-    "exemplos_thumbnails": [
-      "SQUID GAME",
-      "#MWC26 S27 ULTRA? K ADVANCED OUKITEL CE",
-      "HENGTONG, GYEONGSANGBUK, NIDA, TECNO",
-      "PERFECT SMARTPHONE?!",
-      "THE REAL ULTRA iQOO ULTRA POWERED MONSTER INSIDE"
-    ]
+    "palavras_chave": {
+      "shorttail": [
+        "shorts",
+        "technology",
+        "amazingtipsandtricks",
+        "facts",
+        "tech",
+        "apple",
+        "trakinshorts",
+        "trakintech",
+        "entertainment",
+        "samsung",
+        "iphone",
+        "smartphone",
+        "gyantherapy",
+        "unboxing",
+        "techreview"
+      ],
+      "midtail": [
+        "lifestyle (sociology)",
+        "arvind kharra",
+        "tech master",
+        "trending shorts",
+        "viral shorts",
+        "camera test",
+        "techmaster shorts",
+        "cool gadgets",
+        "apple trap",
+        "drop test",
+        "iphone 17",
+        "iphone 17e",
+        "public reaction",
+        "tech shorts",
+        "chota don"
+      ],
+      "longtail": [
+        "science & technology",
+        "tech master shorts",
+        "galaxy s26 ultra",
+        "samsung galaxy s26 ultra",
+        "samsung galaxy s26 ultra privacy display",
+        "iphone 17 pro max",
+        "android vs iphone",
+        "don't buy iphone 17e",
+        "expensive phone drop",
+        "iphone 17e drop test",
+        "iphone 17e durability",
+        "iphone 17e public reaction",
+        "iphone 17e review",
+        "iphone 17e trap",
+        "shock public reaction"
+      ],
+      "proporcao_ideal": {
+        "shorttail": 0.427,
+        "midtail": 0.191,
+        "longtail": 0.381
+      }
+    },
+    "thumbnail": {
+      "texto_capa": {
+        "comprimento_alvo_chars": 20,
+        "termos_obrigatorios": [
+          "samsung",
+          "ultra",
+          "cashify",
+          "mango",
+          "phone",
+          "smartphone",
+          "xiaomi",
+          "squid",
+          "game",
+          "leica",
+          "holi",
+          "oukitel",
+          "cafe",
+          "gyeongsangbuk",
+          "prada"
+        ],
+        "caps_intensidade": 0.5,
+        "emojis": [],
+        "sentimento_alvo": "neutro"
+      },
+      "cena_visual": {
+        "elementos_obrigatorios": [
+          "smartphone",
+          "holds",
+          "holding",
+          "expression",
+          "camera",
+          "beard",
+          "wearing",
+          "shirt",
+          "person",
+          "talking",
+          "looking",
+          "standing",
+          "screen",
+          "smartphones",
+          "glasses"
+        ],
+        "presenca_humana": 0.92
+      },
+      "sentimento_visual_alvo": "neutro",
+      "exemplos_reais": [
+        "Samsung this phone",
+        "#MWC26 S27 ULTRA? K ADVANCED OUKITEL CE",
+        "5 SECRETS, Android 17, Cinnamon Bun, 16"
+      ]
+    },
+    "postagem": {
+      "top_3_slots": [
+        {
+          "dia": "thursday",
+          "janela": "tarde",
+          "quantidade_virais": 5,
+          "justificativa": "20.0% dos vídeos virais desse nicho foram postados nesse slot."
+        },
+        {
+          "dia": "monday",
+          "janela": "manha",
+          "quantidade_virais": 4,
+          "justificativa": "16.0% dos vídeos virais desse nicho foram postados nesse slot."
+        },
+        {
+          "dia": "tuesday",
+          "janela": "manha",
+          "quantidade_virais": 3,
+          "justificativa": "12.0% dos vídeos virais desse nicho foram postados nesse slot."
+        }
+      ]
+    }
   },
-  "thumbnail": {
-    "comprimento_alvo_chars": 36,
-    "termos_thumbnail_usar": [
-      "ultra",
-      "samsung phone",
-      "perfect smartphone",
-      "smartphone",
-      "squid",
-      "squid game",
-      "samsung",
-      "perfect",
-      "game",
-      "phone"
-    ],
-    "termos_thumbnail_evitar": [],
-    "cenas_visuais_dominantes": [
-      "man",
-      "smartphone",
-      "holds",
-      "holds smartphone",
-      "background"
-    ],
-    "exemplos_texto_thumbnail": [
-      "SQUID GAME",
-      "#MWC26 S27 ULTRA? K ADVANCED OUKITEL CE",
-      "HENGTONG, GYEONGSANGBUK, NIDA, TECNO",
-      "PERFECT SMARTPHONE?!",
-      "THE REAL ULTRA iQOO ULTRA POWERED MONSTER INSIDE"
-    ],
-    "exemplos_cena_visual": [
-      "A man wearing a 'Squid Game' t-shirt is gesturing and talking to another person in an outdoor setting with several people in the background.",
-      "A man with a shocked expression looks at a futuristic, ruggedly designed smartphone featuring multiple cameras and a metallic finish.",
-      "A man with a beard holds a smartphone with a unique modular attachment in a brightly lit tech exhibition space.",
-      "A woman in a purple saree appears to be talking expressively or complaining to a man who is looking at his smartphone.",
-      "A man with a surprised expression holds a smartphone with a pixelated pattern and a large orange camera module against a purple background."
-    ]
+  "script_content": {
+    "estrutura_geral": {
+      "estrutura_blocos": "narrativa",
+      "faixa_duracao": "short_longo",
+      "limite_palavras": 217
+    },
+    "gancho": {
+      "formula_abertura": "afirmacao",
+      "comprimento_alvo_palavras": 15,
+      "sentimento_alvo": "positivo",
+      "termos_obrigatorios": [
+        "phone",
+        "friends",
+        "phones",
+        "rickshaw",
+        "samsung",
+        "android",
+        "chinese",
+        "2026"
+      ],
+      "usar_pontuacao_impacto": true,
+      "exemplos_reais": [
+        "guys, can i show you something crazy? i have these two phones. both are from",
+        "today at the farm house these girls spoiled our condition by rubbing our colors. remove",
+        "friends, this phone has such amazing specifications, such amazing features that it should have been"
+      ]
+    },
+    "ritmo_linguagem": {
+      "palavras_por_segundo": 3.11,
+      "comprimento_medio_frase": 8.893,
+      "variancia_ritmo": 22.768,
+      "densidade_pontuacao_impacto": 0.0,
+      "moldes_frase": [
+        "mah battery",
+        "like iphone",
+        "did like",
+        "amoled display",
+        "price range",
+        "physical fan",
+        "near perfect",
+        "snapdragon processor",
+        "samsung galaxy",
+        "phone years"
+      ]
+    },
+    "arco_emocional": {
+      "inicio": {
+        "tom": "positivo",
+        "vocabulario_obrigatorio": [
+          "phone",
+          "look",
+          "iphone",
+          "camera",
+          "good",
+          "samsung",
+          "rickshaw",
+          "ultra",
+          "crazy",
+          "phones"
+        ]
+      },
+      "meio": {
+        "tom": "positivo",
+        "vocabulario_obrigatorio": [
+          "battery",
+          "phone",
+          "iphone",
+          "like",
+          "color",
+          "look",
+          "know",
+          "video",
+          "let",
+          "camera"
+        ]
+      },
+      "fim": {
+        "tom": "positivo",
+        "vocabulario_obrigatorio": [
+          "phone",
+          "subscribe",
+          "camera",
+          "india",
+          "ultra",
+          "look",
+          "phones",
+          "price",
+          "design",
+          "display"
+        ]
+      }
+    },
+    "audio": {
+      "tipo_dominante": "[music]",
+      "clima_sonoro": [
+        {
+          "pista": "[music]",
+          "frequencia": 3
+        },
+        {
+          "pista": "[groaning sound]",
+          "frequencia": 1
+        }
+      ],
+      "frequencia_uso_no_nicho": 0.16
+    },
+    "repeticao": {
+      "ativar": true,
+      "taxa_no_nicho": 0.52,
+      "frequencia_media": 7
+    },
+    "cta": {
+      "intensidade": "moderado",
+      "estilo": "moderado",
+      "ativar_gatilho_debate": false,
+      "taxa_discussao_mediana": 0.031,
+      "posicao": "inicio",
+      "molde_termos": [
+        "like",
+        "subscribe",
+        "buy",
+        "turn",
+        "iphone",
+        "just",
+        "comes",
+        "video",
+        "come",
+        "swipe"
+      ]
+    },
+    "vocabulario_geral": {
+      "termos_obrigatorios": [],
+      "coocorrencias_obrigatorias": [
+        [
+          "battery",
+          "mah"
+        ],
+        [
+          "iphone",
+          "one"
+        ],
+        [
+          "also",
+          "comes"
+        ],
+        [
+          "android",
+          "subscribe"
+        ],
+        [
+          "android",
+          "people"
+        ],
+        [
+          "android",
+          "use"
+        ],
+        [
+          "also",
+          "android"
+        ],
+        [
+          "android",
+          "user"
+        ],
+        [
+          "android",
+          "quickly"
+        ],
+        [
+          "subscribe",
+          "user"
+        ]
+      ]
+    }
   }
 }

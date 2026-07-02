@@ -1,59 +1,66 @@
+"""
+inferencia_ml.py
+
+Responsabilidade: receber o nome do nicho (e opcionalmente o
+audience_context), carregar o JSON de padrões do nicho gerado
+pelo 03_treinamento.py, e retornar o contexto estruturado
+pronto para a LLM em llm.py.
+
+Se o nicho não existir no dataset, ativa fallback por similaridade
+semântica usando os embeddings calculados no 03_treinamento.py
+(cosine similarity entre embeddings de palavras_chave_en por nicho).
+
+Fluxo:
+    1. Tenta carregar JSON do nicho diretamente
+    2. Se não existir, encontra nicho mais similar via embeddings
+    3. Retorna padrões + metadados do fallback se aplicável
+"""
+
 import json
 import os
 import pickle
 
-import numpy as np
+from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from src.core.supabase_client import BASE_DIR
 
-# ── Caminhos ────────────────────────────────────────────────────────────────
 PASTA_PADROES = os.path.join(BASE_DIR, "models", "padroes_virais")
-PASTA_PREPROCESSORS = os.path.join(BASE_DIR, "models", "preprocessors")
-PASTA_PREDICTORS = os.path.join(BASE_DIR, "models", "predictors")
-
 
 # ════════════════════════════════════════════════════════════════════════════
-# BLOCO 1 — CARREGAMENTO DOS ARTEFATOS
+# BLOCO 1 — CARREGAMENTO DE ARTEFATOS
 # ════════════════════════════════════════════════════════════════════════════
 
 
 def carregar_padroes_nicho(nicho: str) -> dict | None:
     """
     Carrega o JSON de padrões do nicho solicitado.
+    Normaliza o nome do nicho (lowercase, espaços → underscore).
     Retorna None se o nicho não existir.
     """
-    nicho_limpo = str(nicho).replace(" ", "_").replace("/", "_").lower()
-    caminho = os.path.join(PASTA_PADROES, f"{nicho_limpo}.json")
+    nicho_normalizado = nicho.lower().replace(" ", "_")
+    caminho = os.path.join(PASTA_PADROES, f"{nicho_normalizado}.json")
 
     if not os.path.exists(caminho):
         return None
 
     with open(caminho, "r", encoding="utf-8") as f:
-        padroes = json.load(f)
-
-    print(f" [inferencia] Padrões carregados: {nicho}")
-
-    return padroes
+        return json.load(f)
 
 
 def carregar_similaridade() -> dict | None:
     """
-    Carrega o nicho_similaridade.pkl para uso no fallback.
+    Carrega o nicho_similaridade.pkl gerado pelo 03_treinamento.py.
+    Contém embeddings agregados por nicho e lista de nichos indexados.
     Retorna None se o arquivo não existir.
     """
-    caminho = os.path.join(PASTA_PADROES, "nicho_similaridade.pkl")
+    caminho = os.path.join(BASE_DIR, "models", "nicho_similaridade.pkl")
 
     if not os.path.exists(caminho):
-        print(" [inferencia] AVISO: nicho_similaridade.pkl não encontrado.")
         return None
 
     with open(caminho, "rb") as f:
-        similaridade = pickle.load(f)
-
-    print(f" [inferencia] Similaridade carregada: {len(similaridade['nichos'])} nichos indexados")
-
-    return similaridade
+        return pickle.load(f)
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -63,35 +70,23 @@ def carregar_similaridade() -> dict | None:
 
 def encontrar_nicho_similar(nicho_novo: str) -> str | None:
     """
-    Recebe um nicho desconhecido como string e encontra
-    o nicho mais similar no dataset usando cosine similarity
-    sobre os vetores TF-IDF de palavras_chave_en.
+    Recebe um nicho desconhecido e encontra o mais similar no dataset.
+    Técnica: embedding do nicho novo com o mesmo modelo Sentence-BERT
+    usado no 03_treinamento.py + cosine similarity contra os embeddings
+    agregados por nicho salvos em nicho_similaridade.pkl.
     Retorna o nome do nicho mais similar.
     """
-    dados = carregar_similaridade()
-
-    if dados is None:
+    similaridade = carregar_similaridade()
+    if similaridade is None:
         return None
 
-    vetorizador = dados["vetorizador"]
-    matriz = dados["matriz"]
-    nichos = dados["nichos"]
+    modelo = SentenceTransformer("all-MiniLM-L6-v2")
+    embedding_novo = modelo.encode([nicho_novo], convert_to_numpy=True)
 
-    # Vetoriza o nicho novo com a mesma régua do treino
-    vetor_novo = vetorizador.transform([nicho_novo.lower()])
+    sims = cosine_similarity(embedding_novo, similaridade["embeddings"])[0]
+    idx_mais_similar = sims.argmax()
 
-    # Calcula similaridade com todos os nichos conhecidos
-    scores = cosine_similarity(vetor_novo, matriz)[0]
-
-    # Retorna o nicho com maior similaridade
-    idx_mais_similar = int(np.argmax(scores))
-    nicho_similar = nichos[idx_mais_similar]
-    score = round(float(scores[idx_mais_similar]), 4)
-
-    print(f" [inferencia] Nicho '{nicho_novo}' não encontrado.")
-    print(f"   Fallback → '{nicho_similar}' (similaridade: {score})")
-
-    return nicho_similar
+    return similaridade["nichos"][idx_mais_similar]
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -102,43 +97,33 @@ def encontrar_nicho_similar(nicho_novo: str) -> str | None:
 def inferir(nicho: str) -> dict:
     """
     Ponto de entrada principal do serviço.
-    Recebe o nome do nicho e retorna o contexto mastigado
-    para a LLM gerar o roteiro e a estrutura do vídeo.
-
     Fluxo:
     1. Tenta carregar padrões do nicho diretamente
-    2. Se não existir, encontra o nicho mais similar via fallback
-    3. Retorna padrões + metadados do fallback se aplicável
+    2. Se não existir, encontra nicho mais similar via fallback
+    3. Retorna padrões + metadados (nicho_solicitado, nicho_utilizado,
+       fallback_usado)
+    Em caso de falha total retorna dict com chave 'erro'.
     """
+    nicho_normalizado = nicho.lower().replace(" ", "_")
+
+    padroes = carregar_padroes_nicho(nicho_normalizado)
     fallback_usado = False
-    nicho_original = nicho
-    nicho_utilizado = nicho
+    nicho_utilizado = nicho_normalizado
 
-    # 1. Tenta carregar padrões do nicho diretamente
-    padroes = carregar_padroes_nicho(nicho)
-
-    # 2. Fallback — nicho desconhecido
     if padroes is None:
-        print(f" [inferencia] Nicho '{nicho}' não encontrado. Ativando fallback...")
-        nicho_similar = encontrar_nicho_similar(nicho)
-
+        nicho_similar = encontrar_nicho_similar(nicho_normalizado)
         if nicho_similar is None:
-            return {
-                "erro": f"Nicho '{nicho}' não encontrado e fallback indisponível.",
-            }
+            return {"erro": f"Nicho '{nicho}' não encontrado e nenhum similar disponível."}
 
         padroes = carregar_padroes_nicho(nicho_similar)
+        if padroes is None:
+            return {"erro": f"Nicho similar '{nicho_similar}' encontrado mas JSON não disponível."}
+
         fallback_usado = True
         nicho_utilizado = nicho_similar
 
-    if padroes is None:
-        return {
-            "erro": f"Não foi possível carregar padrões para o nicho '{nicho}'.",
-        }
-
-    # 3. Retorna padrões + metadados
     return {
-        "nicho_solicitado": nicho_original,
+        "nicho_solicitado": nicho_normalizado,
         "nicho_utilizado": nicho_utilizado,
         "fallback_usado": fallback_usado,
         "padroes": padroes,

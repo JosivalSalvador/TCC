@@ -1,259 +1,444 @@
 {
   "nicho": "historias_denso",
-  "n_videos": 125,
-  "n_super": 15,
-  "n_frio": 20,
-  "estrutura": {
-    "faixa_duracao_dominante": "short_longo",
-    "estrutura_blocos_dominante": "narrativa",
-    "ritmo_palavras_seg_mediana": 4.915,
-    "densidade_roteiro_mediana": 787,
-    "sentimento_dominante": "positivo",
-    "hora_postagem_mediana": 19.0,
-    "top3_slots_postagem": [
-      {
-        "dia": "friday",
-        "janela": "noite",
-        "qtd": 5
-      },
-      {
-        "dia": "friday",
-        "janela": "madrugada",
-        "qtd": 2
-      },
-      {
-        "dia": "monday",
-        "janela": "tarde",
-        "qtd": 2
-      }
-    ],
-    "ativar_repeticao_5x": true,
-    "tipo_audio_dominante": "sem_audio",
-    "clickbait_score_mediana": 0.394,
-    "velocidade_views_mediana": 8.16,
-    "taxa_conversao_mediana": 6.229,
-    "taxa_discussao_mediana": 0.027,
-    "completude_seo_mediana": 9.0,
-    "faixa_duracao_evitar": null,
-    "sentimento_evitar": null
-  },
-  "textuais": {
-    "termos_gancho_usar": [
-      "husband",
-      "accident",
-      "girlfriend taking",
-      "girlfriend",
-      "bro",
-      "job",
-      "failure",
-      "job failure",
-      "baby",
-      "baby months"
-    ],
-    "termos_vocabulario": [
-      "said",
-      "told",
-      "years",
-      "like",
-      "time",
-      "parents",
-      "son",
-      "going",
-      "man",
-      "love"
-    ],
-    "termos_seo_usar": [
-      "entertainment",
-      "youtubeshorts",
-      "redditespanol",
-      "shorts youtubeshorts",
-      "historiasdereddit historiasreales",
-      "historiasreales",
-      "reddit redditespanol",
-      "redditespanol shorts",
-      "historiasdereddit",
-      "entertainment historiasdereddit"
-    ],
-    "ngramas_roteiro": [
-      "said",
-      "just",
-      "parents",
-      "family",
-      "told",
-      "brother",
-      "bro",
-      "going",
-      "know",
-      "don"
-    ],
-    "termos_descricao_usar": [
-      "comments",
-      "told",
-      "shocking stories",
-      "youtubeshorts",
-      "want read",
-      "want",
-      "way",
-      "way details",
-      "situation want",
-      "situation"
-    ],
-    "termos_gancho_evitar": [
-      "did",
-      "boyfriend",
-      "inmate",
-      "fired",
-      "boss",
-      "ve",
-      "parents",
-      "great",
-      "15",
-      "children"
-    ],
-    "termos_roteiro_evitar": [
-      "completely",
-      "year",
-      "asleep",
-      "austin",
-      "frank",
-      "leon",
-      "lauren",
-      "bryce",
-      "hand",
-      "just"
-    ],
-    "emojis_usar": [
-      "⚠️",
-      "👀",
-      "👉",
-      "💬",
-      "📖"
-    ],
-    "emojis_evitar": [
-      "👍",
-      "😌",
-      "😂",
-      "🥺"
-    ],
-    "arco_emocional": {
-      "inicio": "positivo",
-      "meio": "positivo",
-      "fim": "positivo"
-    },
-    "vocabulario_por_terco": {
-      "inicio": [
-        "family",
-        "know",
-        "going",
-        "years",
-        "bro",
-        "just",
-        "man",
-        "parents"
-      ],
-      "meio": [
-        "said",
-        "really",
-        "didn",
-        "like",
-        "just",
-        "know",
-        "don",
-        "brother"
-      ],
-      "fim": [
-        "said",
-        "just",
-        "wanted",
+  "structure_content": {
+    "titulo": {
+      "formula_construcao": "afirmacao",
+      "comprimento_alvo_chars": 77,
+      "termos_obrigatorios": [
+        "sister",
         "parents",
+        "family",
         "brother",
-        "son",
-        "don",
-        "going"
+        "daughter",
+        "mother",
+        "stories",
+        "craziest"
+      ],
+      "caps_intensidade": 0.091,
+      "emojis": [
+        {
+          "emoji": "😳",
+          "posicao": "meio",
+          "frequencia": 5
+        },
+        {
+          "emoji": "😂",
+          "posicao": "meio",
+          "frequencia": 2
+        },
+        {
+          "emoji": "🙄",
+          "posicao": "meio",
+          "frequencia": 2
+        },
+        {
+          "emoji": "😤",
+          "posicao": "meio",
+          "frequencia": 2
+        },
+        {
+          "emoji": "😭",
+          "posicao": "meio",
+          "frequencia": 1
+        }
+      ],
+      "usar_pontuacao_impacto": true,
+      "sentimento_alvo": "neutro",
+      "molde_estrutura": {
+        "formula": "afirmacao",
+        "caps_intensidade": 0.091,
+        "clickbait_score_mediano": 0.439,
+        "usar_pontuacao": true,
+        "emojis_sugeridos": [
+          {
+            "emoji": "😳",
+            "posicao": "meio",
+            "frequencia": 5
+          },
+          {
+            "emoji": "😂",
+            "posicao": "meio",
+            "frequencia": 2
+          }
+        ]
+      },
+      "exemplos_reais": [
+        "Parents Didn't Want Me At Our Family Vacation, Because I'm In A Wheelchair Now And Said I Would",
+        "My mother ABANDONED me when I was 12 to START her “PERFECT life” with her NEW HUSBAND and her",
+        "My Parents Refused Blood For My Surgery It's Sister's Birthday—Doctor Revealed The Truth #reddit"
       ]
     },
-    "comprimento_medio_gancho": 15.0,
-    "comprimento_medio_frase": 11.0,
-    "padrao_abertura_dominante": "afirmacao",
-    "densidade_pontuacao": {
-      "super_viral": 0.0,
-      "frio": 0.0
+    "descricao": {
+      "comprimento_alvo_chars": 77,
+      "primeira_linha_comprimento_alvo": 76,
+      "sentimento_primeira_linha": "neutro",
+      "termos_seo_obrigatorios": [
+        "shorts",
+        "redditstories",
+        "reddit",
+        "story",
+        "redditrelationship",
+        "stories",
+        "redditstory",
+        "emotionalreddit"
+      ],
+      "moldes_frase": [
+        "redditstories aitareddit",
+        "shorts redditstories",
+        "redditstories satisfying",
+        "shorts redditstories satisfying",
+        "shorts reddit",
+        "redditstories aitareddit redditrelationship",
+        "aitareddit redditrelationship",
+        "aitareddit redditrelationship shorts",
+        "redditrelationship shorts",
+        "satisfying story"
+      ],
+      "emojis": [
+        {
+          "emoji": "💬",
+          "frequencia": 8
+        },
+        {
+          "emoji": "👉",
+          "frequencia": 7
+        },
+        {
+          "emoji": "📖",
+          "frequencia": 6
+        },
+        {
+          "emoji": "⚠",
+          "frequencia": 6
+        },
+        {
+          "emoji": "👀",
+          "frequencia": 6
+        }
+      ],
+      "cta_posicao": "ausente",
+      "cta_intensidade": "ausente",
+      "usar_links": false,
+      "hashtags": [
+        "shorts",
+        "lifestyle (sociology)",
+        "reddit",
+        "redditstories",
+        "comedy",
+        "satisfying",
+        "people & blogs",
+        "reddit stories",
+        "entertainment",
+        "aitareddit",
+        "redditrelationship",
+        "storytime",
+        "aita reddit",
+        "geschichte",
+        "reddit recap"
+      ],
+      "quantidade_hashtags": 4,
+      "exemplos_reais": [
+        "What did your MOTHER do for you? ! #shorts #redditstories #satisfying #story",
+        "My parents ignored me my whole life, then tried to move my grown brother into my apartment to trap me. They called it “family responsibility.” I called it the last mistake they’d ever make with my name.\n#redditstories  #aitareddit   #redditrelationship  #shorts #reddit",
+        "ONLY ONE COULD SURVIVE?! #shorts #satisfying #relaxation #redditstory"
+      ]
     },
-    "exemplos_ganchos": [
-      "my parents continued to offer my medical services for free to relatives, so they received",
-      "when i was one year old, a doctor made such a serious mistake during surgery",
-      "i have rejected all of my husband's name proposals for our baby for six months",
-      "my fiancé's pretentious stepmother insisted on planning our entire wedding without asking us anything and",
-      "i work in a restaurant and i have a huge crush on a customer. i"
-    ],
-    "exemplos_titulos": [
-      "My parents offered my medical services for FREE to family members, so I gave them TRAUMAT DIAGNOSES",
-      "My parents disappeared my MILLIONAIRE COMPENSATION. #reddit #shorts",
-      "I rejected ALL of my husband's name proposals for OUR BABY for six months straight.",
-      "My fiancé's STEPMOTHER insisted on planning our wedding WITHOUT ASKING us anything, and we let her.",
-      "I work at a restaurant and I have a HUGE crush on a customer."
-    ],
-    "exemplos_descricoes": [
-      "📖 Shocking stories inspired by Reddit, told in an intense and involving way.\n\nSome details such as names, ages or situations can be modified to improve the narrative.\n \n⚠️ This content is published for entertainment purposes only.\n\n👀 If you made it this far, you are already part of the community.\n\n👉Subscribe now and activate the bell so you don't miss the next one.\n\n💬 Leave me in the comments what you would do in this situation, I want to read you in the next story.\n\n#redditstories #realstories #reddit #redditespañol #shorts #youtubeshorts",
-      "📖 Shocking stories inspired by Reddit, told in an intense and involving way.\r\n\r\nSome details such as names, ages or situations can be modified to improve the narrative.\r\n\r\n⚠️ This content is published for entertainment purposes only.\r\n\r\n👀 If you made it this far, you are already part of the community.\r\n\r\n👉Subscribe now and activate the bell so you don't miss the next one.\r\n\r\n💬 Leave me in the comments what you would do in this situation, I want to read you in the next story.\r\n\r\n#redditstories #realstories #reddit #redditespañol #shorts #youtubeshorts",
-      "📖 Shocking stories inspired by Reddit, told in an intense and involving way.\r\n\r\nSome details such as names, ages or situations can be modified to improve the narrative.\r\n\r\n⚠️ This content is published for entertainment purposes only.\r\n\r\n👀 If you made it this far, you are already part of the community.\r\n\r\n👉Subscribe now and activate the bell so you don't miss the next one.\r\n\r\n💬 Leave me in the comments what you would do in this situation, I want to read you in the next story.\r\n\r\n#redditstories #realstories #reddit #redditespañol #shorts #youtubeshorts",
-      "📖 Shocking stories inspired by Reddit, told in an intense and involving way.\r\n\r\nSome details such as names, ages or situations can be modified to improve the narrative.\r\n\r\n⚠️ This content is published for entertainment purposes only.\r\n\r\n👀 If you made it this far, you are already part of the community.\r\n\r\n👉Subscribe now and activate the bell so you don't miss the next one.\r\n\r\n💬 Leave me in the comments what you would do in this situation, I want to read you in the next story.\r\n\r\n#redditstories #realstories #reddit #redditespañol #shorts #youtubeshorts",
-      "This is a Reddit story! \nAnd there? Tell me your opinion in the comments! 🔬\n\n\n#shorts #reddit #AITAH #stories #confession"
-    ],
-    "exemplos_thumbnails": [
-      "WHAT @ELTIPODEREDDIT",
-      "THEY USED THE TYPE OFREDDIT",
-      "OURS",
-      "THREE HUNDRED",
-      "to sit"
-    ]
+    "palavras_chave": {
+      "shorttail": [
+        "shorts",
+        "reddit",
+        "redditstories",
+        "comedy",
+        "satisfying",
+        "entertainment",
+        "aitareddit",
+        "redditrelationship",
+        "storytime",
+        "geschichte",
+        "story",
+        "food",
+        "hobby",
+        "redditstorie",
+        "stories"
+      ],
+      "midtail": [
+        "lifestyle (sociology)",
+        "reddit stories",
+        "aita reddit",
+        "reddit recap",
+        "aita stories",
+        "reddit drama",
+        "reddit story",
+        "aita narration",
+        "emotional story",
+        "reddit posts",
+        "reddit content",
+        "reddit shorts",
+        "reddit narration",
+        "reddit reading",
+        "aita drama"
+      ],
+      "longtail": [
+        "people & blogs",
+        "trending reddit stories",
+        "viral reddit story",
+        "video game culture",
+        "reddit short story",
+        "a for adley",
+        "ask reddit stories",
+        "askreddit family drama",
+        "family drama reddit stories",
+        "my family ignored me for years",
+        "reddit family drama",
+        "reddit family drama story",
+        "reddit revenge stories",
+        "reddit stories aita",
+        "storytime with reddit"
+      ],
+      "proporcao_ideal": {
+        "shorttail": 0.833,
+        "midtail": 0.167,
+        "longtail": 0.0
+      }
+    },
+    "thumbnail": {
+      "texto_capa": {
+        "comprimento_alvo_chars": 9,
+        "termos_obrigatorios": [
+          "level",
+          "told",
+          "hear",
+          "stage",
+          "took",
+          "rina",
+          "einziges",
+          "acted",
+          "bernd",
+          "crossed",
+          "dinner",
+          "deal",
+          "secret",
+          "best",
+          "brother"
+        ],
+        "caps_intensidade": 0.0,
+        "emojis": [
+          {
+            "emoji": "💀",
+            "frequencia": 2
+          },
+          {
+            "emoji": "🚀",
+            "frequencia": 1
+          },
+          {
+            "emoji": "🎂",
+            "frequencia": 1
+          },
+          {
+            "emoji": "😎",
+            "frequencia": 1
+          },
+          {
+            "emoji": "❄",
+            "frequencia": 1
+          }
+        ],
+        "sentimento_alvo": "neutro"
+      },
+      "cena_visual": {
+        "elementos_obrigatorios": [
+          "person",
+          "wooden",
+          "gloves",
+          "hand",
+          "metal",
+          "surface",
+          "knife",
+          "machine",
+          "holding",
+          "tool",
+          "food",
+          "chocolate",
+          "preparing",
+          "candy",
+          "slice"
+        ],
+        "presenca_humana": 0.592
+      },
+      "sentimento_visual_alvo": "neutro",
+      "exemplos_reais": [
+        "Someone saw me in the",
+        "caused the accident",
+        "At this point"
+      ]
+    },
+    "postagem": {
+      "top_3_slots": [
+        {
+          "dia": "monday",
+          "janela": "tarde",
+          "quantidade_virais": 12,
+          "justificativa": "9.6% dos vídeos virais desse nicho foram postados nesse slot."
+        },
+        {
+          "dia": "thursday",
+          "janela": "tarde",
+          "quantidade_virais": 9,
+          "justificativa": "7.2% dos vídeos virais desse nicho foram postados nesse slot."
+        },
+        {
+          "dia": "friday",
+          "janela": "madrugada",
+          "quantidade_virais": 8,
+          "justificativa": "6.4% dos vídeos virais desse nicho foram postados nesse slot."
+        }
+      ]
+    }
   },
-  "thumbnail": {
-    "comprimento_alvo_chars": 27,
-    "termos_thumbnail_usar": [
-      "sit",
-      "security",
-      "eltipodereddit",
-      "hold",
-      "type ofreddit",
-      "type",
-      "mikasadoreddit",
-      "mikasa red",
-      "used",
-      "used type"
-    ],
-    "termos_thumbnail_evitar": [
-      "tradition",
-      "weeks",
-      "sitting",
-      "shy",
-      "strict",
-      "said",
-      "publicity",
-      "assets",
-      "embarrassing",
-      "entered"
-    ],
-    "cenas_visuais_dominantes": [
-      "person",
-      "using",
-      "reddit",
-      "person using",
-      "textured"
-    ],
-    "exemplos_texto_thumbnail": [
-      "WHAT @ELTIPODEREDDIT",
-      "THEY USED THE TYPE OFREDDIT",
-      "OURS",
-      "THREE HUNDRED",
-      "to sit"
-    ],
-    "exemplos_cena_visual": [
-      "A worker in protective gear is spraying foam insulation onto the underside of a metal roof.",
-      "A conveyor belt carries pretzels through a machine that coats them in liquid chocolate.",
-      "A person is using a string trimmer to edge a patch of grass along a gravel path.",
-      "A person is using a squeegee to clean a soapy glass surface.",
-      "A person wearing blue gloves is cracking eggs into a large metal bowl filled with many egg yolks."
-    ]
+  "script_content": {
+    "estrutura_geral": {
+      "estrutura_blocos": "narrativa",
+      "faixa_duracao": "short_longo",
+      "limite_palavras": 784
+    },
+    "gancho": {
+      "formula_abertura": "afirmacao",
+      "comprimento_alvo_palavras": 15,
+      "sentimento_alvo": "negativo",
+      "termos_obrigatorios": [
+        "parents",
+        "sister",
+        "family",
+        "daughter",
+        "dinner",
+        "mother",
+        "wife"
+      ],
+      "usar_pontuacao_impacto": true,
+      "exemplos_reais": [
+        "what is the biggest promise your parents broke? when i was 15, my parents went",
+        "what did you think was great but ended up being terrible? growing up i thought",
+        "i found out my own brother got married through a text message. no invite, no"
+      ]
+    },
+    "ritmo_linguagem": {
+      "palavras_por_segundo": 4.694,
+      "comprimento_medio_frase": 10.116,
+      "variancia_ritmo": 35.388,
+      "densidade_pontuacao_impacto": 0.0,
+      "moldes_frase": [
+        "didn know",
+        "days later",
+        "felt like",
+        "cell phone",
+        "weeks later",
+        "year old",
+        "don know",
+        "years ago",
+        "months later",
+        "best friend"
+      ]
+    },
+    "arco_emocional": {
+      "inicio": {
+        "tom": "positivo",
+        "vocabulario_obrigatorio": [
+          "parents",
+          "mom"
+        ]
+      },
+      "meio": {
+        "tom": "negativo",
+        "vocabulario_obrigatorio": []
+      },
+      "fim": {
+        "tom": "positivo",
+        "vocabulario_obrigatorio": [
+          "family",
+          "parents",
+          "sister",
+          "mom",
+          "dad",
+          "door",
+          "phone",
+          "felt",
+          "room",
+          "mother"
+        ]
+      }
+    },
+    "audio": {
+      "tipo_dominante": "[music]",
+      "clima_sonoro": [
+        {
+          "pista": "[music]",
+          "frequencia": 14
+        },
+        {
+          "pista": "[clear throat]",
+          "frequencia": 2
+        }
+      ],
+      "frequencia_uso_no_nicho": 0.128
+    },
+    "repeticao": {
+      "ativar": true,
+      "taxa_no_nicho": 0.952,
+      "frequencia_media": 10
+    },
+    "cta": {
+      "intensidade": "moderado",
+      "estilo": "ausente",
+      "ativar_gatilho_debate": false,
+      "taxa_discussao_mediana": 0.013,
+      "posicao": "ausente",
+      "molde_termos": []
+    },
+    "vocabulario_geral": {
+      "termos_obrigatorios": [],
+      "coocorrencias_obrigatorias": [
+        [
+          "like",
+          "said"
+        ],
+        [
+          "mom",
+          "said"
+        ],
+        [
+          "dad",
+          "said"
+        ],
+        [
+          "looked",
+          "said"
+        ],
+        [
+          "said",
+          "told"
+        ],
+        [
+          "said",
+          "sister"
+        ],
+        [
+          "like",
+          "mom"
+        ],
+        [
+          "two",
+          "years"
+        ],
+        [
+          "every",
+          "single"
+        ],
+        [
+          "even",
+          "mom"
+        ]
+      ]
+    }
   }
 }

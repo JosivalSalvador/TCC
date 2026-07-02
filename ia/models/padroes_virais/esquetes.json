@@ -1,260 +1,545 @@
 {
   "nicho": "esquetes",
-  "n_videos": 100,
-  "n_super": 56,
-  "n_frio": 4,
-  "estrutura": {
-    "faixa_duracao_dominante": "short_padrao",
-    "estrutura_blocos_dominante": "esquete",
-    "ritmo_palavras_seg_mediana": 2.051,
-    "densidade_roteiro_mediana": 88,
-    "sentimento_dominante": "positivo",
-    "hora_postagem_mediana": 11.0,
-    "top3_slots_postagem": [
-      {
-        "dia": "friday",
-        "janela": "manha",
-        "qtd": 6
-      },
-      {
-        "dia": "saturday",
-        "janela": "tarde",
-        "qtd": 6
-      },
-      {
-        "dia": "tuesday",
-        "janela": "tarde",
-        "qtd": 5
-      }
-    ],
-    "ativar_repeticao_5x": true,
-    "tipo_audio_dominante": "sem_audio",
-    "clickbait_score_mediana": 0.531,
-    "velocidade_views_mediana": 12.814,
-    "taxa_conversao_mediana": 1.292,
-    "taxa_discussao_mediana": 0.003,
-    "completude_seo_mediana": 11.0,
-    "faixa_duracao_evitar": null,
-    "sentimento_evitar": null
-  },
-  "textuais": {
-    "termos_gancho_usar": [
-      "quickly",
-      "brought",
-      "tillu",
-      "yes",
-      "mom",
-      "didi",
-      "law",
-      "son",
-      "hey",
-      "sister"
-    ],
-    "termos_vocabulario": [
-      "hey",
-      "let",
-      "yes",
-      "come",
-      "look",
-      "mom",
-      "sister",
-      "brought",
-      "mother",
-      "tillu"
-    ],
-    "termos_seo_usar": [
-      "haryanvi",
-      "video",
-      "olida",
-      "tok",
-      "naukrani",
-      "comedy video",
-      "comedy shorts",
-      "jokes",
-      "olida imdat",
-      "imdat"
-    ],
-    "ngramas_roteiro": [
-      "come",
-      "tillu",
-      "hey",
-      "sister",
-      "let",
-      "yes",
-      "oh",
-      "brought",
-      "look",
-      "son"
-    ],
-    "termos_descricao_usar": [
-      "comedy",
-      "shorts",
-      "video",
-      "comedy video",
-      "funny video",
-      "videos",
-      "video funny",
-      "new",
-      "love",
-      "youtube"
-    ],
-    "termos_gancho_evitar": [
-      "come",
-      "come come",
-      "don want",
-      "animals",
-      "don",
-      "papa",
-      "better",
-      "animals look",
-      "animals better",
-      "feats animals"
-    ],
-    "termos_roteiro_evitar": [
-      "come come",
-      "come",
-      "animals",
-      "friend",
-      "love",
-      "pot",
-      "ready",
-      "say",
-      "want",
-      "happened"
-    ],
-    "emojis_usar": [
-      "🙏",
-      "❤️",
-      "🚫",
-      "😜",
-      "🤪"
-    ],
-    "emojis_evitar": [
-      "🎃",
-      "🫟",
-      "💔",
-      "😢",
-      "🪁"
-    ],
-    "arco_emocional": {
-      "inicio": "positivo",
-      "meio": "positivo",
-      "fim": "positivo"
-    },
-    "vocabulario_por_terco": {
-      "inicio": [
-        "sister",
-        "yes",
-        "look",
-        "come",
-        "mom",
+  "structure_content": {
+    "titulo": {
+      "formula_construcao": "afirmacao",
+      "comprimento_alvo_chars": 73,
+      "termos_obrigatorios": [
+        "comedy",
+        "shorts",
         "tillu",
-        "hey",
-        "today"
-      ],
-      "meio": [
-        "hey",
-        "come",
-        "tillu",
-        "sister",
-        "just",
-        "yes",
-        "let",
-        "fun"
-      ],
-      "fim": [
-        "come",
-        "sister",
-        "hey",
-        "let",
-        "oh",
-        "mom",
+        "sketches",
         "holi",
-        "tell"
+        "japanese",
+        "kimura",
+        "henrique",
+        "actor",
+        "magical",
+        "leave",
+        "video",
+        "enchanting",
+        "fascinated",
+        "ghar",
+        "funny",
+        "teacher",
+        "main",
+        "shashi",
+        "shenanigans"
+      ],
+      "caps_intensidade": 0.0,
+      "emojis": [
+        {
+          "emoji": "🤣",
+          "posicao": "meio",
+          "frequencia": 20
+        },
+        {
+          "emoji": "😜",
+          "posicao": "meio",
+          "frequencia": 18
+        },
+        {
+          "emoji": "🤪",
+          "posicao": "meio",
+          "frequencia": 18
+        },
+        {
+          "emoji": "😂",
+          "posicao": "meio",
+          "frequencia": 10
+        },
+        {
+          "emoji": "😂",
+          "posicao": "inicio",
+          "frequencia": 7
+        }
+      ],
+      "usar_pontuacao_impacto": false,
+      "sentimento_alvo": "positivo",
+      "molde_estrutura": {
+        "formula": "afirmacao",
+        "caps_intensidade": 0.0,
+        "clickbait_score_mediano": 0.534,
+        "usar_pontuacao": false,
+        "sentimento_alvo": "positivo",
+        "emojis_sugeridos": [
+          {
+            "emoji": "🤣",
+            "posicao": "meio",
+            "frequencia": 20
+          },
+          {
+            "emoji": "😜",
+            "posicao": "meio",
+            "frequencia": 18
+          }
+        ]
+      },
+      "exemplos_reais": [
+        "The Brazilian needs to be studied. A Japanese man's outburst with actor Henrique Kimura #laughter #humor",
+        "Be careful with gas! A Japanese man's outburst with actor Henrique Kimura #humor #memes #funny #laugh #gas",
+        "The boy Ney and Marea - A Japanese man's outburst with actor Henrique Kimura #neymar #seleção #brasil"
       ]
     },
-    "comprimento_medio_gancho": 14.4,
-    "comprimento_medio_frase": 10.6,
-    "padrao_abertura_dominante": "afirmacao",
-    "densidade_pontuacao": {
-      "super_viral": 0.0,
-      "frio": 0.0
+    "descricao": {
+      "comprimento_alvo_chars": 195,
+      "primeira_linha_comprimento_alvo": 89,
+      "sentimento_primeira_linha": "neutro",
+      "termos_seo_obrigatorios": [
+        "video",
+        "funny",
+        "comedy",
+        "shorts",
+        "laughter",
+        "videos",
+        "tiktok",
+        "viral",
+        "shashi",
+        "keshav",
+        "laugh",
+        "short",
+        "trending",
+        "memes",
+        "hindi",
+        "prank",
+        "family",
+        "twist",
+        "movie",
+        "wali"
+      ],
+      "moldes_frase": [
+        "comedy video",
+        "funny video",
+        "video funny",
+        "videos funny",
+        "tiktok tiktok",
+        "tik tok",
+        "funny shorts",
+        "video comedy",
+        "tok video",
+        "tik tok video"
+      ],
+      "emojis": [
+        {
+          "emoji": "🙏",
+          "frequencia": 22
+        },
+        {
+          "emoji": "❤",
+          "frequencia": 22
+        },
+        {
+          "emoji": "😜",
+          "frequencia": 19
+        },
+        {
+          "emoji": "🤪",
+          "frequencia": 19
+        },
+        {
+          "emoji": "🚫",
+          "frequencia": 19
+        }
+      ],
+      "cta_posicao": "ausente",
+      "cta_intensidade": "ausente",
+      "cta_score_mediano": 0.2,
+      "usar_links": false,
+      "hashtags": [
+        "entertainment",
+        "comedy",
+        "film",
+        "shorts",
+        "funny",
+        "humour",
+        "viral",
+        "people blogs",
+        "trending",
+        "ytshorts",
+        "comedy video",
+        "humor",
+        "short",
+        "funny video",
+        "comedy shorts"
+      ],
+      "quantidade_hashtags": 15,
+      "exemplos_reais": [
+        "Guys if you Love Naukrani, Sanki Malik, Kanjoos Videos and Many More funny Contents please SUBSCRIBE LIKE and SHARE🙏❤️\n\n\n\n\nThis Videos are Created by Olida and Imdad, Using without Permission are strictly Prohibited 🚫. \n\n\n\n\nNew comedy video\nFunny YouTube shorts\nNew tik tok video\nFunny comedy video",
+        "#comedy #kompawno #humor #sketch \n\n★ Follow his friend and father, Kompa Yaso on my OFFICIAL HDSPM page!! AH HA HA HA HA HA!!\n\n👍 Facebook: https://www.facebook.com/elkompayasor​​​...",
+        "this video is buns\n\nSubscribe and like for more skits #shorts\n\nAll My Links:\nhttps://linktr.ee/mobowl\n\nSocials:\nTiktok: https://www.tiktok.com/@mobotv\nIG: https://www.instagram.com/mobootv/\nDiscord: https://discord.gg/F7JSJPMcHt\nGaming YouTube: https://www.youtube.com/mobo1"
+      ]
     },
-    "exemplos_ganchos": [
-      "it's red, your red is red, mahavar is red, red is red, red is red,",
-      "son, what are you playing? does he not come after eating in the morning? no",
-      "look, mom has been busy doing the same work for so long. whether you are",
-      "it is the day of ashtami, dear girl, worship her. it is the day of",
-      "but it will be fun for a second, what is this, where is this nonsense,"
-    ],
-    "exemplos_titulos": [
-      "Jai Gauri Maa 🙏🥰 Shashi Shorts #shorts #viral #song #trending #maa",
-      "That one Strong Student in School 🤣 #shorts #teratrigun #comedy #schoolstudent #teachercomedy",
-      "Sister-in-law and sister-in-law#anandraja #comedy #comedyshorts #funny #comedyvideos #shorts",
-      "Jai Mata di 🙏 social simran #viral #ytshorts #shorts #trending #navratri",
-      "The atmosphere became cloudy in 1 minute 😜🤪 Comedy Shorts #comedy #viral #shorts #funny #trending"
-    ],
-    "exemplos_descricoes": [
-      "Jai Gauri Maa 🙏🥰 Shashi Shorts #shorts #viral #song #trending #maa \n\nKeywords:-\nkeshav shashi vlogs,\nKeshav shashi vlog,\nKeshav shashi block,\nkeshav shashi shorts,\nkeshav shashi funny video,\nhansi wali video,\ntik tok video,\ntiktok,\ntiktok new video,\ntwist in end,\ntwist in end shorts,\ntry not to laugh,\ntry not to laugh challenge,\nViral Shorts Video,\nTrending Shorts Video,\nViral Prank Video,\nTrending Prank Video,\nnitin mridul,\n\nfunny video funny video,\nfunny video movie scene,\nfunny video reaction,\nfunny video sab lool hai,\nfunny video bhojpuri,\nfunny video short,\nfunny video comedy,\nfunny video tik tok,\nfunny video statuss,\nfunny video 2025,\nfunny shorts,\nfunny shorts video,\nfunny shorts tiktok,\nfunny shorts in hindi,\nfunny shorts dushyant kukreja,\nfunny shorts memes,\ncomedy video tik tok,\n\ncomedy video kapil sharma,\ncomedy video movie,\ncomedy video short,\ncomedy video comedy video,\ncomedy video status,\nhindi comedy video,\ncomedy shorts,\ncomedy shorts video,\ncomedy shorts in hindi,\nkaam wali comedy shorts,\nstand up comedy,\n\n#comedy #haryanvicomedy #haryanvi #ytshort #haryana #shortsfeed #shortsyoutube #shortsvideo \n\n#sasbahukicomedy #sasbahukinokjhok #sasbahustory #sasbahucomedy \n\n#parashthakralvlogs #pubgmobile #soravjoshi #souravjoshivlogs #familyfitness #family #familyvlog #themridul #myfamily \n\n#shortsbreak #keshavshashivlogs",
-      "That one Strong Student in School 🤣 #shorts #teratrigun #comedy #schoolstudent #teachercomedy",
-      "Jai Mata di 🙏 social simran #viral #ytshorts #shorts #trending #navratri \n\nKeywords:-\nsocial simran vlogs,\nsocial simran,\nsimran vlogs,\nkeshav shashi vlogs,\nKeshav shashi vlog,\nKeshav shashi block,\nkeshav shashi shorts,\nkeshav shashi funny video,\nhansi wali video,\ntik tok video,\ntiktok,\ntiktok new video,\ntwist in end,\ntwist in end shorts,\ntry not to laugh,\ntry not to laugh challenge,\nViral Shorts Video,\nTrending Shorts Video,\nViral Prank Video,\nTrending Prank Video,\nnitin mridul,\n\nfunny video funny video,\nfunny video movie scene,\nfunny video reaction,\nfunny video sab lool hai,\nfunny video bhojpuri,\nfunny video short,\nfunny video comedy,\nfunny video tik tok,\nfunny video statuss,\nfunny video 2023,\nfunny shorts,\nfunny shorts video,\nfunny shorts tiktok,\nfunny shorts in hindi,\nfunny shorts dushyant kukreja,\nfunny shorts memes,\ncomedy video tik tok,\n\ncomedy video kapil sharma,\ncomedy video movie,\ncomedy video short,\ncomedy video comedy video,\ncomedy video status,\nhindi comedy video,\ncomedy shorts,\ncomedy shorts video,\ncomedy shorts in hindi,\nkaam wali comedy shorts,\nstand up comedy,\n\n#comedy #haryanvicomedy #haryanvi #ytshort #haryana #shortsfeed #shortsyoutube #shortsvideo \n\n#sasbahukicomedy #sasbahukinokjhok #sasbahustory #sasbahucomedy \n\n#parashthakralvlogs #pubgmobile #soravjoshi #souravjoshivlogs #familyfitness #family #familyvlog #themridul #myfamily \n\n#shortsbreak #keshavshashivlogs \n       @MYFAMILYComedy @amitffytcomedy @shemaroobollywoodcomedy @goldminesgreatindiancomedy2048 @keshavshashivlogs",
-      "1 मिनट में महौल बादल दिया 😜🤪 Comedy Shorts #comedy #viral #shorts #funny #trending \n\nKeywords:-\nkeshav shashi vlogs,\nKeshav shashi vlog,\nKeshav shashi block,\nkeshav shashi shorts,\nkeshav shashi funny video,\nhansi wali video,\ntik tok video,\ntiktok,\ntiktok new video,\ntwist in end,\ntwist in end shorts,\ntry not to laugh,\ntry not to laugh challenge,\nViral Shorts Video,\nTrending Shorts Video,\nViral Prank Video,\nTrending Prank Video,\nnitin mridul,\n\nfunny video funny video,\nfunny video movie scene,\nfunny video reaction,\nfunny video sab lool hai,\nfunny video bhojpuri,\nfunny video short,\nfunny video comedy,\nfunny video tik tok,\nfunny video statuss,\nfunny video 2025,\nfunny shorts,\nfunny shorts video,\nfunny shorts tiktok,\nfunny shorts in hindi,\nfunny shorts dushyant kukreja,\nfunny shorts memes,\ncomedy video tik tok,\n\ncomedy video kapil sharma,\ncomedy video movie,\ncomedy video short,\ncomedy video comedy video,\ncomedy video status,\nhindi comedy video,\ncomedy shorts,\ncomedy shorts video,\ncomedy shorts in hindi,\nkaam wali comedy shorts,\nstand up comedy,\n\n#comedy #haryanvicomedy #haryanvi #ytshort #haryana #shortsfeed #shortsyoutube #shortsvideo \n\n#sasbahukicomedy #sasbahukinokjhok #sasbahustory #sasbahucomedy \n\n#parashthakralvlogs #pubgmobile #soravjoshi #souravjoshivlogs #familyfitness #family #familyvlog #themridul #myfamily \n\n#shortsbreak #keshavshashivlogs",
-      "पापा की परी🧚‍♀️की व्रत की खुराक 😜🤪 Comedy Shorts #comedy #funny #shorts #viral #trending \n\nKeywords:-\nkeshav shashi vlogs,\nKeshav shashi vlog,\nKeshav shashi block,\nkeshav shashi shorts,\nkeshav shashi funny video,\nhansi wali video,\ntik tok video,\ntiktok,\ntiktok new video,\ntwist in end,\ntwist in end shorts,\ntry not to laugh,\ntry not to laugh challenge,\nViral Shorts Video,\nTrending Shorts Video,\nViral Prank Video,\nTrending Prank Video,\nnitin mridul,\n\nfunny video funny video,\nfunny video movie scene,\nfunny video reaction,\nfunny video sab lool hai,\nfunny video bhojpuri,\nfunny video short,\nfunny video comedy,\nfunny video tik tok,\nfunny video statuss,\nfunny video 2025,\nfunny shorts,\nfunny shorts video,\nfunny shorts tiktok,\nfunny shorts in hindi,\nfunny shorts dushyant kukreja,\nfunny shorts memes,\ncomedy video tik tok,\n\ncomedy video kapil sharma,\ncomedy video movie,\ncomedy video short,\ncomedy video comedy video,\ncomedy video status,\nhindi comedy video,\ncomedy shorts,\ncomedy shorts video,\ncomedy shorts in hindi,\nkaam wali comedy shorts,\nstand up comedy,\n\n#comedy #haryanvicomedy #haryanvi #ytshort #haryana #shortsfeed #shortsyoutube #shortsvideo \n\n#sasbahukicomedy #sasbahukinokjhok #sasbahustory #sasbahucomedy \n\n#parashthakralvlogs #pubgmobile #soravjoshi #souravjoshivlogs #familyfitness #family #familyvlog #themridul #myfamily \n\n#shortsbreak #keshavshashivlogs"
-    ],
-    "exemplos_thumbnails": [
-      "That one Strong Student in School 🤣, Shree Baba Balak Puri Ji, HAPPY HOLI",
-      "Sister-in-law and sister-in-law",
-      "STYLE",
-      "changed the atmosphere in 1 minute",
-      "pani puri"
-    ]
+    "palavras_chave": {
+      "shorttail": [
+        "entertainment",
+        "comedy",
+        "film",
+        "shorts",
+        "funny",
+        "humour",
+        "viral",
+        "trending",
+        "ytshorts",
+        "humor",
+        "short",
+        "family",
+        "shortsvideo",
+        "ytshort",
+        "familyfitness"
+      ],
+      "midtail": [
+        "people blogs",
+        "comedy video",
+        "funny video",
+        "comedy shorts",
+        "funny shorts",
+        "haryanvi comedy",
+        "howto style",
+        "olida vlogs",
+        "japones pistola",
+        "japones revoltado",
+        "professor balian",
+        "lifestyle sociology",
+        "television program",
+        "physical fitness",
+        "viral videos"
+      ],
+      "longtail": [
+        "haryanvi comedy video",
+        "funny comedy shorts",
+        "funny video haryanvi",
+        "hindi comedy video",
+        "keshav shashi vlogs",
+        "latest haryanvi jokes",
+        "new haryanvi jokes",
+        "cousin wife comedy",
+        "viral comedy shorts",
+        "funny naukrani videos",
+        "funny tik tok videos",
+        "naukrani sanki malik videos",
+        "new funny video",
+        "new kanjoos videos",
+        "new tik tok kanjoos videos"
+      ],
+      "proporcao_ideal": {
+        "shorttail": 0.809,
+        "midtail": 0.12,
+        "longtail": 0.072
+      }
+    },
+    "thumbnail": {
+      "texto_capa": {
+        "comprimento_alvo_chars": 26,
+        "termos_obrigatorios": [
+          "pepper",
+          "flavors",
+          "sister",
+          "holi",
+          "world",
+          "love",
+          "money",
+          "marriage",
+          "wife",
+          "game",
+          "essentials",
+          "daily",
+          "papa",
+          "indian",
+          "puri"
+        ],
+        "caps_intensidade": 0.0,
+        "emojis": [
+          {
+            "emoji": "🤣",
+            "frequencia": 5
+          },
+          {
+            "emoji": "😂",
+            "frequencia": 5
+          },
+          {
+            "emoji": "😜",
+            "frequencia": 5
+          },
+          {
+            "emoji": "🤪",
+            "frequencia": 4
+          },
+          {
+            "emoji": "😭",
+            "frequencia": 2
+          }
+        ],
+        "sentimento_alvo": "neutro"
+      },
+      "cena_visual": {
+        "elementos_obrigatorios": [
+          "woman",
+          "young",
+          "dressed",
+          "stands",
+          "holding",
+          "expression",
+          "traditional",
+          "person",
+          "wearing",
+          "surprised",
+          "sitting",
+          "indian",
+          "sits",
+          "looking",
+          "colorful"
+        ],
+        "presenca_humana": 0.93
+      },
+      "sentimento_visual_alvo": "neutro",
+      "exemplos_reais": [
+        "Dr Pepper 23 Flavors",
+        "Dr Pepper 23 Flavors",
+        "Dr Pepper 23"
+      ]
+    },
+    "postagem": {
+      "top_3_slots": [
+        {
+          "dia": "friday",
+          "janela": "manha",
+          "quantidade_virais": 11,
+          "justificativa": "7.7% dos vídeos virais desse nicho foram postados nesse slot."
+        },
+        {
+          "dia": "friday",
+          "janela": "tarde",
+          "quantidade_virais": 9,
+          "justificativa": "6.3% dos vídeos virais desse nicho foram postados nesse slot."
+        },
+        {
+          "dia": "saturday",
+          "janela": "tarde",
+          "quantidade_virais": 9,
+          "justificativa": "6.3% dos vídeos virais desse nicho foram postados nesse slot."
+        }
+      ]
+    }
   },
-  "thumbnail": {
-    "comprimento_alvo_chars": 25,
-    "termos_thumbnail_usar": [
-      "definition",
-      "fear",
-      "wife",
-      "laddua",
-      "puri",
-      "angel",
-      "papa angel",
-      "papa",
-      "indian",
-      "ha"
-    ],
-    "termos_thumbnail_evitar": [
-      "kite video",
-      "kite",
-      "level",
-      "prank",
-      "end rr",
-      "rr",
-      "potty",
-      "potty hard",
-      "hard level",
-      "level potty"
-    ],
-    "cenas_visuais_dominantes": [
-      "woman",
-      "young",
-      "man",
-      "stands",
-      "expression"
-    ],
-    "exemplos_texto_thumbnail": [
-      "That one Strong Student in School 🤣, Shree Baba Balak Puri Ji, HAPPY HOLI",
-      "Sister-in-law and sister-in-law",
-      "STYLE",
-      "changed the atmosphere in 1 minute",
-      "pani puri"
-    ],
-    "exemplos_cena_visual": [
-      "A smiling woman wearing a traditional red patterned saree stands in a doorway with her hands pressed together in a greeting gesture.",
-      "A man in a white shirt and tie plays a large bass drum while a woman stands beside him in a decorated room.",
-      "Two individuals dressed in traditional Indian sarees are sitting together in a room, likely filming a comedic skit.",
-      "A woman in traditional Indian attire is applying a tilak on a young girl's forehead during a family gathering.",
-      "A woman in a pink floral outfit is sitting outdoors, seemingly preparing something over a small fire."
-    ]
+  "script_content": {
+    "estrutura_geral": {
+      "estrutura_blocos": "esquete",
+      "faixa_duracao": "ultra_curto",
+      "limite_palavras": 0,
+      "usa_dialogo": false,
+      "taxa_dialogo_no_nicho": 0.077,
+      "usa_repeticao": false
+    },
+    "gancho": {
+      "formula_abertura": "afirmacao",
+      "comprimento_alvo_palavras": 15,
+      "comprimento_alvo_chars": 66,
+      "sentimento_alvo": "neutro",
+      "termos_obrigatorios": [
+        "come",
+        "sister",
+        "tillu",
+        "brother",
+        "brought",
+        "meow",
+        "daughter",
+        "tell",
+        "holi",
+        "papa",
+        "second",
+        "mother",
+        "girl",
+        "didi",
+        "today"
+      ],
+      "usar_pontuacao_impacto": false,
+      "exemplos_reais": [
+        "mom look who i have brought shit where did you get this cat from tillu",
+        "tillu look what i have brought in the tiffin black rasgullas idiot this is gulab",
+        "broke the finger now jump up there is double pleasure in eating this tillu does"
+      ]
+    },
+    "ritmo_linguagem": {
+      "palavras_por_segundo": 1.858,
+      "comprimento_medio_frase": 19.634,
+      "variancia_ritmo": 100.83,
+      "densidade_pontuacao_impacto": 0.0,
+      "moldes_frase": [
+        "don_t",
+        "let_s",
+        "come_come",
+        "daughter_law",
+        "meow_meow",
+        "look_bring",
+        "meow_meow_meow",
+        "yum_yum",
+        "s_house",
+        "sister_come"
+      ]
+    },
+    "arco_emocional": {
+      "inicio": {
+        "tom": "neutro",
+        "vocabulario_obrigatorio": [
+          "sister",
+          "yes",
+          "hey",
+          "tillu",
+          "eat",
+          "come",
+          "brother",
+          "brought",
+          "fun",
+          "law"
+        ]
+      },
+      "meio": {
+        "tom": "neutro",
+        "vocabulario_obrigatorio": [
+          "brother",
+          "yes",
+          "come",
+          "sister",
+          "hey",
+          "law",
+          "eat",
+          "look",
+          "let",
+          "tell"
+        ]
+      },
+      "fim": {
+        "tom": "neutro",
+        "vocabulario_obrigatorio": [
+          "sister",
+          "come",
+          "tillu",
+          "yes",
+          "eat",
+          "don",
+          "son",
+          "law",
+          "hey",
+          "meow"
+        ]
+      }
+    },
+    "audio": {
+      "tipo_dominante": "[music]",
+      "clima_sonoro": [
+        {
+          "pista": "[music]",
+          "frequencia": 25
+        },
+        {
+          "pista": "[laughter]",
+          "frequencia": 22
+        },
+        {
+          "pista": "[laughs]",
+          "frequencia": 4
+        },
+        {
+          "pista": "[screaming]",
+          "frequencia": 4
+        },
+        {
+          "pista": "[__]",
+          "frequencia": 1
+        }
+      ],
+      "frequencia_uso_no_nicho": 0.282
+    },
+    "repeticao": {
+      "ativar": true,
+      "taxa_no_nicho": 0.331,
+      "frequencia_media": 8
+    },
+    "cta": {
+      "intensidade": "suave",
+      "estilo": "ausente",
+      "ativar_gatilho_debate": false,
+      "taxa_discussao_mediana": 0.004,
+      "cta_score_mediano": 0.2,
+      "posicao": "ausente",
+      "molde_termos": []
+    },
+    "vocabulario_geral": {
+      "termos_obrigatorios": [
+        "sister",
+        "come",
+        "yes",
+        "hey",
+        "eat",
+        "brother",
+        "law",
+        "tillu",
+        "brought",
+        "don",
+        "son",
+        "papa",
+        "daughter",
+        "look",
+        "didi",
+        "tell",
+        "let",
+        "holi",
+        "mom",
+        "mother",
+        "mummy",
+        "like",
+        "meow",
+        "water",
+        "fun",
+        "quickly",
+        "okay",
+        "sir",
+        "little",
+        "wait"
+      ],
+      "coocorrencias_obrigatorias": [
+        [
+          "come",
+          "sister"
+        ],
+        [
+          "meow",
+          "yum"
+        ],
+        [
+          "daughter",
+          "law"
+        ],
+        [
+          "meow",
+          "yow"
+        ],
+        [
+          "yow",
+          "yum"
+        ],
+        [
+          "come",
+          "let"
+        ],
+        [
+          "take",
+          "yes"
+        ],
+        [
+          "law",
+          "mother"
+        ],
+        [
+          "brother",
+          "law"
+        ],
+        [
+          "like",
+          "say"
+        ]
+      ]
+    }
   }
 }

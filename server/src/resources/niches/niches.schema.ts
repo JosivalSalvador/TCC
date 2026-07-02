@@ -7,7 +7,7 @@ import { z } from 'zod'
 
 export const nicheNameSchema = z
   .string()
-  .transform((value) => value.trim().toLowerCase().replace(/\s+/g, '_'))
+  .transform((value) => value.trim().toLowerCase())
   .refine((value) => value.length >= 2, {
     message: 'Nome do nicho deve ter no mínimo 2 caracteres',
   })

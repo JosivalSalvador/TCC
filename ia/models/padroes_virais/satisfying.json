@@ -1,256 +1,534 @@
 {
   "nicho": "satisfying",
-  "n_videos": 99,
-  "n_super": 8,
-  "n_frio": 66,
-  "estrutura": {
-    "faixa_duracao_dominante": "ultra_curto",
-    "estrutura_blocos_dominante": "impacto_rapido",
-    "ritmo_palavras_seg_mediana": 0.0,
-    "densidade_roteiro_mediana": 0,
-    "sentimento_dominante": "neutro",
-    "hora_postagem_mediana": 10.5,
-    "top3_slots_postagem": [
-      {
-        "dia": "monday",
-        "janela": "manha",
-        "qtd": 2
-      },
-      {
-        "dia": "friday",
-        "janela": "manha",
-        "qtd": 1
-      },
-      {
-        "dia": "monday",
-        "janela": "madrugada",
-        "qtd": 1
-      }
-    ],
-    "ativar_repeticao_5x": false,
-    "tipo_audio_dominante": "sem_audio",
-    "clickbait_score_mediana": 0.385,
-    "velocidade_views_mediana": 12.749,
-    "taxa_conversao_mediana": 0.763,
-    "taxa_discussao_mediana": 0.001,
-    "completude_seo_mediana": 8.0,
-    "faixa_duracao_evitar": null,
-    "sentimento_evitar": null
-  },
-  "textuais": {
-    "termos_gancho_usar": [
-      "try",
-      "boy",
-      "better",
-      "better freaking",
-      "boy better",
-      "freaking",
-      "freaking try",
-      "girls",
-      "girls boy",
-      "hungry lapper"
-    ],
-    "termos_vocabulario": [
-      "girl",
-      "remember",
-      "hungry lapper",
-      "hungry",
-      "lapper crave",
-      "lapper",
-      "diet",
-      "diet dinner",
-      "dinner",
-      "remember snack"
-    ],
-    "termos_seo_usar": [
-      "toys",
-      "asmr entertainment",
-      "lifestyle",
-      "sociology",
-      "lifestyle sociology",
-      "hobby lifestyle",
-      "blogs satisfying",
-      "hobby",
-      "funny",
-      "people blogs"
-    ],
-    "ngramas_roteiro": [
-      "girl",
-      "small",
-      "want",
-      "makeup",
-      "cute",
-      "hungry lapper",
-      "hungry",
-      "lapper",
-      "like video",
-      "like"
-    ],
-    "termos_descricao_usar": [
-      "unboxing",
-      "fun",
-      "make",
-      "asmr video",
-      "channel",
-      "moments",
-      "video",
-      "cute",
-      "makeup",
-      "relaxing"
-    ],
-    "termos_gancho_evitar": [
-      "heat",
-      "heat heat",
-      "tor",
-      "lover",
-      "higher",
-      "brown",
-      "ah",
-      "like",
-      "wow",
-      "help"
-    ],
-    "termos_roteiro_evitar": [
-      "heat",
-      "heat heat",
-      "tor",
-      "just",
-      "ah",
-      "time",
-      "wow",
-      "yeah",
-      "okay",
-      "want eating"
-    ],
-    "emojis_usar": [
-      "🌈",
-      "🧈",
-      "✨",
-      "💥",
-      "❤️"
-    ],
-    "emojis_evitar": [
-      "❤",
-      "🔹",
-      "🧼",
-      "😱"
-    ],
-    "arco_emocional": {
-      "inicio": "neutro",
-      "meio": "positivo",
-      "fim": "positivo"
-    },
-    "vocabulario_por_terco": {
-      "inicio": [
-        "girls",
-        "lapper",
-        "hungry lapper",
-        "hungry",
-        "makeup",
-        "slapped",
-        "snatched",
-        "snatched makeup"
-      ],
-      "meio": [
+  "structure_content": {
+    "titulo": {
+      "formula_construcao": "afirmacao",
+      "comprimento_alvo_chars": 79,
+      "termos_obrigatorios": [
+        "satisfying",
+        "asmr",
+        "oddly",
+        "unboxing",
         "cute",
-        "want",
-        "eating want",
-        "crave eating",
+        "toys",
+        "perfect",
+        "drawing",
+        "barbie",
+        "butter",
+        "making",
+        "fruit",
+        "soap",
+        "cleaning",
+        "mixing",
+        "sand",
+        "faces",
         "eating",
-        "crave",
-        "girl",
-        "small cute"
+        "best",
+        "make"
       ],
-      "fim": [
-        "small",
-        "want dinner",
-        "remember",
-        "want",
-        "diet",
-        "dinner remember",
-        "diet want",
-        "dinner"
+      "caps_intensidade": 0.077,
+      "emojis": [
+        {
+          "emoji": "✨",
+          "posicao": "meio",
+          "frequencia": 7
+        },
+        {
+          "emoji": "😱",
+          "posicao": "meio",
+          "frequencia": 7
+        },
+        {
+          "emoji": "🎶",
+          "posicao": "meio",
+          "frequencia": 4
+        },
+        {
+          "emoji": "😳",
+          "posicao": "meio",
+          "frequencia": 4
+        },
+        {
+          "emoji": "😍",
+          "posicao": "meio",
+          "frequencia": 4
+        }
+      ],
+      "usar_pontuacao_impacto": false,
+      "sentimento_alvo": "positivo",
+      "molde_estrutura": {
+        "formula": "afirmacao",
+        "caps_intensidade": 0.077,
+        "clickbait_score_mediano": 0.51,
+        "usar_pontuacao": false,
+        "sentimento_alvo": "positivo",
+        "emojis_sugeridos": [
+          {
+            "emoji": "✨",
+            "posicao": "meio",
+            "frequencia": 7
+          },
+          {
+            "emoji": "😱",
+            "posicao": "meio",
+            "frequencia": 7
+          }
+        ]
+      },
+      "exemplos_reais": [
+        "Sprunki OC Colour Mixing Battle Super Mario | Normal vs Horror | #satisfying  #colourmixing #colors",
+        "K-pop Demon Hunters color mixing #satisfying #colormixing #art",
+        "Sprunki OC Colour Mixing Battle | Normal vs Horror | Super Mario | Minecraft #satisfying #colors"
       ]
     },
-    "comprimento_medio_gancho": 15.0,
-    "comprimento_medio_frase": 7.9,
-    "padrao_abertura_dominante": "afirmacao",
-    "densidade_pontuacao": {
-      "super_viral": 0.0,
-      "frio": 0.0
+    "descricao": {
+      "comprimento_alvo_chars": 289,
+      "primeira_linha_comprimento_alvo": 59,
+      "sentimento_primeira_linha": "positivo",
+      "termos_seo_obrigatorios": [
+        "satisfying",
+        "asmr",
+        "shorts",
+        "oddlysatisfying",
+        "relaxing",
+        "video",
+        "watch",
+        "viral",
+        "unboxing",
+        "subscribe",
+        "sand",
+        "music",
+        "cute",
+        "youtube",
+        "like",
+        "make",
+        "videos",
+        "content",
+        "channel",
+        "watching"
+      ],
+      "moldes_frase": [
+        "satisfying asmr",
+        "oddlysatisfying shorts",
+        "oddly satisfying",
+        "satisfying oddlysatisfying",
+        "asmr satisfying",
+        "asmr video",
+        "satisfying unboxing",
+        "satisfying art",
+        "kinetic sand",
+        "youtube com"
+      ],
+      "emojis": [
+        {
+          "emoji": "🔹",
+          "frequencia": 18
+        },
+        {
+          "emoji": "❤",
+          "frequencia": 13
+        },
+        {
+          "emoji": "✨",
+          "frequencia": 11
+        },
+        {
+          "emoji": "👇",
+          "frequencia": 10
+        },
+        {
+          "emoji": "🔥",
+          "frequencia": 9
+        }
+      ],
+      "cta_posicao": "ausente",
+      "cta_intensidade": "ausente",
+      "cta_score_mediano": 0.2,
+      "usar_links": false,
+      "hashtags": [
+        "satisfying",
+        "shorts",
+        "asmr",
+        "lifestyle sociology",
+        "entertainment",
+        "oddlysatisfying",
+        "people blogs",
+        "hobby",
+        "viral",
+        "fyp",
+        "funny",
+        "relaxing",
+        "diy",
+        "trending",
+        "oddly satisfying"
+      ],
+      "quantidade_hashtags": 7,
+      "exemplos_reais": [
+        "Sprunki OC Colour Mixing Battle Super Mario | Normal vs Horror | #satisfying #art #colourmixing #colors #memes #colors #supermario #supermario #mario #sprunki #sprunkioc #gugugagapenguin #minecraft",
+        "Gugugaga Penguin Clay and Colour Mixing Oddlysatisfying colors ASMR\n#satisfying #clay #colourmixing #asmr #art #trending #viral #memes #colourmixing #oddlysatisfying #gugugagapenguin #gugugaga #pjmasks #romeo #shortvideo #fyp #funny #cute #masetala #kawaii",
+        "Sprunki OC Colour Mixing Battle Princess Peach | Super Mario #satisfying #art #colourmixing #memes #colors #supermario #supermario #mario #sprunki #sprunkioc #minecraft #princess #minecraft #gugugagapenguin #sherifflabrador #brawlstars"
+      ]
     },
-    "exemplos_ganchos": [
-      "this one's for the girls. if you're a boy, you better not freaking try this",
-      "today gudiya ruined all my makeup. as soon as i laid eyes on her, i",
-      "hungry-lapper ha, hungry-lapper he, hungry-lapper. i want to crave it but keep eating. i want"
-    ],
-    "exemplos_titulos": [
-      "butter ASMR *with different slime flavors inside*🧈 #asmr #satisfying #shorts #slime",
-      "Let's Setup My our generation spa day playset✨🌈 ASMR Satisfying Video #shorts",
-      "Cute Make up kit 💥🌈 satisfying unboxing AsMR make up kit #shorts #yshorts #makeup #makeupkit",
-      "Satisfying Unboxing Barbie Doll & Travel Playsets, ASMR Video #shorts",
-      "Oddly Satisfying Kinetic Sand Faces Crushing | Cute Shapes Hammer Smash ASMR #shorts"
-    ],
-    "exemplos_descricoes": [
-      "Cute Make up kit 💥🌈 satisfying unboxing AsMR make up kit #shorts #yshorts #makeup #makeupkit",
-      "Satisfying Unboxing Barbie Doll & Travel Playsets, ASMR Video #shorts",
-      "Watch these cute kinetic sand face shapes get crushed and smashed with a hammer for the most satisfying ASMR experience! The soft sand breaking, cracking, and crumbling sounds are super relaxing and oddly satisfying to watch.\n\nPerfect for stress relief, ASMR lovers, and kinetic sand fans. Don’t blink or you’ll miss the best crush moments!\n\nLike ❤️ Comment 💬 Subscribe 🔔 for more daily satisfying sand videos.\n\n⸻\n\n🔥 Hashtags\n\n#shorts #asmr #kineticsand #satisfying #oddlysatisfying #sandcrush #sandcutting #relaxing #stressrelief #sandasmr #crushing #satisfyingvideo #asmrsounds #sandshapes #viralshorts",
-      "This is a humorous channel about Crayon Shin-chan and his friends.\nWe hope that we can provide everyone with a fun and relaxing time.\nThis is a fun and humorous Shin-chan and friends channel.\nWe hope it brings you relaxing and enjoyable moments"
-    ],
-    "exemplos_thumbnails": [
-      "*butter asmr* chocolate marshmallow cherry SALTED BUTTER salted butter mango",
-      "SYMPHONY SET, DESIGNED BY KOREA, makeup set 3rd generation",
-      "Barbie, 219, love, 4x4",
-      "DISCARD AFTER USE MPV",
-      "PETRUS"
-    ]
+    "palavras_chave": {
+      "shorttail": [
+        "satisfying",
+        "shorts",
+        "asmr",
+        "entertainment",
+        "oddlysatisfying",
+        "hobby",
+        "viral",
+        "fyp",
+        "funny",
+        "relaxing",
+        "diy",
+        "trending",
+        "food",
+        "satisfyingvideo",
+        "viralshorts"
+      ],
+      "midtail": [
+        "lifestyle sociology",
+        "people blogs",
+        "oddly satisfying",
+        "satisfying video",
+        "asmr makeup",
+        "asmr sleep",
+        "cosmetic asmr",
+        "cosmetic repair",
+        "cosmetic up",
+        "cosmetics restoration",
+        "diy makeup",
+        "makeup asmr",
+        "makeup repair",
+        "satifying asmr",
+        "satisfying makeup"
+      ],
+      "longtail": [
+        "asmr for sleep shorts",
+        "asmr makeup repair",
+        "cosmetic up asmr",
+        "how to fix it",
+        "video game culture",
+        "cute sand faces",
+        "kinetic sand asmr",
+        "hammer crush sand",
+        "stress relief asmr",
+        "cutting open squishies into one bowl",
+        "barbie princess toys",
+        "miniature kitchen set toys",
+        "satisfying with unboxing",
+        "doctor play set",
+        "hello kitty toys"
+      ],
+      "proporcao_ideal": {
+        "shorttail": 0.827,
+        "midtail": 0.173,
+        "longtail": 0.0
+      }
+    },
+    "thumbnail": {
+      "texto_capa": {
+        "comprimento_alvo_chars": 15,
+        "termos_obrigatorios": [
+          "subscribe",
+          "butter",
+          "satisfying",
+          "ranking",
+          "life",
+          "petrus",
+          "mixora",
+          "best",
+          "make",
+          "farrier",
+          "lady",
+          "salad",
+          "desi",
+          "dove",
+          "watch"
+        ],
+        "caps_intensidade": 0.0,
+        "emojis": [
+          {
+            "emoji": "😲",
+            "frequencia": 2
+          },
+          {
+            "emoji": "🤤",
+            "frequencia": 1
+          },
+          {
+            "emoji": "😮",
+            "frequencia": 1
+          },
+          {
+            "emoji": "🤣",
+            "frequencia": 1
+          },
+          {
+            "emoji": "⚠",
+            "frequencia": 1
+          }
+        ],
+        "sentimento_alvo": "neutro"
+      },
+      "cena_visual": {
+        "elementos_obrigatorios": [
+          "hand",
+          "person",
+          "colorful",
+          "holds",
+          "pink",
+          "blue",
+          "holding",
+          "green",
+          "wearing",
+          "various",
+          "woman",
+          "yellow",
+          "stands",
+          "like",
+          "doll"
+        ],
+        "presenca_humana": 0.536
+      },
+      "sentimento_visual_alvo": "neutro",
+      "exemplos_reais": [
+        "Satisfying end ✨ Subscribe",
+        "1/6 Subscribe @Printsculptors",
+        "GAMING MASTER, SUBSCRIBE"
+      ]
+    },
+    "postagem": {
+      "top_3_slots": [
+        {
+          "dia": "friday",
+          "janela": "tarde",
+          "quantidade_virais": 14,
+          "justificativa": "10.0% dos vídeos virais desse nicho foram postados nesse slot."
+        },
+        {
+          "dia": "thursday",
+          "janela": "tarde",
+          "quantidade_virais": 11,
+          "justificativa": "7.9% dos vídeos virais desse nicho foram postados nesse slot."
+        },
+        {
+          "dia": "saturday",
+          "janela": "tarde",
+          "quantidade_virais": 10,
+          "justificativa": "7.1% dos vídeos virais desse nicho foram postados nesse slot."
+        }
+      ]
+    }
   },
-  "thumbnail": {
-    "comprimento_alvo_chars": 22,
-    "termos_thumbnail_usar": [
-      "petrus",
-      "butter",
-      "set",
-      "use mpv",
-      "mpv",
-      "discard",
-      "discard use",
-      "use",
-      "love 4x4",
-      "219 love"
-    ],
-    "termos_thumbnail_evitar": [
-      "subscribe",
-      "satisfying",
-      "big",
-      "lady farrier",
-      "lady",
-      "farrier",
-      "washing",
-      "small",
-      "makeupofthings",
-      "garden"
-    ],
-    "cenas_visuais_dominantes": [
-      "toy",
-      "holds",
-      "hand",
-      "miniature",
-      "barbie"
-    ],
-    "exemplos_texto_thumbnail": [
-      "*butter asmr* chocolate marshmallow cherry SALTED BUTTER salted butter mango",
-      "SYMPHONY SET, DESIGNED BY KOREA, makeup set 3rd generation",
-      "Barbie, 219, love, 4x4",
-      "DISCARD AFTER USE MPV",
-      "PETRUS"
-    ],
-    "exemplos_cena_visual": [
-      "A wooden board displays several rectangular blocks of different food items, including chocolate, marshmallow, cherry, butter, and mango, arranged for an ASMR video.",
-      "A close-up view of a miniature toy nail salon set with tiny nail polish bottles and tools arranged on a small table.",
-      "A smiling woman holds up a colorful children's makeup kit featuring unicorn illustrations and various cosmetic shades.",
-      "A Ken and Barbie doll are sitting in a bright pink toy 4x4 vehicle in front of a Barbie dollhouse.",
-      "A collection of kinetic sand molds in various shapes, each decorated with cartoon faces, arranged on a white surface."
-    ]
+  "script_content": {
+    "estrutura_geral": {
+      "estrutura_blocos": "esquete",
+      "faixa_duracao": "ultra_curto",
+      "limite_palavras": 0,
+      "usa_dialogo": false,
+      "taxa_dialogo_no_nicho": 0.121,
+      "usa_repeticao": false
+    },
+    "gancho": {
+      "formula_abertura": "afirmacao",
+      "comprimento_alvo_palavras": 0,
+      "comprimento_alvo_chars": 0,
+      "sentimento_alvo": "neutro",
+      "termos_obrigatorios": [
+        "want",
+        "craving",
+        "hoya",
+        "wants"
+      ],
+      "usar_pontuacao_impacto": false,
+      "exemplos_reais": [
+        "goo goo ga ga goo goo ga ga goo goo ga ga mario mario mario",
+        "penguin mario i love smokey",
+        "help me help me help me help me help me help me a yeah wow"
+      ]
+    },
+    "ritmo_linguagem": {
+      "palavras_por_segundo": 0.0,
+      "comprimento_medio_frase": 0.0,
+      "variancia_ritmo": 0.0,
+      "densidade_pontuacao_impacto": 0.0,
+      "moldes_frase": [
+        "don_t",
+        "let_s",
+        "hungry_lapper",
+        "eat_want",
+        "lapper_ha",
+        "ha_hungry",
+        "mario_mario",
+        "heat_heat",
+        "craving_continue",
+        "continue_eat"
+      ]
+    },
+    "arco_emocional": {
+      "inicio": {
+        "tom": "neutro",
+        "vocabulario_obrigatorio": [
+          "yeah",
+          "want",
+          "lapper",
+          "hungry",
+          "snack",
+          "mario",
+          "just",
+          "girl",
+          "let",
+          "eating"
+        ]
+      },
+      "meio": {
+        "tom": "neutro",
+        "vocabulario_obrigatorio": [
+          "want",
+          "lapper",
+          "hungry",
+          "eat",
+          "snack",
+          "yeah",
+          "dinner",
+          "eating",
+          "heat",
+          "craving"
+        ]
+      },
+      "fim": {
+        "tom": "neutro",
+        "vocabulario_obrigatorio": [
+          "want",
+          "lapper",
+          "hungry",
+          "okay",
+          "snack",
+          "mario",
+          "yeah",
+          "girl",
+          "heat",
+          "remember"
+        ]
+      }
+    },
+    "audio": {
+      "tipo_dominante": "[music]",
+      "clima_sonoro": [
+        {
+          "pista": "[music]",
+          "frequencia": 10
+        },
+        {
+          "pista": "[laughter]",
+          "frequencia": 4
+        },
+        {
+          "pista": "[screaming]",
+          "frequencia": 3
+        },
+        {
+          "pista": "[bell]",
+          "frequencia": 2
+        },
+        {
+          "pista": "[singing]",
+          "frequencia": 1
+        }
+      ],
+      "frequencia_uso_no_nicho": 0.129
+    },
+    "repeticao": {
+      "ativar": false,
+      "taxa_no_nicho": 0.093,
+      "frequencia_media": 6
+    },
+    "cta": {
+      "intensidade": "suave",
+      "estilo": "ausente",
+      "ativar_gatilho_debate": false,
+      "taxa_discussao_mediana": 0.002,
+      "cta_score_mediano": 0.2,
+      "posicao": "ausente",
+      "molde_termos": []
+    },
+    "vocabulario_geral": {
+      "termos_obrigatorios": [
+        "want",
+        "yeah",
+        "lapper",
+        "hungry",
+        "just",
+        "snack",
+        "okay",
+        "mario",
+        "let",
+        "girl",
+        "glitter",
+        "eating",
+        "remember",
+        "eat",
+        "time",
+        "wow",
+        "squishy",
+        "hey",
+        "make",
+        "slime",
+        "clay",
+        "dinner",
+        "heat",
+        "craving",
+        "continuing",
+        "goes",
+        "gosh",
+        "ding",
+        "shadow",
+        "inside"
+      ],
+      "coocorrencias_obrigatorias": [
+        [
+          "hungry",
+          "lapper"
+        ],
+        [
+          "eating",
+          "want"
+        ],
+        [
+          "keep",
+          "want"
+        ],
+        [
+          "eating",
+          "keep"
+        ],
+        [
+          "craving",
+          "lapper"
+        ],
+        [
+          "continuing",
+          "craving"
+        ],
+        [
+          "craving",
+          "eat"
+        ],
+        [
+          "continuing",
+          "eat"
+        ],
+        [
+          "goo",
+          "mario"
+        ],
+        [
+          "like",
+          "yeah"
+        ]
+      ]
+    }
   }
 }

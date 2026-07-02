@@ -1,746 +1,1207 @@
+"""
+03_treinamento.py
+
+Responsabilidade: receber o CSV ouro, extrair e consolidar
+todos os padrões dos vídeos por nicho, e salvar um JSON por nicho
+em models/padroes_virais/{nicho}.json.
+
+Esse JSON é o que o inferencia_ml.py vai carregar e entregar
+pra LLM gerar o conteúdo.
+
+O JSON de cada nicho terá exatamente a estrutura definida:
+    structure_content:
+        titulo: fórmula, comprimento, termos, CAPS, emojis,
+                pontuação, sentimento, molde, exemplos reais
+        descricao: comprimento, primeira linha, sentimento,
+                   termos SEO, moldes de frase, emojis, CTA,
+                   links, hashtags, exemplos reais
+        palavras_chave: short/mid/long-tail, proporção
+        thumbnail: texto da capa, cena visual, sentimento visual,
+                   exemplos reais
+        postagem: top 3 slots
+
+    script_content:
+        estrutura_geral: blocos, duração, limite de palavras,
+                         diálogo, repetição
+        gancho: fórmula, comprimento, sentimento, termos,
+                pontuação, exemplos reais
+        ritmo_linguagem: palavras/seg, comprimento frase,
+                         variância, densidade pontuação, n-gramas
+        arco_emocional: tom e vocabulário por terço
+        audio: tipo dominante, clima sonoro
+        repeticao: ativar?, quantas vezes
+        cta: estilo, gatilho debate, posição, score, molde
+        vocabulario_geral: termos obrigatórios, co-ocorrências
+
+Técnicas usadas:
+    - Sentence-BERT (sentence-transformers) para embeddings semânticos
+    - HDBSCAN para clustering de exemplos por padrão estilístico
+    - MMR (Maximum Marginal Relevance) para seleção de exemplos
+      (1 centróide + 2 diversos por cluster)
+    - TF-IDF + filtro semântico SBERT para termos discriminativos
+      (títulos, descrições, ganchos, thumbnails, CTA)
+    - Agregação de vocabulario_falado e ngramas_roteiro pré-computados
+      pelo 02_pre_processa.py via Counter — sem recalcular do zero
+    - Derivação semântica de estrutura_blocos a partir de features
+      medianas do cluster dominante (ritmo, densidade, faixa, diálogo)
+    - Regex/estatística para features simples (CAPS, CTA, fórmula)
+"""
+
+import ast
 import json
 import os
 import pickle
 import re
 from collections import Counter
 
+import emoji
+import hdbscan
 import nltk
 import numpy as np
 import pandas as pd
-from nltk.sentiment import SentimentIntensityAnalyzer
+from nltk.corpus import stopwords
+from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, f1_score
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-from xgboost import XGBClassifier
+from sklearn.metrics.pairwise import cosine_similarity
 
 from src.core.supabase_client import BASE_DIR, baixar_csv_ouro
 
-# ── Caminhos ────────────────────────────────────────────────────────────────
-PASTA_PREPROCESSORS = os.path.join(BASE_DIR, "models", "preprocessors")
-PASTA_PREDICTORS = os.path.join(BASE_DIR, "models", "predictors")
 PASTA_PADROES = os.path.join(BASE_DIR, "models", "padroes_virais")
-
-os.makedirs(PASTA_PREPROCESSORS, exist_ok=True)
-os.makedirs(PASTA_PREDICTORS, exist_ok=True)
 os.makedirs(PASTA_PADROES, exist_ok=True)
-
-# ── Stopwords ────────────────────────────────────────────────────────────────
-try:
-    from nltk.corpus import stopwords
-
-    _STOPWORDS = set(stopwords.words("english"))
-except LookupError:
-    nltk.download("stopwords", quiet=True)
-    from nltk.corpus import stopwords
-
-    _STOPWORDS = set(stopwords.words("english"))
+nltk.download("stopwords", quiet=True)
 
 
 # ════════════════════════════════════════════════════════════════════════════
-# BLOCO 1 — PREPARAÇÃO DOS DADOS PARA TREINO
+# BLOCO 1 — CLUSTERING E SELEÇÃO DE EXEMPLOS
 # ════════════════════════════════════════════════════════════════════════════
 
 
-def separar_features_e_target(caminho_matriz_pkl: str):
+def embeddar_textos(textos: list, modelo: SentenceTransformer) -> np.ndarray:
     """
-    Carrega a matriz numérica já vetorizada (matriz_ml.pkl, gerado pelo 02)
-    e separa X (features numéricas) e y (targets) para o treino.
+    Gera embeddings semânticos para uma lista de textos curtos.
+    Técnica: Sentence-BERT (sentence-transformers).
+    Usado para clustering e seleção de exemplos por similaridade.
     """
-    with open(caminho_matriz_pkl, "rb") as f:
-        dados = pickle.load(f)
-
-    X = dados["X"]
-    y = dados["y"]
-
-    print(" Bloco 1 | separar_features_e_target concluído")
-    print(f"   Features (X) : {X.shape[1]} colunas (matriz esparsa numérica)")
-    print(f"   Targets  (y) : {list(y.columns)}")
-
-    return X, y
+    return modelo.encode(textos, show_progress_bar=False, convert_to_numpy=True)
 
 
-def split_treino_teste(X, y):
+def clusterizar_por_padrao(embeddings: np.ndarray) -> np.ndarray:
     """
-    Divide os dados em treino e teste estratificado por label_viral,
-    garantindo que todos os níveis estejam representados nos dois conjuntos.
+    Agrupa os vídeos do nicho em clusters por padrão estilístico.
+    Técnica: HDBSCAN — lida melhor que KMeans com clusters de
+    tamanho irregular e não exige número fixo de clusters.
+    Retorna array de labels de cluster por vídeo.
     """
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y,
-        test_size=0.2,
-        random_state=42,
-        stratify=y["label_viral"],
+
+    clusterer = hdbscan.HDBSCAN(
+        min_cluster_size=5,
+        min_samples=3,
+        metric="euclidean",
     )
-
-    print(" Bloco 1 | split_treino_teste concluído")
-    print(f"   Treino : {X_train.shape[0]} linhas ({X_train.shape[0] / X.shape[0] * 100:.1f}%)")
-    print(f"   Teste  : {X_test.shape[0]} linhas ({X_test.shape[0] / X.shape[0] * 100:.1f}%)")
-    print("   Distribuição treino:")
-    for label, count in y_train["label_viral"].value_counts().items():
-        print(f"     {label:<15}: {count}")
-
-    return X_train, X_test, y_train, y_test
+    return clusterer.fit_predict(embeddings)
 
 
-# ════════════════════════════════════════════════════════════════════════════
-# BLOCO 2 — TREINAMENTO DO MODELO
-# ════════════════════════════════════════════════════════════════════════════
-
-
-def treinar_modelo(X_train, y_train):
+def selecionar_exemplos_mmr(
+    embeddings: np.ndarray,
+    textos: list,
+    labels_cluster: np.ndarray,
+    n_exemplos: int = 3,
+) -> list:
     """
-    Treina XGBoost para classificação multiclasse
-    (frio, aquecido, viral, super_viral).
-    Salva label_encoder.pkl para decodificar previsões no endpoint.
+    Seleciona exemplos reais representativos e diversos por cluster.
+    Técnica: Maximum Marginal Relevance (MMR) —
+    1 exemplo centróide (mais típico do cluster) +
+    2 exemplos diversos (máxima distância entre si dentro do cluster).
+    Evita exemplos redundantes que seriam inúteis pra LLM.
+
+    Pré-filtragem: textos com menos de 3 tokens são excluídos do pool
+    antes de qualquer seleção — evita artefatos de tradução e strings vazias.
+
+    Fallback: se nenhum cluster válido se formar (tudo ruído no HDBSCAN),
+    aplica MMR global sobre o pool válido — seleciona o centróide global
+    como primeiro exemplo, depois escolhe os mais diversos entre si
+    via mínima similaridade coseno iterativa.
     """
-    le = LabelEncoder()
-    y_encoded = le.fit_transform(y_train["label_viral"])
-
-    caminho_le = os.path.join(PASTA_PREPROCESSORS, "label_encoder.pkl")
-    with open(caminho_le, "wb") as f:
-        pickle.dump(le, f)
-
-    modelo = XGBClassifier(
-        n_estimators=300,
-        max_depth=6,
-        learning_rate=0.05,
-        subsample=0.8,
-        colsample_bytree=0.8,
-        eval_metric="mlogloss",
-        random_state=42,
-        n_jobs=-1,
-    )
-
-    modelo.fit(X_train, y_encoded)
-
-    print(" Bloco 2 | treinar_modelo concluído")
-    print("   Algoritmo  : XGBClassifier")
-    print(f"   Classes    : {list(le.classes_)}")
-    print(f"   Features   : {X_train.shape[1]}")
-
-    return modelo, le
-
-
-def avaliar_modelo(modelo, le, X_test, y_test) -> dict:
-    """
-    Avalia o modelo no conjunto de teste.
-    Retorna accuracy, f1 por classe e matriz de confusão.
-    """
-    y_encoded = le.transform(y_test["label_viral"])
-    y_pred = modelo.predict(X_test)
-
-    accuracy = accuracy_score(y_encoded, y_pred)
-    f1 = f1_score(y_encoded, y_pred, average=None)
-    matriz_confusao = confusion_matrix(y_encoded, y_pred)
-
-    print(" Bloco 2 | avaliar_modelo concluído")
-    print(f"   Accuracy : {accuracy:.4f}")
-    print("\n   Classification Report:")
-    print(classification_report(y_encoded, y_pred, target_names=le.classes_))
-    print("   Matriz de Confusão:")
-    print(matriz_confusao)
-
-    metricas = {
-        "accuracy": accuracy,
-        "f1_por_classe": dict(zip(le.classes_, f1.tolist())),
-        "matriz_confusao": matriz_confusao.tolist(),
-    }
-
-    return metricas
-
-
-def salvar_modelo(modelo, metricas: dict) -> None:
-    """
-    Salva o modelo treinado e as métricas de avaliação.
-    """
-    caminho_modelo = os.path.join(PASTA_PREDICTORS, "motor_modelo.pkl")
-    with open(caminho_modelo, "wb") as f:
-        pickle.dump(modelo, f)
-
-    caminho_metricas = os.path.join(PASTA_PREDICTORS, "motor_modelo_metricas.json")
-    with open(caminho_metricas, "w", encoding="utf-8") as f:
-        json.dump(metricas, f, ensure_ascii=False, indent=2)
-
-    print(" Bloco 2 | salvar_modelo concluído")
-    print(f"   motor_modelo.pkl salvo em     : {caminho_modelo}")
-    print(f"   motor_modelo_metricas.json em : {caminho_metricas}")
-
-
-# ════════════════════════════════════════════════════════════════════════════
-# BLOCO 3 — EXTRAÇÃO DE PADRÕES DOS SUPER_VIRAL POR NICHO
-# ════════════════════════════════════════════════════════════════════════════
-
-
-def extrair_padroes_estrutura(df_super: pd.DataFrame, df_frio: pd.DataFrame, nicho: str) -> dict:
-    """
-    Extrai padrões de estrutura/formato dos super_viral do nicho.
-    Recebe df_frio para gerar contraste.
-
-    Extrai:
-    - faixa_duracao dominante
-    - estrutura_blocos dominante
-    - ritmo_palavras_seg mediana
-    - densidade_roteiro mediana
-    - sentimento_roteiro dominante
-    - hora_postagem mediana
-    - top 3 slots de postagem (dia × janela)
-    - tem_repeticao_roteiro (ativar regra 5x se > 30%)
-    - tipo_audio_dominante
-    - clickbait_score mediana
-    - velocidade_views mediana — proxy de hype do nicho
-    - taxa_conversao mediana — qualidade do CTA
-    - taxa_discussao mediana — potencial de debate
-    - completude_seo mediana — nível de otimização técnica
-    - faixa_duracao_evitar — contraste com frio
-    - sentimento_evitar — contraste com frio (None se igual ao dominante)
-    """
-
-    def dominante(serie):
-        serie_limpa = serie.dropna()
-        return serie_limpa.value_counts().index[0] if not serie_limpa.empty else None
-
-    def top3_slots(df):
-        if "dia_postagem" not in df.columns or "janela_postagem" not in df.columns:
-            return []
-        slots = df.groupby(["dia_postagem", "janela_postagem"]).size()
-        slots = slots.sort_values(ascending=False).head(3)
-        return [{"dia": d, "janela": j, "qtd": int(c)} for (d, j), c in slots.items()]
-
-    def mediana_segura(df, col):
-        if col not in df.columns:
-            return None
-        serie = pd.to_numeric(df[col], errors="coerce").dropna()
-        return round(float(serie.median()), 3) if not serie.empty else None
-
-    sentimento_dominante = dominante(df_super["sentimento_roteiro"]) if "sentimento_roteiro" in df_super.columns else None
-    sentimento_frio = dominante(df_frio["sentimento_roteiro"]) if "sentimento_roteiro" in df_frio.columns and not df_frio.empty else None
-    sentimento_evitar = sentimento_frio if sentimento_frio != sentimento_dominante else None
-
-    faixa_evitar = dominante(df_frio["faixa_duracao"]) if "faixa_duracao" in df_frio.columns and not df_frio.empty else None
-    faixa_dominante = dominante(df_super["faixa_duracao"]) if "faixa_duracao" in df_super.columns else None
-    faixa_evitar = faixa_evitar if faixa_evitar != faixa_dominante else None
-
-    padroes = {
-        "faixa_duracao_dominante": faixa_dominante,
-        "estrutura_blocos_dominante": dominante(df_super["estrutura_blocos"]) if "estrutura_blocos" in df_super.columns else None,
-        "ritmo_palavras_seg_mediana": mediana_segura(df_super, "ritmo_palavras_seg"),
-        "densidade_roteiro_mediana": int(df_super["densidade_roteiro"].median()) if "densidade_roteiro" in df_super.columns else None,
-        "sentimento_dominante": sentimento_dominante,
-        "hora_postagem_mediana": mediana_segura(df_super, "hora_postagem"),
-        "top3_slots_postagem": top3_slots(df_super),
-        "ativar_repeticao_5x": bool(df_super["tem_repeticao_roteiro"].mean() > 0.30) if "tem_repeticao_roteiro" in df_super.columns else False,
-        "tipo_audio_dominante": dominante(df_super["tipo_audio_dominante"]) if "tipo_audio_dominante" in df_super.columns else None,
-        "clickbait_score_mediana": mediana_segura(df_super, "clickbait_score"),
-        "velocidade_views_mediana": mediana_segura(df_super, "velocidade_views"),
-        "taxa_conversao_mediana": mediana_segura(df_super, "taxa_conversao"),
-        "taxa_discussao_mediana": mediana_segura(df_super, "taxa_discussao"),
-        "completude_seo_mediana": mediana_segura(df_super, "completude_seo"),
-        # Contraste com frio
-        "faixa_duracao_evitar": faixa_evitar,
-        "sentimento_evitar": sentimento_evitar,
-    }
-
-    print(f"   [{nicho}] extrair_padroes_estrutura concluído")
-
-    return padroes
-
-
-def extrair_padroes_textuais(df_super: pd.DataFrame, df_frio: pd.DataFrame, nicho: str) -> dict:
-    """
-    Extrai padrões textuais dos super_viral para mastigar o roteiro da LLM.
-    Recebe df_frio para gerar lista de termos a evitar.
-
-    Extrai:
-    - termos_gancho_usar          : TF-IDF exclusivo super_viral em gancho_primeira_frase
-    - termos_vocabulario          : TF-IDF dominante em vocabulario_falado
-    - termos_seo_usar             : TF-IDF exclusivo super_viral em palavras_chave_en
-    - ngramas_roteiro             : TF-IDF dominante em texto_falado_limpo_en
-    - termos_descricao_usar       : TF-IDF exclusivo super_viral em descricao_en
-    - emojis_usar                 : top 5 emojis mais frequentes nos super_viral
-    - emojis_evitar               : top 5 emojis exclusivos dos frio
-    - arco_emocional              : sentimento VADER por terço do roteiro
-    - vocabulario_por_terco       : top termos TF-IDF de cada terço do roteiro
-    - exemplos_ganchos            : exemplos reais de gancho_primeira_frase
-    - exemplos_titulos            : exemplos reais de titulo_en
-    - termos_gancho_evitar        : TF-IDF exclusivo frio em gancho_primeira_frase
-    - termos_roteiro_evitar       : TF-IDF exclusivo frio em texto_falado_limpo_en
-    - comprimento_medio_gancho    : média de palavras nos ganchos dos super_viral
-    - comprimento_medio_frase     : média de palavras por frase no roteiro dos super_viral
-    - padrao_abertura_dominante   : pergunta / imperativo / afirmacao — padrão do gancho
-    - densidade_pontuacao         : % de frases com ! ou ? nos super_viral vs frio
-    - exemplos_descricoes         : exemplos reais de descricao_en super_viral
-    - exemplos_thumbnails         : exemplos reais de texto_thumbnail super_viral
-    """
-
-    def top_tfidf(corpus, n=10):
-        corpus_limpo = [str(t) for t in corpus if isinstance(t, str) and t.strip()]
-        if len(corpus_limpo) < 2:
-            return []
-        vec = TfidfVectorizer(
-            max_features=50,
-            ngram_range=(1, 2),
-            min_df=1,
-            strip_accents="unicode",
-            stop_words="english",
-        )
-        X = vec.fit_transform(corpus_limpo)
-        scores = np.asarray(X.mean(axis=0)).flatten()
-        terms = vec.get_feature_names_out()
-        ordem = scores.argsort()[::-1][:n]
-        return [terms[i] for i in ordem]
-
-    def top_tfidf_exclusivo(corpus_super, corpus_frio, n=10):
-        corpus_s = [str(t) for t in corpus_super if isinstance(t, str) and t.strip()]
-        corpus_f = [str(t) for t in corpus_frio if isinstance(t, str) and t.strip()]
-        if len(corpus_s) < 2:
-            return []
-        vec = TfidfVectorizer(
-            max_features=200,
-            ngram_range=(1, 2),
-            min_df=1,
-            strip_accents="unicode",
-            stop_words="english",
-        )
-        todos = corpus_s + corpus_f if corpus_f else corpus_s
-        X = vec.fit_transform(todos)
-        terms = vec.get_feature_names_out()
-        scores_s = np.asarray(X[: len(corpus_s)].mean(axis=0)).flatten()
-        scores_f = np.asarray(X[len(corpus_s) :].mean(axis=0)).flatten() if corpus_f else np.zeros(len(terms))
-        diff = scores_s - scores_f
-        ordem = diff.argsort()[::-1][:n]
-        return [terms[i] for i in ordem if diff[i] > 0]
-
-    def extrair_emojis_frequentes(serie, n=5):
-        import emoji as emoji_lib
-
-        contagem = Counter()
-        for texto in serie:
-            if not isinstance(texto, str) or not texto.strip():
-                continue
-            for item in emoji_lib.emoji_list(texto):
-                contagem[item["emoji"]] += 1
-        return [e for e, _ in contagem.most_common(n)]
-
-    def arco_emocional(df):
-        if "texto_falado_limpo_en" not in df.columns:
-            return {}
-        try:
-            sia = SentimentIntensityAnalyzer()
-        except LookupError:
-            nltk.download("vader_lexicon", quiet=True)
-            sia = SentimentIntensityAnalyzer()
-
-        def sentimento_terco(textos, inicio, fim):
-            resultados = []
-            for t in textos:
-                if not isinstance(t, str) or not t.strip():
-                    continue
-                palavras = t.split()
-                n = len(palavras)
-                terco = " ".join(palavras[int(n * inicio) : int(n * fim)])
-                if not terco.strip():
-                    continue
-                resultados.append(sia.polarity_scores(terco)["compound"])
-            if not resultados:
-                return "neutro"
-            media = np.mean(resultados)
-            return "positivo" if media >= 0.05 else "negativo" if media <= -0.05 else "neutro"
-
-        textos = df["texto_falado_limpo_en"].tolist()
-        return {
-            "inicio": sentimento_terco(textos, 0.0, 0.2),
-            "meio": sentimento_terco(textos, 0.2, 0.8),
-            "fim": sentimento_terco(textos, 0.8, 1.0),
-        }
-
-    def vocabulario_por_terco(df, n=8):
-        """Top termos TF-IDF de cada terço do texto_falado_limpo_en."""
-        if "texto_falado_limpo_en" not in df.columns:
-            return {"inicio": [], "meio": [], "fim": []}
-
-        corpus_ini, corpus_mei, corpus_fim = [], [], []
-        for t in df["texto_falado_limpo_en"]:
-            if not isinstance(t, str) or not t.strip():
-                continue
-            palavras = t.split()
-            total = len(palavras)
-            if total < 5:
-                continue
-            ci = max(1, int(total * 0.20))
-            cf = max(ci + 1, int(total * 0.80))
-            corpus_ini.append(" ".join(palavras[:ci]))
-            corpus_mei.append(" ".join(palavras[ci:cf]))
-            corpus_fim.append(" ".join(palavras[cf:]))
-
-        return {
-            "inicio": top_tfidf(corpus_ini, n=n),
-            "meio": top_tfidf(corpus_mei, n=n),
-            "fim": top_tfidf(corpus_fim, n=n),
-        }
-
-    def comprimento_medio_gancho(df):
-        """Média de palavras nos ganchos dos super_viral."""
-        if "gancho_primeira_frase" not in df.columns:
-            return None
-        serie = df["gancho_primeira_frase"].dropna().astype(str)
-        serie = serie[serie.str.strip() != ""]
-        if serie.empty:
-            return None
-        return round(float(serie.apply(lambda t: len(t.split())).mean()), 1)
-
-    def comprimento_medio_frase(df):
-        """Média de palavras por frase no texto_falado_limpo_en."""
-        if "texto_falado_limpo_en" not in df.columns:
-            return None
-        medias = []
-        for t in df["texto_falado_limpo_en"]:
-            if not isinstance(t, str) or not t.strip():
-                continue
-            frases = [f.strip() for f in re.split(r"[.!?]+", t) if f.strip()]
-            if not frases:
-                continue
-            medias.append(np.mean([len(f.split()) for f in frases]))
-        return round(float(np.mean(medias)), 1) if medias else None
-
-    def padrao_abertura_dominante(df):
-        """
-        Detecta se o gancho começa mais com pergunta, imperativo ou afirmação.
-        Baseado nos ganchos dos super_viral.
-        """
-        if "gancho_primeira_frase" not in df.columns:
-            return None
-
-        _INTERROGATIVAS = re.compile(
-            r"^(what|who|why|how|when|where|which|is|are|do|did|will|can|would|should|have)\b",
-            re.I,
-        )
-        _IMPERATIVOS = re.compile(
-            r"^(stop|never|don't|avoid|forget|quit|start|try|make|look|watch|come|get|take|check|find|use|learn|save|discover)\b",
-            re.I,
-        )
-
-        contagem = Counter()
-        for t in df["gancho_primeira_frase"].dropna().astype(str):
-            t = t.strip()
-            if not t:
-                continue
-            if _INTERROGATIVAS.match(t):
-                contagem["pergunta"] += 1
-            elif _IMPERATIVOS.match(t):
-                contagem["imperativo"] += 1
-            else:
-                contagem["afirmacao"] += 1
-
-        if not contagem:
-            return None
-        return contagem.most_common(1)[0][0]
-
-    def densidade_pontuacao(df_s, df_f):
-        """
-        % de frases com ! ou ? nos super_viral vs frio.
-        Indica energia e ritmo do roteiro.
-        """
-
-        def calcular(df):
-            if "texto_falado_limpo_en" not in df.columns:
-                return None
-            total, com_pontuacao = 0, 0
-            for t in df["texto_falado_limpo_en"]:
-                if not isinstance(t, str) or not t.strip():
-                    continue
-                frases = [f.strip() for f in re.split(r"[.!?]+", t) if f.strip()]
-                total += len(frases)
-                com_pontuacao += sum(1 for f in frases if re.search(r"[!?]", f))
-            return round(com_pontuacao / total * 100, 1) if total > 0 else None
-
-        return {
-            "super_viral": calcular(df_s),
-            "frio": calcular(df_f),
-        }
-
-    def exemplos_reais(df, coluna, n=5):
-        if coluna not in df.columns:
-            return []
-        return [str(v) for v in df[coluna].dropna().head(n).tolist()]
-
-    # ── Emojis ───────────────────────────────────────────────────────────────
-    emojis_super = extrair_emojis_frequentes(df_super["vibe_emojis"] if "vibe_emojis" in df_super.columns else pd.Series(dtype=str))
-    emojis_frio = extrair_emojis_frequentes(df_frio["vibe_emojis"] if "vibe_emojis" in df_frio.columns else pd.Series(dtype=str))
-    emojis_evitar = [e for e in emojis_frio if e not in emojis_super][:5]
-
-    padroes = {
-        # ── Termos e vocabulário ──────────────────────────────────────────────
-        "termos_gancho_usar": top_tfidf_exclusivo(
-            df_super.get("gancho_primeira_frase", pd.Series(dtype=str)),
-            df_frio.get("gancho_primeira_frase", pd.Series(dtype=str)),
-        ),
-        "termos_vocabulario": top_tfidf(
-            df_super.get("vocabulario_falado", pd.Series(dtype=str)),
-        ),
-        "termos_seo_usar": top_tfidf_exclusivo(
-            df_super.get("palavras_chave_en", pd.Series(dtype=str)),
-            df_frio.get("palavras_chave_en", pd.Series(dtype=str)),
-        ),
-        "ngramas_roteiro": top_tfidf(
-            df_super.get("texto_falado_limpo_en", pd.Series(dtype=str)),
-        ),
-        "termos_descricao_usar": top_tfidf_exclusivo(
-            df_super.get("descricao_en", pd.Series(dtype=str)),
-            df_frio.get("descricao_en", pd.Series(dtype=str)),
-        ),
-        "termos_gancho_evitar": top_tfidf_exclusivo(
-            df_frio.get("gancho_primeira_frase", pd.Series(dtype=str)),
-            df_super.get("gancho_primeira_frase", pd.Series(dtype=str)),
-        ),
-        "termos_roteiro_evitar": top_tfidf_exclusivo(
-            df_frio.get("texto_falado_limpo_en", pd.Series(dtype=str)),
-            df_super.get("texto_falado_limpo_en", pd.Series(dtype=str)),
-        ),
-        # ── Emojis ───────────────────────────────────────────────────────────
-        "emojis_usar": emojis_super,
-        "emojis_evitar": emojis_evitar,
-        # ── Análise do roteiro ────────────────────────────────────────────────
-        "arco_emocional": arco_emocional(df_super),
-        "vocabulario_por_terco": vocabulario_por_terco(df_super),
-        "comprimento_medio_gancho": comprimento_medio_gancho(df_super),
-        "comprimento_medio_frase": comprimento_medio_frase(df_super),
-        "padrao_abertura_dominante": padrao_abertura_dominante(df_super),
-        "densidade_pontuacao": densidade_pontuacao(df_super, df_frio),
-        # ── Exemplos reais ────────────────────────────────────────────────────
-        "exemplos_ganchos": exemplos_reais(df_super, "gancho_primeira_frase"),
-        "exemplos_titulos": exemplos_reais(df_super, "titulo_en"),
-        "exemplos_descricoes": exemplos_reais(df_super, "descricao_en"),
-        "exemplos_thumbnails": exemplos_reais(df_super, "texto_thumbnail"),
-    }
-
-    print(f"   [{nicho}] extrair_padroes_textuais concluído")
-
-    return padroes
-
-
-def extrair_padroes_thumbnail(df_super: pd.DataFrame, df_frio: pd.DataFrame, nicho: str) -> dict:
-    """
-    Extrai padrões visuais da thumbnail dos super_viral.
-    Recebe df_frio para contraste.
-
-    Extrai:
-    - comprimento_alvo_chars    : mediana de chars do texto_thumbnail nos super_viral
-    - termos_thumbnail_usar     : TF-IDF exclusivo super_viral em texto_thumbnail
-    - termos_thumbnail_evitar   : TF-IDF exclusivo frio em texto_thumbnail
-    - cenas_visuais_dominantes  : TF-IDF dominante em descricao_visual_thumb
-    - exemplos_texto_thumbnail  : exemplos reais de texto_thumbnail super_viral
-    - exemplos_cena_visual      : exemplos reais de descricao_visual_thumb super_viral
-    """
-
-    def top_tfidf_exclusivo(corpus_super, corpus_frio, n=10):
-        corpus_s = [str(t) for t in corpus_super if isinstance(t, str) and t.strip()]
-        corpus_f = [str(t) for t in corpus_frio if isinstance(t, str) and t.strip()]
-        if len(corpus_s) < 2:
-            return []
-        vec = TfidfVectorizer(
-            max_features=200,
-            ngram_range=(1, 2),
-            min_df=1,
-            strip_accents="unicode",
-            stop_words="english",
-        )
-        todos = corpus_s + corpus_f if corpus_f else corpus_s
-        X = vec.fit_transform(todos)
-        terms = vec.get_feature_names_out()
-        scores_s = np.asarray(X[: len(corpus_s)].mean(axis=0)).flatten()
-        scores_f = np.asarray(X[len(corpus_s) :].mean(axis=0)).flatten() if corpus_f else np.zeros(len(terms))
-        diff = scores_s - scores_f
-        ordem = diff.argsort()[::-1][:n]
-        return [terms[i] for i in ordem if diff[i] > 0]
-
-    def top_tfidf(corpus, n=5):
-        corpus_limpo = [str(t) for t in corpus if isinstance(t, str) and t.strip()]
-        if len(corpus_limpo) < 2:
-            return corpus_limpo[:n]
-        vec = TfidfVectorizer(
-            max_features=50,
-            ngram_range=(1, 2),
-            min_df=1,
-            strip_accents="unicode",
-            stop_words="english",
-        )
-        X = vec.fit_transform(corpus_limpo)
-        scores = np.asarray(X.mean(axis=0)).flatten()
-        terms = vec.get_feature_names_out()
-        ordem = scores.argsort()[::-1][:n]
-        return [terms[i] for i in ordem]
-
-    def comprimento_alvo(df, coluna):
-        if coluna not in df.columns:
-            return None
-        serie = df[coluna].dropna().apply(lambda x: len(str(x)))
-        return int(serie.median()) if not serie.empty else None
-
-    def exemplos_reais(df, coluna, n=5):
-        if coluna not in df.columns:
-            return []
-        return [str(v) for v in df[coluna].dropna().head(n).tolist()]
-
-    padroes = {
-        "comprimento_alvo_chars": comprimento_alvo(df_super, "texto_thumbnail"),
-        "termos_thumbnail_usar": top_tfidf_exclusivo(
-            df_super.get("texto_thumbnail", pd.Series(dtype=str)),
-            df_frio.get("texto_thumbnail", pd.Series(dtype=str)),
-        ),
-        "termos_thumbnail_evitar": top_tfidf_exclusivo(
-            df_frio.get("texto_thumbnail", pd.Series(dtype=str)),
-            df_super.get("texto_thumbnail", pd.Series(dtype=str)),
-        ),
-        "cenas_visuais_dominantes": top_tfidf(
-            df_super.get("descricao_visual_thumb", pd.Series(dtype=str)),
-        ),
-        "exemplos_texto_thumbnail": exemplos_reais(df_super, "texto_thumbnail"),
-        "exemplos_cena_visual": exemplos_reais(df_super, "descricao_visual_thumb"),
-    }
-
-    print(f"   [{nicho}] extrair_padroes_thumbnail concluído")
-
-    return padroes
-
-
-def consolidar_padroes_nicho(df: pd.DataFrame, nicho: str) -> dict:
-    """
-    Consolida todos os padrões extraídos em um único dicionário por nicho.
-    Filtra super_viral e frio do nicho específico para contraste.
-    """
-    df_nicho = df[df["nicho"] == nicho].copy()
-    df_super = df_nicho[df_nicho["label_viral"] == "super_viral"].copy()
-    df_frio = df_nicho[df_nicho["label_viral"] == "frio"].copy()
-
-    if df_super.empty:
-        print(f"   [{nicho}] SKIP — sem super_viral suficientes.")
-        return {}
-
-    padroes = {
-        "nicho": nicho,
-        "n_videos": len(df_nicho),
-        "n_super": len(df_super),
-        "n_frio": len(df_frio),
-        "estrutura": extrair_padroes_estrutura(df_super, df_frio, nicho),
-        "textuais": extrair_padroes_textuais(df_super, df_frio, nicho),
-        "thumbnail": extrair_padroes_thumbnail(df_super, df_frio, nicho),
-    }
-
-    print(f"   [{nicho}] consolidar_padroes_nicho concluído")
-    print(f"   Super virais: {len(df_super)} | Frios: {len(df_frio)}")
-
-    return padroes
-
-
-def salvar_padroes_por_nicho(df: pd.DataFrame) -> None:
-    """
-    Itera sobre todos os nichos do dataset, extrai e consolida os padrões
-    e salva um JSON por nicho em models/padroes_virais/{nicho}.json.
-    Esses JSONs são o contexto mastigado que o endpoint entrega para a LLM.
-    """
-    if "nicho" not in df.columns:
-        raise ValueError("ERRO: coluna 'nicho' não encontrada no DataFrame.")
-
-    nichos = df["nicho"].dropna().unique()
-
-    print(" Bloco 3 | salvar_padroes_por_nicho")
-    print(f"   Nichos encontrados: {list(nichos)}")
-
-    for nicho in nichos:
-        padroes = consolidar_padroes_nicho(df, nicho)
-
-        if not padroes:
+    # Filtra textos com menos de 3 tokens — remove artefatos e vazios
+    indices_validos = [i for i, t in enumerate(textos) if len(str(t).strip().split()) >= 3]
+
+    if not indices_validos:
+        return []
+
+    textos_validos = [textos[i] for i in indices_validos]
+    embs_validos = embeddings[indices_validos]
+    labels_validos = labels_cluster[indices_validos]
+
+    selecionados = []
+    clusters_unicos = set(labels_validos)
+    clusters_unicos.discard(-1)
+
+    for cluster_id in clusters_unicos:
+        indices = np.where(labels_validos == cluster_id)[0]
+        embs_cluster = embs_validos[indices]
+        textos_cluster = [textos_validos[i] for i in indices]
+
+        if len(textos_cluster) == 1:
+            selecionados.append(textos_cluster[0])
             continue
 
-        nicho_limpo = str(nicho).replace(" ", "_").replace("/", "_").lower()
-        caminho = os.path.join(PASTA_PADROES, f"{nicho_limpo}.json")
+        # Centróide: embedding mais próximo da média do cluster
+        centroide = embs_cluster.mean(axis=0, keepdims=True)
+        sims = cosine_similarity(centroide, embs_cluster)[0]
+        idx_centroide = sims.argmax()
+        selecionados.append(textos_cluster[idx_centroide])
 
-        with open(caminho, "w", encoding="utf-8") as f:
-            json.dump(padroes, f, ensure_ascii=False, indent=2)
+        if len(textos_cluster) < 3:
+            continue
 
-        print(f"   [{nicho}] salvo em: {caminho}")
+        # Diversidade: 2 exemplos com máxima distância entre si
+        restantes = [i for i in range(len(textos_cluster)) if i != idx_centroide]
+        embs_restantes = embs_cluster[restantes]
+        sims_restantes = cosine_similarity(embs_restantes, embs_restantes)
 
-    print(f" Bloco 3 | todos os padrões salvos em: {PASTA_PADROES}")
+        np.fill_diagonal(sims_restantes, 1.0)
+        i, j = np.unravel_index(sims_restantes.argmin(), sims_restantes.shape)
+        selecionados.append(textos_cluster[restantes[i]])
+        selecionados.append(textos_cluster[restantes[j]])
+
+    # Fallback: nenhum cluster válido — MMR global sobre pool filtrado
+    if not selecionados:
+        centroide_global = embs_validos.mean(axis=0, keepdims=True)
+        sims_global = cosine_similarity(centroide_global, embs_validos)[0]
+        idx_centro = sims_global.argmax()
+        selecionados.append(textos_validos[idx_centro])
+
+        restantes = [i for i in range(len(textos_validos)) if i != idx_centro]
+        if len(restantes) >= 2:
+            embs_restantes = embs_validos[restantes]
+            sims_restantes = cosine_similarity(embs_restantes, embs_restantes)
+            np.fill_diagonal(sims_restantes, 1.0)
+            i, j = np.unravel_index(sims_restantes.argmin(), sims_restantes.shape)
+            selecionados.append(textos_validos[restantes[i]])
+            selecionados.append(textos_validos[restantes[j]])
+        elif len(restantes) == 1:
+            selecionados.append(textos_validos[restantes[0]])
+
+    return selecionados[:n_exemplos]
 
 
-def calcular_similaridade_entre_nichos(df: pd.DataFrame) -> None:
+# ════════════════════════════════════════════════════════════════════════════
+# BLOCO 2 — EXTRAÇÃO DE PADRÕES DO TÍTULO
+# ════════════════════════════════════════════════════════════════════════════
+
+
+def extrair_padroes_titulo(df_nicho: pd.DataFrame, modelo: SentenceTransformer) -> dict:
     """
-    Calcula e salva vetores TF-IDF das palavras_chave_en agregadas por nicho.
-    Usado pelo inferencia_ml.py para encontrar o nicho mais similar
-    quando o usuário entra com um nicho ainda não visto no treino.
-
-    Estratégia:
-    - Agrega palavras_chave_en dos super_viral de cada nicho
-    - Vetoriza com TF-IDF com stop_words="english"
-    - Salva vetores + vetorizador em nicho_similaridade.pkl
-    - Salva JSON legível com top termos por nicho
+    Extrai todos os padrões do título para o nicho:
+    - fórmula de construção dominante (pergunta/imperativo/afirmação)
+    - comprimento alvo em chars (mediana)
+    - termos obrigatórios (TF-IDF + filtro semântico via SBERT)
+    - posições e intensidade de CAPS (mediana de titulo_caps_intensidade)
+    - quais emojis usar e onde (mais frequentes de titulo_emojis_posicao)
+    - usar pontuação de impacto? (% de títulos com !, ?)
+    - tom/sentimento alvo (dominante de titulo_sentimento)
+    - molde de estrutura (derivado de clickbait_score + caps + emojis + formula)
+    - exemplos reais (MMR sobre embeddings de titulo_en)
+    Retorna dict com todos os campos do structure_content.titulo
     """
-    from sklearn.metrics.pairwise import cosine_similarity
+    titulos = df_nicho["titulo_en"].fillna("").tolist()
 
-    if "nicho" not in df.columns or "palavras_chave_en" not in df.columns:
-        print("   [SKIP] colunas necessárias não encontradas.")
-        return
+    def limpar_titulo(titulo):
+        t = re.sub(r"#\S+", "", titulo)
+        t = re.sub(r"@\S+", "", t)
+        t = emoji.replace_emoji(t, replace="")
+        return t.strip()
 
-    df_super = df[df["label_viral"] == "super_viral"].copy()
-    corpus_por_nicho = df_super.groupby("nicho")["palavras_chave_en"].apply(lambda x: " ".join(x.dropna().astype(str))).to_dict()
+    titulos_limpos = [limpar_titulo(t) for t in titulos]
 
-    if len(corpus_por_nicho) < 2:
-        print("   [SKIP] nichos insuficientes para calcular similaridade.")
-        return
+    # Fórmula dominante
+    formula_dominante = df_nicho["titulo_formula_abertura"].mode()[0]
 
-    nichos = list(corpus_por_nicho.keys())
-    corpus = list(corpus_por_nicho.values())
+    # Comprimento alvo
+    comprimento_alvo = int(df_nicho["titulo_comprimento"].median())
 
-    vetorizador = TfidfVectorizer(
-        max_features=300,
-        ngram_range=(1, 2),
-        min_df=1,
-        strip_accents="unicode",
-        lowercase=True,
+    # Termos candidatos via TF-IDF — pool amplo pra SBERT filtrar depois
+    vectorizer = TfidfVectorizer(stop_words="english", max_features=50)
+    termos_obrigatorios = []
+    try:
+        matriz = vectorizer.fit_transform(titulos_limpos)
+        scores = np.asarray(matriz.mean(axis=0)).flatten()
+        termos = vectorizer.get_feature_names_out()
+        indices_top = scores.argsort()[::-1][:50]
+        candidatos = [termos[i] for i in indices_top]
+
+        # Filtro semântico via SBERT
+        # len(t) >= 4 elimina partículas curtas de qualquer idioma (ki, ka, vs, ji)
+        # threshold 0.28 elimina nomes próprios transliterados sem semântica real
+        frases_contexto = [f"this video is about {t}" for t in candidatos]
+        embedding_contexto = modelo.encode(frases_contexto, convert_to_numpy=True)
+        embedding_nicho = modelo.encode(titulos_limpos, convert_to_numpy=True).mean(axis=0, keepdims=True)
+
+        sims = cosine_similarity(embedding_nicho, embedding_contexto)[0]
+        termos_obrigatorios = [t for t, s in zip(candidatos, sims) if s >= 0.28 and len(t) >= 4][:20]
+    except Exception:
+        termos_obrigatorios = []
+
+    # CAPS
+    caps_intensidade = round(df_nicho["titulo_caps_intensidade"].median(), 3)
+
+    # Emojis mais frequentes — já deserializados no maestro
+    todos_emojis = []
+    for lista in df_nicho["titulo_emojis_posicao"].dropna():
+        if isinstance(lista, list):
+            todos_emojis.extend(lista)
+    contagem_emojis = Counter((e["emoji"], e["posicao"]) for e in todos_emojis if isinstance(e, dict))
+    emojis_dominantes = [{"emoji": em, "posicao": posicao, "frequencia": freq} for (em, posicao), freq in contagem_emojis.most_common(5)]
+
+    # Pontuação de impacto
+    usar_pontuacao = df_nicho["titulo_pontuacao_impacto"].mean() >= 0.3
+
+    # Sentimento alvo
+    sentimento_alvo = df_nicho["titulo_sentimento"].mode()[0]
+
+    # Molde de estrutura
+    clickbait_medio = round(df_nicho["clickbait_score"].median(), 3)
+    molde_estrutura = {
+        "formula": formula_dominante,
+        "caps_intensidade": caps_intensidade,
+        "clickbait_score_mediano": clickbait_medio,
+        "usar_pontuacao": usar_pontuacao,
+        "sentimento_alvo": sentimento_alvo,
+        "emojis_sugeridos": emojis_dominantes[:2] if emojis_dominantes else [],
+    }
+
+    # Exemplos reais via MMR
+    embeddings = embeddar_textos(titulos, modelo)
+    labels = clusterizar_por_padrao(embeddings)
+    exemplos = selecionar_exemplos_mmr(embeddings, titulos, labels)
+
+    return {
+        "formula_construcao": formula_dominante,
+        "comprimento_alvo_chars": comprimento_alvo,
+        "termos_obrigatorios": termos_obrigatorios,
+        "caps_intensidade": caps_intensidade,
+        "emojis": emojis_dominantes,
+        "usar_pontuacao_impacto": usar_pontuacao,
+        "sentimento_alvo": sentimento_alvo,
+        "molde_estrutura": molde_estrutura,
+        "exemplos_reais": exemplos,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# BLOCO 3 — EXTRAÇÃO DE PADRÕES DA DESCRIÇÃO
+# ════════════════════════════════════════════════════════════════════════════
+
+
+def extrair_padroes_descricao(df_nicho: pd.DataFrame, modelo: SentenceTransformer) -> dict:
+    """
+    Extrai todos os padrões da descrição para o nicho:
+    - comprimento alvo total e da primeira linha (medianas)
+    - tom/sentimento da primeira linha (dominante)
+    - termos SEO obrigatórios (TF-IDF + filtro semântico via SBERT)
+    - moldes de frase (bigrams/trigrams TF-IDF + filtro SBERT sobre descricao_en)
+    - quais emojis usar e onde (mais frequentes)
+    - CTA: estilo dominante, intensidade e posição
+    - usar links? onde? (% e posição de descricao_tem_link)
+    - hashtags: quais, quantas, onde (de palavras_chave_en)
+    - exemplos reais (MMR sobre embeddings de descricao_en — filtrado por tamanho)
+    Retorna dict com todos os campos do structure_content.descricao
+    """
+    descricoes = df_nicho["descricao_en"].fillna("").tolist()
+
+    # Comprimentos alvo
+    comprimento_alvo = int(df_nicho["descricao_comprimento"].median())
+    primeira_linha_alvo = int(df_nicho["descricao_primeira_linha_comprimento"].median())
+
+    # Sentimento da primeira linha
+    sentimento_primeira_linha = df_nicho["descricao_primeira_linha_sentimento"].mode()[0]
+
+    # Termos SEO candidatos via TF-IDF — pool amplo pra SBERT filtrar
+    vectorizer_seo = TfidfVectorizer(stop_words="english", max_features=50)
+    termos_obrigatorios = []
+    try:
+        matriz_seo = vectorizer_seo.fit_transform(descricoes)
+        scores_seo = np.asarray(matriz_seo.mean(axis=0)).flatten()
+        termos_seo = vectorizer_seo.get_feature_names_out()
+        indices_seo = scores_seo.argsort()[::-1][:50]
+        candidatos = [termos_seo[i] for i in indices_seo]
+
+        # Filtro semântico via SBERT
+        frases_contexto = [f"this video is about {t}" for t in candidatos]
+        embedding_contexto = modelo.encode(frases_contexto, convert_to_numpy=True)
+        embedding_nicho = modelo.encode(descricoes, convert_to_numpy=True).mean(axis=0, keepdims=True)
+
+        sims = cosine_similarity(embedding_nicho, embedding_contexto)[0]
+        termos_obrigatorios = [t for t, s in zip(candidatos, sims) if s >= 0.28 and len(t) >= 4][:20]
+    except Exception:
+        termos_obrigatorios = []
+
+    # Moldes de frase via bigrams/trigrams TF-IDF + filtro SBERT
+    # token_pattern restrito a latino — bloqueia tokens não-latinos de transcrições
+    vectorizer_ngrama = TfidfVectorizer(
+        ngram_range=(2, 3),
         stop_words="english",
+        token_pattern=r"[a-zA-Z]{3,}",
+        max_features=50,
+    )
+    moldes_frase = []
+    try:
+        matriz_ngrama = vectorizer_ngrama.fit_transform(descricoes)
+        scores_ngrama = np.asarray(matriz_ngrama.mean(axis=0)).flatten()
+        termos_ngrama = vectorizer_ngrama.get_feature_names_out()
+        indices_ngrama = scores_ngrama.argsort()[::-1][:50]
+        candidatos_ngrama = [termos_ngrama[i] for i in indices_ngrama]
+
+        # Filtro semântico via SBERT sobre bigrams/trigrams
+        frases_contexto_ngrama = [f"this video description contains the phrase {t}" for t in candidatos_ngrama]
+        embedding_contexto_ngrama = modelo.encode(frases_contexto_ngrama, convert_to_numpy=True)
+
+        sims_ngrama = cosine_similarity(embedding_nicho, embedding_contexto_ngrama)[0]
+        moldes_frase = [t for t, s in zip(candidatos_ngrama, sims_ngrama) if s >= 0.28][:10]
+    except Exception:
+        moldes_frase = []
+
+    # Emojis mais frequentes na descrição
+    todos_emojis = []
+    for descricao in descricoes:
+        for char in str(descricao):
+            if char in emoji.EMOJI_DATA:
+                todos_emojis.append(char)
+    contagem_emojis = Counter(todos_emojis)
+    emojis_dominantes = [{"emoji": e, "frequencia": f} for e, f in contagem_emojis.most_common(5)]
+
+    # CTA
+    # CTA
+    cta_posicao = df_nicho["descricao_cta_posicao"].mode()[0]
+    cta_intensidade = df_nicho["descricao_cta_intensidade"].mode()[0]
+    cta_score_mediano = round(df_nicho["descricao_cta_score"].median(), 3)
+
+    # Links
+    usar_links = df_nicho["descricao_tem_link"].mean() >= 0.3
+
+    # Hashtags — top termos de palavras_chave_en
+    todas_hashtags = []
+    for kw in df_nicho["palavras_chave_en"].fillna("").tolist():
+        termos = [t.strip() for t in str(kw).split(",") if t.strip()]
+        todas_hashtags.extend(termos)
+    contagem_hashtags = Counter(todas_hashtags)
+    hashtags_top = [h for h, _ in contagem_hashtags.most_common(15)]
+
+    # Quantidade de hashtags — conta # nas descrições com fallback
+    # pra nichos que listam keywords sem # (formato de lista separada por vírgula)
+    # clamp garante que quantidade nunca excede o tamanho real da lista
+    qtd_hashtags_desc = df_nicho["descricao_en"].fillna("").apply(lambda x: len(re.findall(r"#\S+", str(x)))).median()
+    quantidade_hashtags = int(qtd_hashtags_desc) if qtd_hashtags_desc > 0 else int(df_nicho["palavras_chave_en"].fillna("").apply(lambda x: len([t.strip() for t in str(x).split(",") if t.strip()])).median())
+    quantidade_hashtags = min(quantidade_hashtags, len(hashtags_top))
+
+    # Exemplos reais via MMR — filtra descrições com SEO spam
+    # limite de 500 chars — acima disso é quase sempre lista de keywords
+    descricoes_filtradas = [d for d in descricoes if 50 <= len(str(d).strip()) <= 500]
+    if not descricoes_filtradas:
+        descricoes_filtradas = descricoes
+
+    embeddings = embeddar_textos(descricoes_filtradas, modelo)
+    labels = clusterizar_por_padrao(embeddings)
+    exemplos = selecionar_exemplos_mmr(embeddings, descricoes_filtradas, labels)
+
+    return {
+        "comprimento_alvo_chars": comprimento_alvo,
+        "primeira_linha_comprimento_alvo": primeira_linha_alvo,
+        "sentimento_primeira_linha": sentimento_primeira_linha,
+        "termos_seo_obrigatorios": termos_obrigatorios,
+        "moldes_frase": moldes_frase,
+        "emojis": emojis_dominantes,
+        "cta_posicao": cta_posicao,
+        "cta_intensidade": cta_intensidade,
+        "cta_score_mediano": cta_score_mediano,
+        "usar_links": usar_links,
+        "hashtags": hashtags_top,
+        "quantidade_hashtags": quantidade_hashtags,
+        "exemplos_reais": exemplos,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# BLOCO 4 — EXTRAÇÃO DE PADRÕES DE PALAVRAS-CHAVE
+# ════════════════════════════════════════════════════════════════════════════
+
+
+def extrair_padroes_palavras_chave(df_nicho: pd.DataFrame) -> dict:
+    """
+    Extrai padrões de palavras-chave para associar ao vídeo:
+    - termos short-tail obrigatórios (1 palavra, mais frequentes)
+    - termos mid-tail do nicho (2 palavras, mais frequentes)
+    - termos long-tail do nicho (3+ palavras, mais frequentes)
+    - proporção ideal short/mid/long-tail (mediana de palavras_chave_proporcao,
+      normalizada para somar 1.0)
+    Técnica: agregação de palavras_chave_shorttail, midtail, longtail do ouro.
+    Retorna dict com todos os campos do structure_content.palavras_chave
+    """
+
+    def agregar_termos(coluna, top_n=15):
+        todos = []
+        for lista in df_nicho[coluna].dropna():
+            if isinstance(lista, list):
+                todos.extend(lista)
+        return [t for t, _ in Counter(todos).most_common(top_n)]
+
+    shorttail = agregar_termos("palavras_chave_shorttail")
+    midtail = agregar_termos("palavras_chave_midtail")
+    longtail = agregar_termos("palavras_chave_longtail")
+
+    # Proporção ideal — guard contra dicts vazios antes do np.median
+    proporcoes = [p for p in df_nicho["palavras_chave_proporcao"].dropna().tolist() if isinstance(p, dict) and p.get("shorttail", 0) + p.get("midtail", 0) + p.get("longtail", 0) > 0]
+
+    if proporcoes:
+        mediana_short = np.median([p["shorttail"] for p in proporcoes])
+        mediana_mid = np.median([p["midtail"] for p in proporcoes])
+        mediana_long = np.median([p["longtail"] for p in proporcoes])
+        total = mediana_short + mediana_mid + mediana_long
+        if total > 0:
+            proporcao_mediana = {
+                "shorttail": round(mediana_short / total, 3),
+                "midtail": round(mediana_mid / total, 3),
+                "longtail": round(mediana_long / total, 3),
+            }
+        else:
+            proporcao_mediana = {"shorttail": 0.0, "midtail": 0.0, "longtail": 0.0}
+    else:
+        proporcao_mediana = {"shorttail": 0.0, "midtail": 0.0, "longtail": 0.0}
+
+    return {
+        "shorttail": shorttail,
+        "midtail": midtail,
+        "longtail": longtail,
+        "proporcao_ideal": proporcao_mediana,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# BLOCO 5 — EXTRAÇÃO DE PADRÕES DA THUMBNAIL
+# ════════════════════════════════════════════════════════════════════════════
+
+
+def extrair_padroes_thumbnail(df_nicho: pd.DataFrame, modelo: SentenceTransformer) -> dict:
+    """
+    Extrai padrões da thumbnail para o nicho:
+    - texto da capa: comprimento alvo, termos obrigatórios (TF-IDF + filtro SBERT),
+      CAPS (mediana thumbnail_caps_intensidade), emojis, sentimento
+    - cena visual: elementos obrigatórios (TF-IDF + filtro SBERT sobre descricao_visual_thumb),
+      presença humana (% thumbnail_tem_pessoa), composição dominante
+    - sentimento visual alvo (dominante de thumbnail_sentimento_visual)
+    - exemplos reais de texto de thumbnail (MMR sobre embeddings de texto_thumbnail)
+    Retorna dict com todos os campos do structure_content.thumbnail
+    """
+    textos_capa = df_nicho["texto_thumbnail"].fillna("").tolist()
+    descricoes_visuais = df_nicho["descricao_visual_thumb"].fillna("").tolist()
+
+    # Limpeza de handles, hashtags e tokens com dígitos ou underscores embutidos
+    # que vazam do texto da capa (ex: "anandraja_86173", "#shorts", "@canal")
+    def limpar_texto_capa(texto):
+        t = re.sub(r"#\S+", "", texto)
+        t = re.sub(r"@\S+", "", t)
+        # remove tokens com underscore ou dígito embutido (handles concatenados)
+        t = re.sub(r"\b\w*[\d_]\w*\b", "", t)
+        return t.strip()
+
+    textos_capa_limpos = [limpar_texto_capa(t) for t in textos_capa]
+
+    # Comprimento alvo — só sobre textos originais não vazios (antes da limpeza)
+    textos_capa_validos = [t for t in textos_capa if str(t).strip()]
+    comprimento_alvo = int(np.median([len(t) for t in textos_capa_validos])) if textos_capa_validos else 0
+
+    # Termos obrigatórios do texto da capa via TF-IDF + filtro SBERT
+    # usa textos limpos — handles e IDs já removidos
+    vectorizer_capa = TfidfVectorizer(
+        stop_words="english",
+        token_pattern=r"[a-zA-Z]{3,}",
+        max_features=50,
+    )
+    termos_obrigatorios_capa = []
+    try:
+        matriz_capa = vectorizer_capa.fit_transform(textos_capa_limpos)
+        scores_capa = np.asarray(matriz_capa.mean(axis=0)).flatten()
+        termos_capa = vectorizer_capa.get_feature_names_out()
+        indices_capa = scores_capa.argsort()[::-1][:50]
+        candidatos_capa = [termos_capa[i] for i in indices_capa]
+
+        # Filtro semântico via SBERT
+        frases_contexto = [f"this video thumbnail text says {t}" for t in candidatos_capa]
+        embedding_contexto = modelo.encode(frases_contexto, convert_to_numpy=True)
+        textos_capa_limpos_validos = [t for t in textos_capa_limpos if t.strip()]
+        if not textos_capa_limpos_validos:
+            textos_capa_limpos_validos = textos_capa_limpos
+        embedding_nicho = modelo.encode(textos_capa_limpos_validos, convert_to_numpy=True).mean(axis=0, keepdims=True)
+
+        sims = cosine_similarity(embedding_nicho, embedding_contexto)[0]
+        termos_obrigatorios_capa = [t for t, s in zip(candidatos_capa, sims) if s >= 0.28 and len(t) >= 4][:15]
+    except Exception:
+        termos_obrigatorios_capa = []
+
+    # CAPS do texto da capa
+    caps_intensidade = round(df_nicho["thumbnail_caps_intensidade"].median(), 3)
+
+    # Emojis no texto da capa — usa textos originais (emojis removidos na limpeza)
+    todos_emojis = []
+    for texto in textos_capa:
+        for char in str(texto):
+            if char in emoji.EMOJI_DATA:
+                todos_emojis.append(char)
+    emojis_dominantes = [{"emoji": e, "frequencia": f} for e, f in Counter(todos_emojis).most_common(5)]
+
+    # Sentimento visual alvo
+    sentimento_visual = df_nicho["thumbnail_sentimento_visual"].mode()[0]
+
+    # Elementos visuais obrigatórios via TF-IDF + filtro SBERT
+    vectorizer_visual = TfidfVectorizer(
+        stop_words="english",
+        token_pattern=r"[a-zA-Z]{3,}",
+        max_features=50,
+    )
+    elementos_visuais = []
+    try:
+        matriz_visual = vectorizer_visual.fit_transform(descricoes_visuais)
+        scores_visual = np.asarray(matriz_visual.mean(axis=0)).flatten()
+        termos_visual = vectorizer_visual.get_feature_names_out()
+        indices_visual = scores_visual.argsort()[::-1][:50]
+        candidatos_visual = [termos_visual[i] for i in indices_visual]
+
+        # Filtro semântico via SBERT
+        frases_contexto_visual = [f"this video thumbnail scene shows {t}" for t in candidatos_visual]
+        embedding_contexto_visual = modelo.encode(frases_contexto_visual, convert_to_numpy=True)
+        embedding_nicho_visual = modelo.encode(descricoes_visuais, convert_to_numpy=True).mean(axis=0, keepdims=True)
+
+        sims_visual = cosine_similarity(embedding_nicho_visual, embedding_contexto_visual)[0]
+        elementos_visuais = [t for t, s in zip(candidatos_visual, sims_visual) if s >= 0.28 and len(t) >= 4][:15]
+    except Exception:
+        elementos_visuais = []
+
+    # Presença humana
+    presenca_humana = round(df_nicho["thumbnail_tem_pessoa"].mean(), 3)
+
+    # Exemplos reais via MMR — usa textos originais (não limpos)
+    # pra preservar o exemplo real como aparece na thumbnail
+    embeddings = embeddar_textos(textos_capa, modelo)
+    labels = clusterizar_por_padrao(embeddings)
+    exemplos = selecionar_exemplos_mmr(embeddings, textos_capa, labels)
+
+    return {
+        "texto_capa": {
+            "comprimento_alvo_chars": comprimento_alvo,
+            "termos_obrigatorios": termos_obrigatorios_capa,
+            "caps_intensidade": caps_intensidade,
+            "emojis": emojis_dominantes,
+            "sentimento_alvo": sentimento_visual,
+        },
+        "cena_visual": {
+            "elementos_obrigatorios": elementos_visuais,
+            "presenca_humana": presenca_humana,
+        },
+        "sentimento_visual_alvo": sentimento_visual,
+        "exemplos_reais": exemplos,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# BLOCO 6 — EXTRAÇÃO DE PADRÕES DE POSTAGEM
+# ════════════════════════════════════════════════════════════════════════════
+
+
+def extrair_padroes_postagem(df_nicho: pd.DataFrame) -> dict:
+    """
+    Extrai os top 3 slots de postagem do nicho.
+    Técnica: contagem de frequência por combinação dia_postagem × janela_postagem.
+    Retorna dict com top 3 slots (dia, janela, quantidade de vídeos virais nesse slot
+    e justificativa baseada na proporção de virais naquele slot).
+    """
+    total = len(df_nicho)
+
+    contagem = df_nicho.groupby(["dia_postagem", "janela_postagem"]).size().reset_index(name="quantidade").sort_values("quantidade", ascending=False).head(3)
+
+    slots = [
+        {
+            "dia": row["dia_postagem"],
+            "janela": row["janela_postagem"],
+            "quantidade_virais": int(row["quantidade"]),
+            "justificativa": f"{round(row['quantidade'] / total * 100, 1)}% dos vídeos virais desse nicho foram postados nesse slot.",
+        }
+        for _, row in contagem.iterrows()
+    ]
+
+    return {"top_3_slots": slots}
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# BLOCO 7 — EXTRAÇÃO DE PADRÕES DO GANCHO
+# ════════════════════════════════════════════════════════════════════════════
+
+
+def extrair_padroes_gancho(df_nicho: pd.DataFrame, modelo: SentenceTransformer) -> dict:
+    """
+    Extrai todos os padrões do gancho para o nicho:
+    - fórmula de abertura dominante (dominante de gancho_formula_abertura)
+    - comprimento alvo em palavras (mediana de gancho_comprimento)
+    - sentimento alvo (dominante de gancho_sentimento)
+    - termos obrigatórios (TF-IDF + filtro semântico via SBERT)
+    - uso de pontuação de impacto (mediana de gancho_pontuacao_impacto)
+    - exemplos reais (MMR sobre embeddings de gancho_primeira_frase —
+      filtrado por comprimento mínimo e ausência de artefatos de transcrição)
+    Retorna dict com todos os campos do script_content.gancho
+    """
+    ganchos = df_nicho["gancho_primeira_frase"].fillna("").tolist()
+
+    # Fórmula dominante
+    formula_dominante = df_nicho["gancho_formula_abertura"].mode()[0]
+
+    # Comprimento alvo
+    comprimento_alvo = int(df_nicho["gancho_comprimento"].median())
+
+    # Sentimento alvo
+    sentimento_alvo = df_nicho["gancho_sentimento"].mode()[0]
+
+    # Termos candidatos via TF-IDF — pool amplo pra SBERT filtrar
+    vectorizer = TfidfVectorizer(stop_words="english", max_features=50)
+    termos_obrigatorios = []
+    try:
+        matriz = vectorizer.fit_transform(ganchos)
+        scores = np.asarray(matriz.mean(axis=0)).flatten()
+        termos = vectorizer.get_feature_names_out()
+        indices_top = scores.argsort()[::-1][:50]
+        candidatos = [termos[i] for i in indices_top]
+
+        # Filtro semântico via SBERT
+        # len(t) >= 4 elimina partículas curtas de qualquer idioma (ji, ka, vs)
+        frases_contexto = [f"this video hook starts with {t}" for t in candidatos]
+        embedding_contexto = modelo.encode(frases_contexto, convert_to_numpy=True)
+        embedding_nicho = modelo.encode(ganchos, convert_to_numpy=True).mean(axis=0, keepdims=True)
+
+        sims = cosine_similarity(embedding_nicho, embedding_contexto)[0]
+        termos_obrigatorios = [t for t, s in zip(candidatos, sims) if s >= 0.25 and len(t) >= 4][:15]
+    except Exception:
+        termos_obrigatorios = []
+
+    # Pontuação de impacto
+    usar_pontuacao = df_nicho["gancho_pontuacao_impacto"].mean() >= 0.3
+
+    # Exemplos reais via MMR — filtro dinâmico baseado em gancho_comprimento do nicho
+    # threshold mínimo: max(5, mediana - desvio_padrão) palavras — adapta ao nicho
+    # exclui também ganchos com sequências numéricas soltas (artefato de transcrição)
+    comprimentos = df_nicho["gancho_comprimento"].dropna()
+    threshold_palavras = max(5, int(comprimentos.median() - comprimentos.std()))
+    ganchos_validos = [g for g in ganchos if len(str(g).strip().split()) >= threshold_palavras and not re.search(r"\b\d{4,}\b", str(g))]
+    if not ganchos_validos:
+        ganchos_validos = ganchos
+
+    embeddings = embeddar_textos(ganchos_validos, modelo)
+    labels = clusterizar_por_padrao(embeddings)
+    exemplos = selecionar_exemplos_mmr(embeddings, ganchos_validos, labels)
+
+    # Comprimento alvo em chars — mediana sobre gancho_primeira_frase diretamente
+    comprimento_alvo_chars = int(df_nicho["gancho_primeira_frase"].fillna("").apply(lambda x: len(str(x))).median())
+
+    return {
+        "formula_abertura": formula_dominante,
+        "comprimento_alvo_palavras": comprimento_alvo,
+        "comprimento_alvo_chars": comprimento_alvo_chars,
+        "sentimento_alvo": sentimento_alvo,
+        "termos_obrigatorios": termos_obrigatorios,
+        "usar_pontuacao_impacto": usar_pontuacao,
+        "exemplos_reais": exemplos,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# BLOCO 8 — EXTRAÇÃO DE PADRÕES DE RITMO E LINGUAGEM
+# ════════════════════════════════════════════════════════════════════════════
+
+
+def extrair_padroes_ritmo(df_nicho: pd.DataFrame) -> dict:
+    """
+    Extrai padrões de ritmo e linguagem do roteiro:
+    - palavras por segundo (mediana de ritmo_palavras_seg)
+    - comprimento médio de frase (mediana de comprimento_medio_frase)
+    - variância de ritmo (mediana de variancia_ritmo)
+    - densidade de pontuação de impacto (mediana de densidade_pontuacao_impacto)
+    - moldes de frase do nicho (top bigrams/trigrams via class-based TF-IDF
+      sobre texto_falado_limpo_en por cluster)
+    Retorna dict com todos os campos do script_content.ritmo_linguagem
+    """
+    # Métricas de ritmo
+    palavras_por_segundo = round(df_nicho["ritmo_palavras_seg"].median(), 3)
+    comprimento_medio = round(df_nicho["comprimento_medio_frase"].median(), 3)
+    variancia = round(df_nicho["variancia_ritmo"].median(), 3)
+    densidade_pontuacao = round(df_nicho["densidade_pontuacao_impacto"].median(), 3)
+
+    # Moldes de frase via agregação de ngramas_roteiro
+    # O 02_pre_processa.py já calculou bigrams/trigrams por vídeo via spacy-ngram
+    # com lemmatização — agrega por frequência no nicho em vez de recalcular do zero
+    contagem_ngramas = Counter()
+    for lista in df_nicho["ngramas_roteiro"].dropna():
+        if isinstance(lista, list):
+            contagem_ngramas.update(lista)
+    moldes_frase = [ngrama for ngrama, _ in contagem_ngramas.most_common(10)]
+
+    return {
+        "palavras_por_segundo": palavras_por_segundo,
+        "comprimento_medio_frase": comprimento_medio,
+        "variancia_ritmo": variancia,
+        "densidade_pontuacao_impacto": densidade_pontuacao,
+        "moldes_frase": moldes_frase,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# BLOCO 9 — EXTRAÇÃO DO ARCO EMOCIONAL
+# ════════════════════════════════════════════════════════════════════════════
+
+
+def extrair_arco_emocional(df_nicho: pd.DataFrame) -> dict:
+    """
+    Extrai o padrão de arco emocional do nicho por terço do roteiro:
+    - tom dominante início/meio/fim (dominante de sentimento_inicio/meio/fim,
+      vindos prontos do 02_pre_processa.py)
+    - vocabulário obrigatório por terço: agrega vocabulario_falado dos vídeos
+      cujo tom no terço correspondente coincide com o tom dominante do nicho —
+      vocabulário ancorado no tom real, não em corte posicional artificial do texto
+    Retorna dict com todos os campos do script_content.arco_emocional
+    """
+    # Tom dominante por terço — vindos prontos do 02
+    tom_inicio = df_nicho["sentimento_inicio"].mode()[0]
+    tom_meio = df_nicho["sentimento_meio"].mode()[0]
+    tom_fim = df_nicho["sentimento_fim"].mode()[0]
+
+    def vocabulario_por_tom(coluna_sentimento: str, tom_alvo: str, top_n: int = 10) -> list:
+        """
+        Agrega vocabulario_falado dos vídeos cujo sentimento no terço
+        coincide com o tom dominante. Counter simples sobre os termos
+        pré-computados pelo 02 — sem recalcular embeddings nem TF-IDF.
+        """
+        mask = df_nicho[coluna_sentimento] == tom_alvo
+        subset = df_nicho.loc[mask, "vocabulario_falado"].fillna("")
+        contagem = Counter()
+        for vocab in subset:
+            termos = [t.strip() for t in str(vocab).split() if t.strip()]
+            contagem.update(termos)
+        # Fallback: se o tom dominante não tiver vídeos suficientes,
+        # agrega sobre o nicho inteiro
+        if len(contagem) < top_n:
+            for vocab in df_nicho["vocabulario_falado"].fillna(""):
+                termos = [t.strip() for t in str(vocab).split() if t.strip()]
+                contagem.update(termos)
+        return [termo for termo, _ in contagem.most_common(top_n)]
+
+    vocabulario_inicio = vocabulario_por_tom("sentimento_inicio", tom_inicio)
+    vocabulario_meio = vocabulario_por_tom("sentimento_meio", tom_meio)
+    vocabulario_fim = vocabulario_por_tom("sentimento_fim", tom_fim)
+
+    return {
+        "inicio": {
+            "tom": tom_inicio,
+            "vocabulario_obrigatorio": vocabulario_inicio,
+        },
+        "meio": {
+            "tom": tom_meio,
+            "vocabulario_obrigatorio": vocabulario_meio,
+        },
+        "fim": {
+            "tom": tom_fim,
+            "vocabulario_obrigatorio": vocabulario_fim,
+        },
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# BLOCO 10 — EXTRAÇÃO DE PADRÕES DE ÁUDIO
+# ════════════════════════════════════════════════════════════════════════════
+
+
+def extrair_padroes_audio(df_nicho: pd.DataFrame) -> dict:
+    """
+    Extrai padrões de áudio do nicho:
+    - tipo de áudio dominante (dominante de tipo_audio_dominante)
+    - clima sonoro sugerido (tags individuais mais frequentes de pistas_audio_en)
+    - frequência de uso de áudio no nicho (% de vídeos com pista identificada
+      calculada sobre o total do nicho, não sobre o subset filtrado)
+    Retorna dict com todos os campos do script_content.audio
+    """
+    # Tipo dominante
+    tipo_dominante = df_nicho["tipo_audio_dominante"].dropna().mode()
+    tipo_dominante = tipo_dominante[0] if len(tipo_dominante) > 0 else "desconhecido"
+
+    # Pistas mais frequentes — extrai tags individuais ([laughter], [music], etc.)
+    # via regex para evitar contar combinações concatenadas como pistas distintas
+    todas_pistas = []
+    for pista in df_nicho["pistas_audio_en"].dropna():
+        tags = re.findall(r"\[[^\]]+\]", str(pista))
+        todas_pistas.extend(tags)
+
+    pistas_dominantes = [{"pista": pista, "frequencia": freq} for pista, freq in Counter(todas_pistas).most_common(5)]
+
+    # Frequência de uso — % sobre total do nicho, não sobre subset com pista
+    total = len(df_nicho)
+    com_pista = df_nicho["pistas_audio_en"].apply(lambda x: bool(re.findall(r"\[[^\]]+\]", str(x))) if isinstance(x, str) else False).sum()
+    frequencia_uso = round(com_pista / total, 3) if total > 0 else 0.0
+
+    return {
+        "tipo_dominante": tipo_dominante,
+        "clima_sonoro": pistas_dominantes,
+        "frequencia_uso_no_nicho": frequencia_uso,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# BLOCO 11 — EXTRAÇÃO DE PADRÕES DE REPETIÇÃO
+# ════════════════════════════════════════════════════════════════════════════
+
+
+def extrair_padroes_repeticao(df_nicho: pd.DataFrame) -> dict:
+    """
+    Define se o nicho usa repetição da ideia central e com que frequência:
+    - ativar repetição? (True se % de tem_repeticao_roteiro > 30%)
+    - frequência média de repetição (mediana de quantas vezes o termo mais
+      frequente do roteiro se repete nos vídeos que têm repeticao=True)
+    Retorna dict com todos os campos do script_content.repeticao
+    """
+    taxa_repeticao = df_nicho["tem_repeticao_roteiro"].mean()
+    ativar = taxa_repeticao >= 0.3
+
+    com_repeticao = df_nicho[df_nicho["tem_repeticao_roteiro"]]["texto_falado_limpo_en"].fillna("").tolist()
+
+    frequencia_media = 0
+    if com_repeticao:
+        contagens = []
+        stop_words = set(stopwords.words("english"))
+        for roteiro in com_repeticao:
+            if not roteiro.strip():
+                continue
+            tokens = [t for t in re.findall(r"\b[a-z]{3,}\b", roteiro.lower()) if t not in stop_words]
+            if not tokens:
+                continue
+            # Conta quantas vezes o termo mais frequente do roteiro se repete
+            mais_frequente = Counter(tokens).most_common(1)
+            if mais_frequente:
+                contagens.append(mais_frequente[0][1])
+
+        frequencia_media = int(np.median(contagens)) if contagens else 0
+
+    return {
+        "ativar": ativar,
+        "taxa_no_nicho": round(taxa_repeticao, 3),
+        "frequencia_media": frequencia_media,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# BLOCO 12 — EXTRAÇÃO DE PADRÕES DE CTA
+# ════════════════════════════════════════════════════════════════════════════
+
+
+def extrair_padroes_cta(df_nicho: pd.DataFrame, modelo: SentenceTransformer) -> dict:
+    """
+    Extrai padrões de CTA do nicho:
+    - estilo e intensidade (derivado de descricao_cta_intensidade
+      calibrado por taxa_conversao mediana do nicho)
+    - gatilho de debate (ativar se taxa_discussao mediana > threshold)
+    - posição no roteiro (dominante de descricao_cta_posicao)
+    - molde de frase do CTA (TF-IDF + filtro SBERT sobre frases candidatas
+      com threshold mais alto pra garantir que só verbos de ação passam)
+    - shortcircuit: se nicho não tem CTA (ausente+ausente), retorna molde vazio
+      sem rodar pipeline — evita minerar diálogo como CTA
+    Retorna dict com todos os campos do script_content.cta
+    """
+    # Intensidade calibrada por taxa_conversao mediana
+    taxa_conversao = df_nicho["taxa_conversao"].median()
+    if taxa_conversao >= 5.0:
+        intensidade = "direto"
+    elif taxa_conversao >= 2.0:
+        intensidade = "moderado"
+    else:
+        intensidade = "suave"
+
+    # Estilo dominante
+    estilo_dominante = df_nicho["descricao_cta_intensidade"].mode()[0]
+
+    # Gatilho de debate
+    taxa_discussao = df_nicho["taxa_discussao"].median()
+    threshold_debate = float(np.percentile(df_nicho["taxa_discussao"].dropna(), 75))
+    ativar_debate = taxa_discussao >= threshold_debate
+
+    # Posição dominante
+    posicao_dominante = df_nicho["descricao_cta_posicao"].mode()[0]
+
+    # Shortcircuit — nicho sem CTA identificado na descrição
+    # Minerar roteiro de diálogo como CTA gera lixo (ex: "come here", "watch out")
+    cta_score_mediano = round(df_nicho["descricao_cta_score"].median(), 3)
+    if estilo_dominante == "ausente" and posicao_dominante == "ausente":
+        return {
+            "intensidade": intensidade,
+            "estilo": estilo_dominante,
+            "ativar_gatilho_debate": ativar_debate,
+            "taxa_discussao_mediana": round(taxa_discussao, 3),
+            "cta_score_mediano": cta_score_mediano,
+            "posicao": posicao_dominante,
+            "molde_termos": [],
+        }
+
+    padrao_cta = re.compile(
+        r"\b(subscribe|follow|like|comment|share|click|check out|visit|"
+        r"buy|get|download|sign up|join|watch|learn more|tap|swipe|"
+        r"turn on|hit the bell|save|tag|dm|contact|order|shop)\b",
+        re.IGNORECASE,
     )
 
-    matriz = vetorizador.fit_transform(corpus)
+    # Coleta candidatas via regex — pool amplo
+    frases_candidatas = []
+    for roteiro in df_nicho["texto_falado_limpo_en"].fillna("").tolist():
+        frases = re.split(r"[.!?]+", roteiro.strip())
+        for frase in frases:
+            frase = frase.strip()
+            if padrao_cta.search(frase) and len(frase.split()) >= 3:
+                frases_candidatas.append(frase)
 
-    sim_matrix = cosine_similarity(matriz)
-    similaridade = {nichos[i]: {nichos[j]: round(float(sim_matrix[i][j]), 4) for j in range(len(nichos)) if i != j} for i in range(len(nichos))}
+    if not frases_candidatas:
+        molde_cta = []
+    else:
+        # Zero-shot via SBERT com threshold mais alto (0.4)
+        # pra garantir que só frases genuinamente de CTA passam
+        rotulos = [
+            "subscribe like comment share follow the channel call to action",
+            "narrative context storytelling describing events or dialogue",
+        ]
+        embs_candidatas = modelo.encode(frases_candidatas, convert_to_numpy=True)
+        embs_rotulos = modelo.encode(rotulos, convert_to_numpy=True)
 
-    feature_names = vetorizador.get_feature_names_out()
-    top_termos = {}
-    for i, nicho in enumerate(nichos):
-        scores = zip(feature_names, matriz[i].toarray()[0])
-        top_termos[nicho] = [t for t, s in sorted(scores, key=lambda x: x[1], reverse=True) if s > 0][:20]
+        sims = cosine_similarity(embs_candidatas, embs_rotulos)
 
-    caminho_pkl = os.path.join(PASTA_PADROES, "nicho_similaridade.pkl")
-    with open(caminho_pkl, "wb") as f:
+        # Threshold mais alto e margem mínima entre os dois rótulos
+        # evita classificar diálogo ambíguo como CTA
+        frases_cta = [frase for frase, sim in zip(frases_candidatas, sims) if sim[0] > sim[1] and (sim[0] - sim[1]) >= 0.05]
+
+        if len(frases_cta) < 3:
+            molde_cta = []
+        else:
+            vectorizer = TfidfVectorizer(stop_words="english", max_features=50)
+            try:
+                matriz = vectorizer.fit_transform(frases_cta)
+                scores = np.asarray(matriz.mean(axis=0)).flatten()
+                termos = vectorizer.get_feature_names_out()
+                indices_top = scores.argsort()[::-1][:50]
+                candidatos = [termos[i] for i in indices_top]
+
+                # Filtro semântico via SBERT — threshold alto pra CTA
+                frases_contexto = [f"call to action asking viewer to {t}" for t in candidatos]
+                embedding_contexto = modelo.encode(frases_contexto, convert_to_numpy=True)
+                embedding_cta = modelo.encode(frases_cta, convert_to_numpy=True).mean(axis=0, keepdims=True)
+
+                sims_termos = cosine_similarity(embedding_cta, embedding_contexto)[0]
+                molde_cta = [t for t, s in zip(candidatos, sims_termos) if s >= 0.3][:10]
+            except Exception:
+                molde_cta = []
+
+    return {
+        "intensidade": intensidade,
+        "estilo": estilo_dominante,
+        "ativar_gatilho_debate": ativar_debate,
+        "taxa_discussao_mediana": round(taxa_discussao, 3),
+        "cta_score_mediano": cta_score_mediano,
+        "posicao": posicao_dominante,
+        "molde_termos": molde_cta,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# BLOCO 13 — EXTRAÇÃO DE VOCABULÁRIO GERAL
+# ════════════════════════════════════════════════════════════════════════════
+
+
+def extrair_vocabulario_geral(df_nicho: pd.DataFrame) -> dict:
+    """
+    Extrai vocabulário geral obrigatório do roteiro no nicho:
+    - termos obrigatórios (TF-IDF + filtro SBERT por cluster HDBSCAN —
+      garante termos discriminativos e semanticamente relevantes do nicho)
+    - co-ocorrências obrigatórias (pares de termos mais frequentes
+      de coocorrencias_roteiro do ouro — já sem pares auto-referentes
+      após correção no 02_pre_processa.py)
+    Retorna dict com todos os campos do script_content.vocabulario_geral
+    """
+    # Termos obrigatórios via agregação de vocabulario_falado
+    # O 02_pre_processa.py já calculou os top 15 termos TF-IDF por vídeo.
+    # Agrega por frequência no nicho — equivalente ao class-based TF-IDF
+    # mas sem recalcular embeddings nem clustering do zero.
+    contagem_vocab = Counter()
+    for vocab in df_nicho["vocabulario_falado"].fillna("").tolist():
+        termos = [t.strip() for t in str(vocab).split() if t.strip()]
+        contagem_vocab.update(termos)
+
+    termos_obrigatorios = [termo for termo, _ in contagem_vocab.most_common(30)]
+
+    # Co-ocorrências — já sem pares auto-referentes após correção no 02
+    todas_coocorrencias = []
+    for lista in df_nicho["coocorrencias_roteiro"].dropna():
+        if isinstance(lista, list):
+            todas_coocorrencias.extend([tuple(par) for par in lista if isinstance(par, list)])
+
+    coocorrencias_top = [list(par) for par, _ in Counter(todas_coocorrencias).most_common(10)]
+
+    return {
+        "termos_obrigatorios": termos_obrigatorios,
+        "coocorrencias_obrigatorias": coocorrencias_top,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# BLOCO 14 — CONSOLIDAÇÃO E SALVAMENTO
+# ════════════════════════════════════════════════════════════════════════════
+
+
+def extrair_padroes_dialogo(df_nicho: pd.DataFrame) -> dict:
+    """
+    Determina se o nicho usa formato de diálogo (roteiro com múltiplos
+    interlocutores, marcado por >> no texto_falado original) ou monólogo.
+    tem_dialogo foi gerado pelo 02_pre_processa.py e chega pronto no ouro.
+    Retorna usa_dialogo (bool) e taxa_dialogo (proporção do nicho)
+    para que a LLM saiba o formato narrativo correto ao gerar o roteiro.
+    """
+    if "tem_dialogo" not in df_nicho.columns:
+        return {"usa_dialogo": False, "taxa_dialogo_no_nicho": 0.0}
+
+    taxa = round(float(df_nicho["tem_dialogo"].mean()), 3)
+    usa = taxa >= 0.3
+
+    return {
+        "usa_dialogo": usa,
+        "taxa_dialogo_no_nicho": taxa,
+    }
+
+
+def extrair_estrutura_geral(df_nicho: pd.DataFrame) -> dict:
+    """
+    Extrai e descreve semanticamente o formato narrativo dominante do nicho.
+    O 02_pre_processa.py gera estrutura_blocos via KMeans com labels formato_1,
+    formato_2, ... sem semântica. Esta função identifica o cluster dominante,
+    calcula as medianas das features que o definem e deriva uma descrição
+    legível para a LLM.
+    Também incorpora tem_dialogo para indicar se o nicho usa monólogo ou diálogo.
+    """
+    # Cluster dominante
+    cluster_dominante = df_nicho["estrutura_blocos"].mode()[0]
+    df_cluster = df_nicho[df_nicho["estrutura_blocos"] == cluster_dominante]
+
+    # Medianas das features do cluster dominante
+    ritmo_mediano = round(df_cluster["ritmo_palavras_seg"].median(), 3)
+    densidade_mediana = int(df_cluster["densidade_roteiro"].median())
+    faixa_dominante = df_cluster["faixa_duracao"].mode()[0]
+    repeticao = bool(df_cluster["tem_repeticao_roteiro"].mean() >= 0.3)
+
+    # Diálogo — delega para extrair_padroes_dialogo
+    dialogo = extrair_padroes_dialogo(df_nicho)
+    usa_dialogo = dialogo["usa_dialogo"]
+    taxa_dialogo = dialogo["taxa_dialogo_no_nicho"]
+
+    # Descrição semântica derivada das features
+    if ritmo_mediano >= 4.0 and densidade_mediana <= 150:
+        estilo = "impacto_rapido"
+    elif repeticao and ritmo_mediano >= 3.5:
+        estilo = "esquete_com_hook"
+    elif densidade_mediana >= 400:
+        estilo = "narrativa"
+    else:
+        estilo = "esquete"
+
+    return {
+        "estrutura_blocos": estilo,
+        "faixa_duracao": faixa_dominante,
+        "limite_palavras": densidade_mediana,
+        "usa_dialogo": usa_dialogo,
+        "taxa_dialogo_no_nicho": taxa_dialogo,
+        "usa_repeticao": repeticao,
+    }
+
+
+def consolidar_padroes_nicho(
+    df_nicho: pd.DataFrame,
+    nicho: str,
+    modelo: SentenceTransformer,
+) -> dict:
+    """
+    Consolida todos os padrões extraídos num único dict estruturado
+    com exatamente os campos definidos em structure_content e script_content.
+    Chama todos os blocos de extração e monta o JSON final do nicho.
+    """
+    return {
+        "nicho": nicho,
+        "structure_content": {
+            "titulo": extrair_padroes_titulo(df_nicho, modelo),
+            "descricao": extrair_padroes_descricao(df_nicho, modelo),
+            "palavras_chave": extrair_padroes_palavras_chave(df_nicho),
+            "thumbnail": extrair_padroes_thumbnail(df_nicho, modelo),
+            "postagem": extrair_padroes_postagem(df_nicho),
+        },
+        "script_content": {
+            "estrutura_geral": extrair_estrutura_geral(df_nicho),
+            "gancho": extrair_padroes_gancho(df_nicho, modelo),
+            "ritmo_linguagem": extrair_padroes_ritmo(df_nicho),
+            "arco_emocional": extrair_arco_emocional(df_nicho),
+            "audio": extrair_padroes_audio(df_nicho),
+            "repeticao": extrair_padroes_repeticao(df_nicho),
+            "cta": extrair_padroes_cta(df_nicho, modelo),
+            "vocabulario_geral": extrair_vocabulario_geral(df_nicho),
+        },
+    }
+
+
+def salvar_padroes_por_nicho(df: pd.DataFrame, modelo: SentenceTransformer) -> None:
+    """
+    Itera sobre todos os nichos do CSV ouro,
+    chama consolidar_padroes_nicho() para cada um
+    e salva o JSON em models/padroes_virais/{nicho}.json.
+    """
+    nichos = df["nicho"].unique()
+
+    for nicho in nichos:
+        print(f"[03] Processando nicho: {nicho}...")
+        df_nicho = df[df["nicho"] == nicho].reset_index(drop=True)
+
+        padroes = consolidar_padroes_nicho(df_nicho, nicho, modelo)
+
+        caminho = os.path.join(PASTA_PADROES, f"{nicho}.json")
+        with open(caminho, "w", encoding="utf-8") as f:
+            json.dump(padroes, f, ensure_ascii=False, indent=2, default=lambda o: bool(o) if isinstance(o, np.bool_) else int(o) if isinstance(o, np.integer) else float(o) if isinstance(o, np.floating) else o.tolist() if isinstance(o, np.ndarray) else TypeError(f"Tipo não serializável: {type(o)}"))
+
+        print(f"[03] ✓ {nicho}.json salvo ({len(df_nicho)} vídeos).")
+
+
+def calcular_similaridade_entre_nichos(df: pd.DataFrame, modelo: SentenceTransformer) -> None:
+    """
+    Calcula e salva vetores de embedding agregados por nicho
+    para uso no fallback de nicho desconhecido no inferencia_ml.py.
+    Técnica: média dos embeddings de palavras_chave_en por nicho +
+    cosine similarity entre nichos.
+    Salva nicho_similaridade.pkl com embeddings, matriz e lista de nichos.
+    """
+    nichos = df["nicho"].unique().tolist()
+    embeddings_por_nicho = []
+
+    for nicho in nichos:
+        df_nicho = df[df["nicho"] == nicho]
+        textos = df_nicho["palavras_chave_en"].fillna("").tolist()
+        embs = embeddar_textos(textos, modelo)
+        embedding_agregado = embs.mean(axis=0)
+        embeddings_por_nicho.append(embedding_agregado)
+
+    matriz_embeddings = np.stack(embeddings_por_nicho)
+
+    caminho = os.path.join(BASE_DIR, "models", "nicho_similaridade.pkl")
+    with open(caminho, "wb") as f:
         pickle.dump(
             {
-                "vetorizador": vetorizador,
-                "matriz": matriz,
                 "nichos": nichos,
-                "similaridade": similaridade,
+                "embeddings": matriz_embeddings,
             },
             f,
         )
 
-    caminho_json = os.path.join(PASTA_PADROES, "nicho_similaridade.json")
-    with open(caminho_json, "w", encoding="utf-8") as f:
-        json.dump(
-            {
-                "nichos": nichos,
-                "similaridade": similaridade,
-                "top_termos": top_termos,
-            },
-            f,
-            ensure_ascii=False,
-            indent=2,
-        )
-
-    print(" Bloco 3 | calcular_similaridade_entre_nichos concluído")
-    print(f"   Nichos indexados : {nichos}")
-    print(f"   nicho_similaridade.pkl  → {caminho_pkl}")
-    print(f"   nicho_similaridade.json → {caminho_json}")
+    print(f"[03] ✓ nicho_similaridade.pkl salvo ({len(nichos)} nichos).")
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -750,91 +1211,53 @@ def calcular_similaridade_entre_nichos(df: pd.DataFrame) -> None:
 
 def maestro_treinamento() -> None:
     """
-    Orquestra a execução sequencial de todas as etapas:
-
-    BLOCO 1 — PREPARAÇÃO
-      1. carrega matriz_ml.pkl (gerado pelo 02) para treino numérico
-      2. carrega CSV ouro (baixar_csv_ouro) para extração de padrões
-      3. separar_features_e_target()
-      4. split_treino_teste()
-
-    BLOCO 2 — TREINAMENTO
-      5. treinar_modelo()
-      6. avaliar_modelo()
-      7. salvar_modelo()
-
-    BLOCO 3 — PADRÕES DOS SUPER_VIRAL
-      8. salvar_padroes_por_nicho()
-      9. calcular_similaridade_entre_nichos()
+    Orquestra a execução sequencial de todos os blocos:
+    1. Baixa CSV ouro do Supabase
+    2. Deserializa colunas que chegam como string do CSV
+    3. Carrega modelo Sentence-BERT uma única vez
+    4. Para cada nicho: extrai e consolida todos os padrões
+    5. Salva JSON por nicho em models/padroes_virais/
+    6. Calcula e salva similaridade entre nichos para fallback
     """
-    print("\n" + "=" * 55)
-    print("🎯 INICIANDO TREINAMENTO")
-    print("=" * 55)
-
-    # ── BLOCO 1 — PREPARAÇÃO ─────────────────────────────────
-    print("\n── BLOCO 1: PREPARAÇÃO ────────────────────────────────")
-
-    caminho_matriz = os.path.join(PASTA_PREPROCESSORS, "matriz_ml.pkl")
-
-    if not os.path.exists(caminho_matriz):
-        print(f"ERRO: '{caminho_matriz}' não encontrado. Rode o 02_pre_processa.py primeiro.")
-        return
-
-    X, y = separar_features_e_target(caminho_matriz)
-    X_train, X_test, y_train, y_test = split_treino_teste(X, y)
-
+    print("[03] Baixando CSV ouro...")
     df = baixar_csv_ouro()
-
-    if df is None or df.empty:
-        print("ERRO: CSV ouro vazio ou não carregado. Abortando.")
+    if df.empty:
+        print("[03] ERRO: CSV ouro vazio ou não encontrado.")
         return
 
-    print(f"   CSV ouro carregado: {df.shape[0]} linhas × {df.shape[1]} colunas")
-
-    # Valida colunas críticas para extração de padrões
-    colunas_criticas = [
-        "nicho",
-        "label_viral",
-        "gancho_primeira_frase",
-        "vocabulario_falado",
-        "texto_falado_limpo_en",
-        "palavras_chave_en",
-        "descricao_en",
-        "titulo_en",
-        "texto_thumbnail",
-        "descricao_visual_thumb",
-        "vibe_emojis",
-        "pistas_audio_en",
-        "taxa_discussao",
-        "taxa_conversao",
-        "velocidade_views",
-        "completude_seo",
-        "hora_postagem",
+    # Deserializa colunas que o pandas carrega como string
+    colunas_lista = [
+        "titulo_emojis_posicao",
+        "palavras_chave_shorttail",
+        "palavras_chave_midtail",
+        "palavras_chave_longtail",
+        "ngramas_roteiro",
+        "coocorrencias_roteiro",
     ]
-    faltando = [c for c in colunas_criticas if c not in df.columns]
-    if faltando:
-        print(f"   AVISO: colunas ausentes no CSV ouro: {faltando}")
-        print("   Verifique se o 02_pre_processa.py foi rodado com a versão atualizada.")
+    colunas_dict = [
+        "palavras_chave_proporcao",
+    ]
+    for col in colunas_lista + colunas_dict:
+        if col in df.columns:
+            df[col] = df[col].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) and x.strip() else ([] if col in colunas_lista else {}))
 
-    # ── BLOCO 2 — TREINAMENTO ─────────────────────────────────
-    print("\n── BLOCO 2: TREINAMENTO ───────────────────────────────")
+    # Cast de colunas que o pandas pode carregar como string do CSV
+    if "tem_dialogo" in df.columns:
+        df["tem_dialogo"] = df["tem_dialogo"].map(lambda x: str(x).strip().lower() == "true" if not isinstance(x, bool) else x)
 
-    modelo, le = treinar_modelo(X_train, y_train)
-    metricas = avaliar_modelo(modelo, le, X_test, y_test)
-    salvar_modelo(modelo, metricas)
+    if "descricao_cta_score" in df.columns:
+        df["descricao_cta_score"] = pd.to_numeric(df["descricao_cta_score"], errors="coerce").fillna(0.0)
 
-    # ── BLOCO 3 — PADRÕES DOS SUPER_VIRAL ────────────────────
-    print("\n── BLOCO 3: PADRÕES DOS SUPER_VIRAL ──────────────────")
+    print("[03] Carregando modelo Sentence-BERT...")
+    modelo = SentenceTransformer("all-MiniLM-L6-v2")
 
-    salvar_padroes_por_nicho(df)
-    calcular_similaridade_entre_nichos(df)
+    print("[03] Extraindo e salvando padrões por nicho...")
+    salvar_padroes_por_nicho(df, modelo)
 
-    print("\n" + "=" * 55)
-    print("✅ TREINAMENTO CONCLUÍDO")
-    print(f"   Modelo salvo em         : {PASTA_PREDICTORS}")
-    print(f"   Padrões salvos em       : {PASTA_PADROES}")
-    print(f"   Preprocessors salvos em : {PASTA_PREPROCESSORS}")
-    print("=" * 55 + "\n")
+    print("[03] Calculando similaridade entre nichos...")
+    calcular_similaridade_entre_nichos(df, modelo)
+
+    print("[03] Concluído.")
 
 
 if __name__ == "__main__":

@@ -30,7 +30,7 @@ async function main() {
    */
   console.info('🎯 Semeando Nichos...')
 
-  const nicheNames = ['historias_denso', 'esquetes', 'satisfying', 'street_interview', 'tech_review']
+  const nicheNames = ['historias denso', 'esquetes', 'satisfying', 'street interview', 'tech review']
 
   const niches = await Promise.all(
     nicheNames.map((name) =>
