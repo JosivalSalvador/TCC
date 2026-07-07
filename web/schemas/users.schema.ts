@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { Role } from "../types/enums";
+import { nicheNameSchema } from "./niches.schema";
 
 // =========================
 // Email
@@ -40,9 +41,9 @@ export const registerUserSchema = z.object({
     .refine((value) => value.length >= 3, {
       message: "Nome deve ter no mínimo 3 caracteres",
     }),
-
   email: emailSchema,
   password: passwordSchema,
+  nicheName: nicheNameSchema,
 });
 
 // ==========================================
@@ -64,7 +65,6 @@ export const updateUserSchema = z.object({
 // ==========================================
 export const updateRoleSchema = z.object({
   role: z.enum([Role.ADMIN, Role.SUPPORTER, Role.USER], {
-    // Ajuste fino: Array explicito para o Zod entender o enum do Prisma perfeitamente na doc
     error: "Cargo inválido. Escolha entre ADMIN, SUPPORTER ou USER.",
   }),
 });
@@ -74,7 +74,7 @@ export const updateRoleSchema = z.object({
 // ==========================================
 export const updatePasswordSchema = z.object({
   oldPassword: z.string().min(1, { message: "Senha antiga é obrigatória" }),
-  newPassword: passwordSchema, // Reutiliza sua regra forte de senha
+  newPassword: passwordSchema,
 });
 
 // ==========================================
@@ -86,4 +86,17 @@ export const userResponseSchema = z.object({
   email: z.email(),
   role: z.string(),
   createdAt: z.coerce.date().optional(),
+});
+
+// ==========================================
+// Schema de Resposta (Estatísticas — Admin)
+// ==========================================
+export const userStatsResponseSchema = z.object({
+  total: z.number(),
+  byRole: z.array(
+    z.object({
+      role: z.enum([Role.ADMIN, Role.SUPPORTER, Role.USER]),
+      count: z.number(),
+    }),
+  ),
 });

@@ -15,10 +15,30 @@ async function main() {
   const start = Date.now()
 
   // 1. Limpeza do banco na ordem correta (filhos primeiro)
+  await prisma.generationFeedback.deleteMany()
+  await prisma.generation.deleteMany()
+  await prisma.userNiche.deleteMany()
+  await prisma.niche.deleteMany()
   await prisma.token.deleteMany()
   await prisma.user.deleteMany()
-
   console.info('🧹 Banco de dados limpo com sucesso.')
+
+  /*
+   |--------------------------------------------------------------------------
+   | 🎯 NICHOS
+   |--------------------------------------------------------------------------
+   */
+  console.info('🎯 Semeando Nichos...')
+
+  const nicheNames = ['historias denso', 'esquetes', 'satisfying', 'street interview', 'tech review']
+
+  const niches = await Promise.all(
+    nicheNames.map((name) =>
+      prisma.niche.create({
+        data: { name },
+      }),
+    ),
+  )
 
   const DEFAULT_PASSWORD = '@Js92434212'
   const passwordHash = await hash(DEFAULT_PASSWORD, 10)
@@ -29,6 +49,7 @@ async function main() {
    |--------------------------------------------------------------------------
    */
   console.info('👤 Semeando Usuários...')
+
   const admin = await prisma.user.create({
     data: {
       name: 'Admin Sistema',
@@ -67,10 +88,29 @@ async function main() {
 
   /*
    |--------------------------------------------------------------------------
+   | 🔗 VÍNCULOS USUÁRIO <-> NICHO (todos os 5 nichos para cada usuário)
+   |--------------------------------------------------------------------------
+   */
+  console.info('🔗 Vinculando nichos aos usuários...')
+
+  const allUsers = [admin, supporter, client1, client2]
+
+  await prisma.userNiche.createMany({
+    data: allUsers.flatMap((user) =>
+      niches.map((niche) => ({
+        userId: user.id,
+        nicheId: niche.id,
+      })),
+    ),
+  })
+
+  /*
+   |--------------------------------------------------------------------------
    | 🔑 TOKENS
    |--------------------------------------------------------------------------
    */
   console.info('🔑 Semeando Tokens para TODOS os usuários...')
+
   await prisma.token.createMany({
     data: [
       {
@@ -104,6 +144,8 @@ async function main() {
   console.info(`🎧 Suporte: josivalsup@gmail.com | Senha: ${DEFAULT_PASSWORD}`)
   console.info(`🛒 Cliente: josivaluser@gmail.com  | Senha: ${DEFAULT_PASSWORD}`)
   console.info(`🛒 Cliente: josivaluser2@gmail.com | Senha: ${DEFAULT_PASSWORD}`)
+  console.info('--------------------------------------------------')
+  console.info('🎯 Nichos criados:', nicheNames.join(', '))
   console.info('--------------------------------------------------')
 }
 

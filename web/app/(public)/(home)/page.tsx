@@ -1,5 +1,19 @@
-export const revalidate = 3600; // Cache da página de 1 hora no Next.js
+import { HeroSection } from "../_components/hero-section";
+import { HowItWorksSection } from "../_components/how-it-works-section";
+import { FeaturesSection } from "../_components/features-section";
+import { PublicFooter } from "../_components/footer";
 
-export default async function HomePage() {
-  return <div className="flex w-full flex-col"></div>;
+export const metadata = {
+  title: "Início",
+};
+
+export default function HomePage() {
+  return (
+    <>
+      <HeroSection />
+      <HowItWorksSection />
+      <FeaturesSection />
+      <PublicFooter />
+    </>
+  );
 }

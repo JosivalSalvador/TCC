@@ -53,6 +53,7 @@ jobs:
           echo "DATABASE_URL=postgresql://user:password@localhost:5432/ecommerce_test" > server/.env
           echo "JWT_SECRET=ci-secret" >> server/.env
           echo "NODE_ENV=test" >> server/.env
+          echo "IA_SERVICE_URL=http://localhost:8000/api/v1" >> server/.env
           cp server/.env server/.env.test
 
       - name: Install Node Dependencies

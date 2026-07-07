@@ -3,14 +3,12 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 
-// A fonte principal: Neutra, limpa e padrão ouro para SaaS e Portfólios Tech
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
 });
 
-// A fonte secundária: Monoespaçada para os metadados, tags e código
 const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   display: "swap",
@@ -19,15 +17,24 @@ const jetBrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Josival | Software Engineer",
-    template: "%s | Josival",
+    default: "Viralize | Geração de Conteúdo com IA",
+    template: "%s | Viralize",
   },
   description:
-    "Portfólio de Engenharia de Software. Arquitetura Full Stack, Next.js, Fastify, Prisma e soluções de alta performance.",
+    "Gere estruturas de vídeo e roteiros virais com IA. Escolha seu nicho, defina seu público e receba em segundos tudo que precisa para criar conteúdo de alto impacto.",
+  keywords: [
+    "geração de conteúdo",
+    "roteiro para vídeo",
+    "IA para criadores",
+    "viral",
+    "nicho",
+    "YouTube",
+    "criador de conteúdo",
+  ],
 };
 
 export const viewport: Viewport = {
-  themeColor: "#050505", // Tom escuro que casa com o nosso OLED do globals.css
+  themeColor: "#0d0d14",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,

@@ -2,57 +2,48 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { GridBackground } from "@/components/ui/grid-background";
 import { blurFadeIn, staggerContainer, slideUp } from "@/lib/animations/fade";
-import { ArrowLeft, Terminal } from "lucide-react";
+import { ArrowLeft, SearchX } from "lucide-react";
 
 export default function GlobalNotFound() {
   return (
-    <main className="bg-background text-foreground relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
-      <GridBackground />
-
+    <main className="bg-background text-foreground relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6">
       <motion.div
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
-        className="relative z-10 flex w-full max-w-3xl flex-col items-center px-6 text-center"
+        className="flex w-full max-w-lg flex-col items-center text-center"
       >
         <motion.div
           variants={blurFadeIn}
-          className="border-border/50 bg-muted/30 mb-6 flex items-center justify-center rounded-full border px-4 py-1.5 backdrop-blur-md"
+          className="badge-ai mb-6 flex items-center gap-2 rounded-full px-4 py-1.5"
         >
-          <Terminal className="text-muted-foreground mr-2 h-4 w-4" />
-          <span className="text-muted-foreground font-mono text-xs tracking-widest uppercase">
-            Status Code: 404
-          </span>
+          <SearchX className="h-4 w-4" />
+          <span className="text-xs font-medium">Página não encontrada</span>
         </motion.div>
 
         <motion.h1
           variants={blurFadeIn}
-          className="text-5xl font-black tracking-tight md:text-7xl"
+          className="text-4xl font-bold tracking-tight md:text-5xl"
         >
-          Recurso <span className="text-muted-foreground">Inexistente.</span>
+          Essa página <span className="text-gradient">não existe</span>
         </motion.h1>
 
         <motion.p
           variants={blurFadeIn}
-          className="text-muted-foreground mt-6 max-w-xl text-sm leading-relaxed font-medium text-balance md:text-base"
+          className="text-muted-foreground mt-4 text-sm leading-relaxed text-balance"
         >
-          A rota solicitada não foi encontrada na árvore de diretórios. O
-          arquivo pode ter sido movido, renomeado ou o caminho foi digitado
-          incorretamente.
+          O endereço que você acessou não foi encontrado. Ele pode ter sido
+          removido ou o link está incorreto.
         </motion.p>
 
-        <motion.div
-          variants={slideUp}
-          className="mt-10 flex items-center gap-4"
-        >
+        <motion.div variants={slideUp} className="mt-8">
           <Link
             href="/"
-            className="glow-border group border-border/50 bg-card text-foreground hover:bg-muted/50 flex h-11 items-center justify-center rounded-md border px-8 text-sm font-medium transition-all"
+            className="glow-border border-border/50 bg-card text-foreground hover:bg-accent flex h-10 items-center gap-2 rounded-md border px-6 text-sm font-medium transition-all"
           >
-            <ArrowLeft className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
-            RETORNAR À BASE
+            <ArrowLeft className="h-4 w-4" />
+            Voltar ao início
           </Link>
         </motion.div>
       </motion.div>

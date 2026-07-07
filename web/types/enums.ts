@@ -8,3 +8,8 @@ export enum Role {
 export enum TokenType {
   REFRESH_TOKEN = "REFRESH_TOKEN",
 }
+
+export enum FeedbackType {
+  STRUCTURE = "STRUCTURE",
+  SCRIPT = "SCRIPT",
+}

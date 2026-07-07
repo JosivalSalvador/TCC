@@ -85,8 +85,9 @@ export async function changePasswordAction(
 
 export async function deleteAccountAction(): Promise<ActionResponse> {
   try {
-    // 1. Apaga os dados no banco de dados do Fastify
     await usersService.deleteAccount();
+    await destroySession();
+    return { success: true, message: "Conta excluída com sucesso." };
   } catch (error: unknown) {
     const httpError = error as HttpError;
     return {
@@ -94,11 +95,6 @@ export async function deleteAccountAction(): Promise<ActionResponse> {
       error: httpError.message || "Erro ao deletar conta.",
     };
   }
-
-  // 2. O Next.js exige que o redirect() aconteça FORA do bloco try/catch
-  // (porque por baixo dos panos o redirect joga um erro especial de navegação)
-  await destroySession();
-  return { success: true, message: "Conta excluída com sucesso." };
 }
 
 // ==========================================
@@ -145,5 +141,14 @@ export async function adminDeleteUserAction(
       success: false,
       error: httpError.message || "Erro ao excluir usuário.",
     };
+  }
+}
+
+export async function getUserStatsAction() {
+  try {
+    return await usersService.getStats();
+  } catch (error: unknown) {
+    const httpError = error as HttpError;
+    throw new Error(httpError.message || "Falha ao buscar estatísticas.");
   }
 }

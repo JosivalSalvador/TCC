@@ -1,0 +1,545 @@
+{
+  "nicho": "street interview",
+  "structure_content": {
+    "titulo": {
+      "formula_construcao": "afirmacao",
+      "comprimento_alvo_chars": 69,
+      "termos_obrigatorios": [
+        "street",
+        "interview",
+        "interviews",
+        "survey",
+        "funniest",
+        "indian",
+        "frankfurt",
+        "questions",
+        "meeting",
+        "wedding",
+        "home",
+        "went",
+        "reality",
+        "delhi",
+        "bengal",
+        "bengali",
+        "rapper",
+        "celebrities",
+        "celeb",
+        "chooses"
+      ],
+      "caps_intensidade": 0.0,
+      "emojis": [
+        {
+          "emoji": "😱",
+          "posicao": "meio",
+          "frequencia": 4
+        },
+        {
+          "emoji": "😂",
+          "posicao": "meio",
+          "frequencia": 3
+        },
+        {
+          "emoji": "😍",
+          "posicao": "meio",
+          "frequencia": 3
+        },
+        {
+          "emoji": "😳",
+          "posicao": "meio",
+          "frequencia": 3
+        },
+        {
+          "emoji": "😅",
+          "posicao": "meio",
+          "frequencia": 2
+        }
+      ],
+      "usar_pontuacao_impacto": false,
+      "sentimento_alvo": "neutro",
+      "molde_estrutura": {
+        "formula": "afirmacao",
+        "caps_intensidade": 0.0,
+        "clickbait_score_mediano": 0.41,
+        "usar_pontuacao": false,
+        "sentimento_alvo": "neutro",
+        "emojis_sugeridos": [
+          {
+            "emoji": "😱",
+            "posicao": "meio",
+            "frequencia": 4
+          },
+          {
+            "emoji": "😂",
+            "posicao": "meio",
+            "frequencia": 3
+          }
+        ]
+      },
+      "exemplos_reais": [
+        "POV: street interviews on fighting😂",
+        "West Bengal 2026 Election  Street Interview",
+        "i cannot believe i found my wife on the streets #shorts #stephspeaks #attractionacademy"
+      ]
+    },
+    "descricao": {
+      "comprimento_alvo_chars": 98,
+      "primeira_linha_comprimento_alvo": 41,
+      "sentimento_primeira_linha": "neutro",
+      "termos_seo_obrigatorios": [
+        "street",
+        "interview",
+        "shorts",
+        "funny",
+        "india",
+        "video",
+        "viral",
+        "bengali",
+        "kolkata",
+        "indian",
+        "watch",
+        "copyright",
+        "women",
+        "streetinterview",
+        "people",
+        "public",
+        "content",
+        "opinion",
+        "comedy",
+        "politics"
+      ],
+      "moldes_frase": [
+        "street interview",
+        "street interviews",
+        "interview street",
+        "public opinion",
+        "location kolkata",
+        "kolkata india",
+        "real street",
+        "viral shorts",
+        "simple question",
+        "bengali street"
+      ],
+      "emojis": [
+        {
+          "emoji": "🔥",
+          "frequencia": 13
+        },
+        {
+          "emoji": "🎤",
+          "frequencia": 7
+        },
+        {
+          "emoji": "📍",
+          "frequencia": 7
+        },
+        {
+          "emoji": "😂",
+          "frequencia": 5
+        },
+        {
+          "emoji": "😳",
+          "frequencia": 5
+        }
+      ],
+      "cta_posicao": "ausente",
+      "cta_intensidade": "ausente",
+      "cta_score_mediano": 0.0,
+      "usar_links": false,
+      "hashtags": [
+        "entertainment",
+        "shorts",
+        "people blogs",
+        "lifestyle sociology",
+        "streetinterview",
+        "interview",
+        "viralshorts",
+        "viral",
+        "comedy",
+        "film",
+        "funny",
+        "youtubeshorts",
+        "fyp",
+        "kolkata",
+        "humour"
+      ],
+      "quantidade_hashtags": 8,
+      "exemplos_reais": [
+        "“Street interview with clear words. 😳\nThe reporter only asks one question — but the answer causes discussion.”\n\n\n\n#politics #merz #afd #germany #interview #viral #shorts #tiktokde #opinion #street survey #reels #debate #viralvideo #fyp #foryou",
+        "Jax stops by for an on the street interview as he comments on what his favourite part of the TADC: The Last Act movie fame and fortune has brought him! It’s just a shame he immediately gets his point ruined by a FNAF fan who stops by. Sorry Bonnie.\n\nAnimation by me, Jax voice acting by JovialBirbVA\n\n#tadc #animation #shorts",
+        "CRAZY ENERGY! Most Bizarre Scrambled Eggs in India 🇮🇳\n\n📍Location\nKolkata in India\n\n💰Price\nINR 150"
+      ]
+    },
+    "palavras_chave": {
+      "shorttail": [
+        "entertainment",
+        "shorts",
+        "streetinterview",
+        "interview",
+        "viralshorts",
+        "viral",
+        "comedy",
+        "film",
+        "funny",
+        "youtubeshorts",
+        "fyp",
+        "kolkata",
+        "humour",
+        "trending",
+        "street"
+      ],
+      "midtail": [
+        "people blogs",
+        "lifestyle sociology",
+        "travel events",
+        "film animation",
+        "street interview",
+        "youtube shorts",
+        "autos vehicles",
+        "bakra market",
+        "islamic discussion",
+        "kolkata interview",
+        "qurbani debate",
+        "street reporter",
+        "cricket fans",
+        "cricket lover",
+        "ipl 2026"
+      ],
+      "longtail": [
+        "youtube shorts viral",
+        "asking girls if height matters reactions",
+        "funniest street interview moments",
+        "funny asking girls if height matters",
+        "funny public prank 2025",
+        "height and weight roast prank",
+        "height matters in guys prank",
+        "height vs weight prank",
+        "hilarious social experiment clips",
+        "lenny miller funny moments",
+        "lenny miller weight matters prank",
+        "public interview savage moments",
+        "savage social experiment",
+        "viral prank shorts",
+        "bakra eid interview"
+      ],
+      "proporcao_ideal": {
+        "shorttail": 0.827,
+        "midtail": 0.173,
+        "longtail": 0.0
+      }
+    },
+    "thumbnail": {
+      "texto_capa": {
+        "comprimento_alvo_chars": 40,
+        "termos_obrigatorios": [
+          "street",
+          "interview",
+          "jitpur",
+          "voice",
+          "interviews",
+          "ranking",
+          "travelicious",
+          "time",
+          "funniest",
+          "best",
+          "like",
+          "years",
+          "just",
+          "funny",
+          "government"
+        ],
+        "caps_intensidade": 0.125,
+        "emojis": [
+          {
+            "emoji": "🤣",
+            "frequencia": 3
+          },
+          {
+            "emoji": "💀",
+            "frequencia": 2
+          },
+          {
+            "emoji": "😭",
+            "frequencia": 2
+          },
+          {
+            "emoji": "©",
+            "frequencia": 1
+          },
+          {
+            "emoji": "😳",
+            "frequencia": 1
+          }
+        ],
+        "sentimento_alvo": "neutro"
+      },
+      "cena_visual": {
+        "elementos_obrigatorios": [
+          "street",
+          "microphone",
+          "woman",
+          "young",
+          "interviewed",
+          "holding",
+          "text",
+          "wearing",
+          "outdoor",
+          "image",
+          "overlay",
+          "background",
+          "food",
+          "outdoors",
+          "person"
+        ],
+        "presenca_humana": 0.818
+      },
+      "sentimento_visual_alvo": "neutro",
+      "exemplos_reais": [
+        "BEST OF GOGO LA PULSE",
+        "Ranking The Funniest Street Interviews Ever ( 1st one is crazy 🤣 ) 1. 2. Embarrassing 🤣 3. No one complained 💀 4. Why 300ft 😭 5. No way 😭 6. 2 women 💀 I design parachutes. BCC",
+        "Fast Ticket, Edwise, Study Abroad, 10"
+      ]
+    },
+    "postagem": {
+      "top_3_slots": [
+        {
+          "dia": "thursday",
+          "janela": "noite",
+          "quantidade_virais": 6,
+          "justificativa": "9.1% dos vídeos virais desse nicho foram postados nesse slot."
+        },
+        {
+          "dia": "thursday",
+          "janela": "tarde",
+          "quantidade_virais": 5,
+          "justificativa": "7.6% dos vídeos virais desse nicho foram postados nesse slot."
+        },
+        {
+          "dia": "tuesday",
+          "janela": "tarde",
+          "quantidade_virais": 5,
+          "justificativa": "7.6% dos vídeos virais desse nicho foram postados nesse slot."
+        }
+      ]
+    }
+  },
+  "script_content": {
+    "estrutura_geral": {
+      "estrutura_blocos": "esquete",
+      "faixa_duracao": "short_padrao",
+      "limite_palavras": 103,
+      "usa_dialogo": true,
+      "taxa_dialogo_no_nicho": 0.455,
+      "usa_repeticao": true
+    },
+    "gancho": {
+      "formula_abertura": "afirmacao",
+      "comprimento_alvo_palavras": 15,
+      "comprimento_alvo_chars": 71,
+      "sentimento_alvo": "neutro",
+      "termos_obrigatorios": [
+        "know",
+        "going",
+        "people",
+        "think",
+        "today",
+        "time",
+        "helicopter",
+        "yeah",
+        "question",
+        "excuse",
+        "best",
+        "guys",
+        "want",
+        "government",
+        "tattoo"
+      ],
+      "usar_pontuacao_impacto": false,
+      "exemplos_reais": [
+        "hi how are you i m good shireen how are you i m doing great",
+        "the imams of the mosques of kolkata have appealed to the muslims not to sacrifice",
+        "mr labuff liam combmes we re with baton rouge news man we just want to"
+      ]
+    },
+    "ritmo_linguagem": {
+      "palavras_por_segundo": 2.933,
+      "comprimento_medio_frase": 22.145,
+      "variancia_ritmo": 170.924,
+      "densidade_pontuacao_impacto": 0.0,
+      "moldes_frase": [
+        "don_t",
+        "let_s",
+        "male_female",
+        "t_know",
+        "m_good",
+        "yeah_m",
+        "day_s",
+        "yeah_yeah",
+        "win_t",
+        "interview_local"
+      ]
+    },
+    "arco_emocional": {
+      "inicio": {
+        "tom": "neutro",
+        "vocabulario_obrigatorio": [
+          "yeah",
+          "yes",
+          "think",
+          "going",
+          "say",
+          "don",
+          "okay",
+          "sure",
+          "like",
+          "people"
+        ]
+      },
+      "meio": {
+        "tom": "neutro",
+        "vocabulario_obrigatorio": [
+          "like",
+          "yeah",
+          "think",
+          "yes",
+          "question",
+          "come",
+          "good",
+          "let",
+          "say",
+          "don"
+        ]
+      },
+      "fim": {
+        "tom": "negativo",
+        "vocabulario_obrigatorio": [
+          "say",
+          "like",
+          "yeah",
+          "people",
+          "sure",
+          "don",
+          "brother",
+          "hitler",
+          "feel",
+          "going"
+        ]
+      }
+    },
+    "audio": {
+      "tipo_dominante": "[music]",
+      "clima_sonoro": [
+        {
+          "pista": "[laughter]",
+          "frequencia": 11
+        },
+        {
+          "pista": "[music]",
+          "frequencia": 9
+        },
+        {
+          "pista": "[ __ ]",
+          "frequencia": 4
+        },
+        {
+          "pista": "[loud laughter]",
+          "frequencia": 2
+        },
+        {
+          "pista": "[clears throat]",
+          "frequencia": 2
+        }
+      ],
+      "frequencia_uso_no_nicho": 0.318
+    },
+    "repeticao": {
+      "ativar": true,
+      "taxa_no_nicho": 0.394,
+      "frequencia_media": 7
+    },
+    "cta": {
+      "intensidade": "moderado",
+      "estilo": "ausente",
+      "ativar_gatilho_debate": false,
+      "taxa_discussao_mediana": 0.028,
+      "cta_score_mediano": 0.0,
+      "posicao": "ausente",
+      "molde_termos": []
+    },
+    "vocabulario_geral": {
+      "termos_obrigatorios": [
+        "yeah",
+        "yes",
+        "like",
+        "say",
+        "think",
+        "don",
+        "good",
+        "people",
+        "sure",
+        "thank",
+        "come",
+        "man",
+        "going",
+        "know",
+        "question",
+        "father",
+        "let",
+        "happen",
+        "okay",
+        "change",
+        "day",
+        "nice",
+        "feel",
+        "got",
+        "time",
+        "today",
+        "meet",
+        "just",
+        "want",
+        "real"
+      ],
+      "coocorrencias_obrigatorias": [
+        [
+          "good",
+          "yeah"
+        ],
+        [
+          "good",
+          "name"
+        ],
+        [
+          "last",
+          "time"
+        ],
+        [
+          "message",
+          "person"
+        ],
+        [
+          "message",
+          "next"
+        ],
+        [
+          "next",
+          "person"
+        ],
+        [
+          "away",
+          "message"
+        ],
+        [
+          "one",
+          "style"
+        ],
+        [
+          "away",
+          "next"
+        ],
+        [
+          "away",
+          "person"
+        ]
+      ]
+    }
+  }
+}

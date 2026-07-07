@@ -95,12 +95,16 @@ function Carousel({
 
   React.useEffect(() => {
     if (!api) return;
-    onSelect(api);
     api.on("reInit", onSelect);
     api.on("select", onSelect);
+    // Sincroniza o estado inicial via o próprio mecanismo de evento do
+    // Embla, em vez de chamar onSelect(api) direto no corpo do effect —
+    // isso evita o setState síncrono fora de uma subscription callback.
+    api.emit("select");
 
     return () => {
       api?.off("select", onSelect);
+      api?.off("reInit", onSelect);
     };
   }, [api, onSelect]);
 

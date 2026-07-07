@@ -9,6 +9,7 @@ import {
   deleteAccountAction,
   updateRoleAction,
   adminDeleteUserAction,
+  getUserStatsAction,
 } from "../actions/users.actions";
 import {
   UpdateUserInput,
@@ -124,4 +125,11 @@ export function useUsersMutations() {
     updateRole,
     deleteUser,
   };
+}
+
+export function useUserStats() {
+  return useQuery({
+    queryKey: ["users-stats"],
+    queryFn: () => getUserStatsAction(),
+  });
 }

@@ -1,25 +1,26 @@
-export default function AuthLoading() {
+import { Skeleton } from "@/components/ui/skeleton";
+
+export default function LoginLoading() {
   return (
-    <div className="glass-panel w-full animate-pulse flex-col rounded-2xl p-8 shadow-2xl sm:p-10">
-      <div className="border-border/50 mb-8 flex flex-col items-start border-b pb-6">
-        <div className="bg-muted/40 mb-4 h-3 w-24 rounded-full" />
-        <div className="bg-muted/40 h-8 w-48 rounded-md" />
-        <div className="bg-muted/20 mt-4 h-4 w-64 rounded-md" />
+    <div className="flex w-full max-w-sm flex-col gap-5">
+      <div className="mb-3 flex flex-col gap-2">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-4 w-64" />
       </div>
 
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <div className="bg-muted/30 h-3 w-16 rounded-full" />
-          <div className="bg-muted/20 h-11 w-full rounded-md" />
-        </div>
-        <div className="space-y-2">
-          <div className="bg-muted/30 h-3 w-16 rounded-full" />
-          <div className="bg-muted/20 h-11 w-full rounded-md" />
-        </div>
-        <div className="pt-2">
-          <div className="bg-border/40 h-11 w-full rounded-md" />
-        </div>
+      <div className="flex flex-col gap-1.5">
+        <Skeleton className="h-4 w-16" />
+        <Skeleton className="h-10 w-full" />
       </div>
+
+      <div className="flex flex-col gap-1.5">
+        <Skeleton className="h-4 w-16" />
+        <Skeleton className="h-10 w-full" />
+      </div>
+
+      <Skeleton className="h-10 w-full" />
+
+      <Skeleton className="mx-auto h-4 w-48" />
     </div>
   );
 }
