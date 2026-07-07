@@ -3,7 +3,7 @@ import { HistoryDetailSkeleton } from "../../_components/history/history-detail-
 
 export default function HistoryDetailLoading() {
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-8">
+    <div className="mx-auto flex max-w-7xl flex-col gap-8">
       {/* Header */}
       <div className="flex flex-col gap-3">
         <Skeleton className="h-4 w-36" />

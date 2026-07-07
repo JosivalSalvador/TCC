@@ -247,19 +247,27 @@ export async function updateUserRole(userId: string, data: UpdateRoleInput) {
  * para acompanhar a distribuição de roles no sistema.
  */
 export async function getUserStats() {
-  const total = await prisma.user.count({
-    where: { deletedAt: null },
-  })
-
-  const grouped = await prisma.user.groupBy({
-    by: ['role'],
-    where: { deletedAt: null },
-    _count: { _all: true },
-  })
+  // Ambas as contagens rodam dentro de uma única transaction para garantir
+  // que "total" e "grouped" enxerguem exatamente o mesmo estado do banco.
+  // Sem isso, duas queries sequenciais soltas poderiam ver o banco em dois
+  // instantes diferentes (ex.: um novo usuário criado por uma requisição
+  // concorrente entre uma query e outra), fazendo a soma de byRole não
+  // bater com total.
+  const [total, grouped] = await prisma.$transaction([
+    prisma.user.count({
+      where: { deletedAt: null },
+    }),
+    prisma.user.groupBy({
+      by: ['role'],
+      where: { deletedAt: null },
+      _count: { _all: true },
+      orderBy: { role: 'asc' },
+    }),
+  ])
 
   const byRole = grouped.map((entry) => ({
     role: entry.role,
-    count: entry._count._all,
+    count: (typeof entry._count === 'object' ? entry._count._all : 0) ?? 0,
   }))
 
   return { total, byRole }

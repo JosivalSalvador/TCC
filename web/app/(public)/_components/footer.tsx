@@ -1,51 +1,36 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Layers } from "lucide-react";
-import { fadeIn } from "@/lib/animations/fade";
+import { Flame, ArrowUpRight } from "lucide-react";
 
 export function PublicFooter() {
   return (
-    <motion.footer
-      variants={fadeIn}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      className="border-border/50 border-t px-6 py-10"
-    >
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 sm:flex-row">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="bg-primary flex h-7 w-7 items-center justify-center rounded-lg">
-            <Layers className="text-primary-foreground h-3.5 w-3.5" />
+    <footer className="relative overflow-hidden border-t border-white/6 px-6 pt-10 pb-8">
+      {/* Halo ambiente, ecoando a navbar */}
+      <div className="pointer-events-none absolute inset-x-8 top-0 h-24 rounded-full bg-linear-to-r from-[#ff6b5e] to-[#8b5cf6] opacity-[0.20] blur-[80px]" />
+
+      <div className="relative flex w-full items-center justify-between">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-[#ff6b5e] to-[#8b5cf6] shadow-[0_0_16px_rgba(139,92,246,0.4)]">
+            <Flame className="h-4 w-4 text-white" />
           </div>
-          <span className="text-foreground text-base font-semibold tracking-tight">
-            Nicho
+          <span className="text-gradient font-sans text-lg font-bold tracking-tight">
+            nicho
           </span>
         </Link>
 
-        {/* Links */}
-        <div className="flex items-center gap-6">
-          <Link
-            href="/login"
-            className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-          >
-            Entrar
-          </Link>
-          <Link
-            href="/register"
-            className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-          >
-            Cadastrar
-          </Link>
-        </div>
+        <Link
+          href="/register"
+          className="text-muted-foreground hover:text-foreground group flex items-center gap-1 text-sm font-medium transition-colors"
+        >
+          Criar conta
+          <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </Link>
 
-        {/* Copyright */}
-        <p className="text-muted-foreground/50 text-xs">
-          © {new Date().getFullYear()} Nicho. Todos os direitos reservados.
+        <p className="text-muted-foreground text-xs">
+          © {new Date().getFullYear()} nicho.app
         </p>
       </div>
-    </motion.footer>
+    </footer>
   );
 }

@@ -20,7 +20,7 @@ export function HistoryList({ generations }: HistoryListProps) {
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      className="grid gap-4 sm:grid-cols-2"
     >
       {generations.map((generation) => (
         <HistoryCard key={generation.id} generation={generation} />

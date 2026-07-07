@@ -23,17 +23,25 @@ export default function GeneratePage() {
         className="flex flex-col gap-8"
       >
         {/* Header */}
-        <motion.div variants={blurFadeIn} className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold tracking-tight">Gerar conteúdo</h1>
-          <p className="text-muted-foreground text-sm">
-            Escolha seu nicho e receba estrutura e roteiro prontos para gravar.
-          </p>
+        <motion.div variants={blurFadeIn} className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1.5">
+            <h1 className="text-gradient text-3xl font-bold tracking-tight">
+              Gerar conteúdo
+            </h1>
+            <p className="text-muted-foreground max-w-lg text-sm leading-relaxed">
+              Escolha seu nicho e receba um guia completo de estrutura e roteiro
+              para gravar.
+            </p>
+          </div>
         </motion.div>
 
-        <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
+        <div className="flex flex-col gap-8">
           {/* Formulário */}
           <motion.div variants={blurFadeIn}>
-            <GenerationForm onSuccess={(generation) => setResult(generation)} />
+            <GenerationForm
+              onSuccess={(generation) => setResult(generation)}
+              createGeneration={createGeneration}
+            />
           </motion.div>
 
           {/* Resultado */}

@@ -1,8 +1,10 @@
+// user-dropdown.tsx
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-users";
-import { LogOut, User, ChevronDown } from "lucide-react";
+import { LogOut, User, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +14,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-export function UserDropdown() {
+interface UserDropdownProps {
+  variant: "dock" | "badge";
+  expanded: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function UserDropdown({
+  variant,
+  expanded,
+  onOpenChange,
+}: UserDropdownProps) {
   const { logout } = useAuth();
   const { data } = useProfile();
 
@@ -26,52 +38,91 @@ export function UserDropdown() {
         .toUpperCase()
     : "?";
 
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="hover:bg-accent flex items-center gap-2 rounded-md px-2 py-1.5 transition-colors outline-none">
-        <Avatar className="h-7 w-7">
-          <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
-            {initials}
-          </AvatarFallback>
-        </Avatar>
-        <span className="text-foreground max-w-30 truncate text-sm font-medium">
+  const avatar = (
+    <Avatar className="h-8 w-8 shrink-0 ring-1 ring-white/10">
+      <AvatarFallback className="bg-linear-to-br from-[#ff6b5e]/20 to-[#8b5cf6]/20 text-xs font-semibold text-[#c4b5fd]">
+        {initials}
+      </AvatarFallback>
+    </Avatar>
+  );
+
+  const menuContent = (
+    <DropdownMenuContent
+      align={variant === "dock" ? "end" : "end"}
+      side={variant === "dock" ? "right" : "bottom"}
+      sideOffset={variant === "dock" ? 12 : 8}
+      avoidCollisions
+      className="w-52 border-white/10 bg-[#12121c]"
+    >
+      <div className="px-2 py-1.5">
+        <p className="truncate text-sm font-medium text-[#f4f2fa]">
           {user?.name ?? "..."}
-        </span>
-        <ChevronDown className="text-muted-foreground h-3.5 w-3.5" />
-      </DropdownMenuTrigger>
+        </p>
+        <p className="truncate text-xs text-[#9995b0]">
+          {user?.email ?? "..."}
+        </p>
+      </div>
+      <DropdownMenuSeparator className="bg-white/6" />
+      <DropdownMenuItem asChild>
+        <a href="/settings" className="flex cursor-pointer items-center gap-2">
+          <User className="h-4 w-4" />
+          Configurações
+        </a>
+      </DropdownMenuItem>
+      <DropdownMenuSeparator className="bg-white/6" />
+      <DropdownMenuItem
+        onClick={() => logout.mutate()}
+        className="flex cursor-pointer items-center gap-2 text-[#ff6b5e] focus:text-[#ff6b5e]"
+      >
+        <LogOut className="h-4 w-4" />
+        Sair
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  );
 
-      <DropdownMenuContent align="end" className="w-48">
-        <div className="px-2 py-1.5">
-          <p className="text-foreground truncate text-sm font-medium">
-            {user?.name ?? "..."}
-          </p>
-          <p className="text-muted-foreground truncate text-xs">
-            {user?.email ?? "..."}
-          </p>
-        </div>
+  if (variant === "badge") {
+    return (
+      <DropdownMenu onOpenChange={onOpenChange}>
+        <DropdownMenuTrigger className="rounded-full p-0.5 outline-none">
+          <div className="rounded-full bg-linear-to-br from-[#ff6b5e]/40 to-[#8b5cf6]/40 p-px shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
+            <div
+              className="rounded-full p-1 backdrop-blur-xl"
+              style={{ backgroundColor: "rgba(13, 13, 20, 0.92)" }}
+            >
+              {avatar}
+            </div>
+          </div>
+        </DropdownMenuTrigger>
+        {menuContent}
+      </DropdownMenu>
+    );
+  }
 
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem asChild>
-          <a
-            href="/settings"
-            className="flex cursor-pointer items-center gap-2"
+  // variant === "dock": o onOpenChange é repassado pro Dock, que
+  // usa isso pra travar o próprio estado de hover enquanto o menu
+  // estiver aberto, evitando a disputa de eventos de ponteiro entre
+  // o hover do dock e o outside-click do Radix.
+  return (
+    <DropdownMenu onOpenChange={onOpenChange}>
+      <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-xl px-1 py-1.5 outline-none hover:bg-white/5">
+        {avatar}
+        <div className="flex min-w-0 flex-1 items-center justify-between">
+          <motion.span
+            animate={{ opacity: expanded ? 1 : 0 }}
+            transition={{ duration: 0.2 }}
+            className="truncate text-sm font-medium whitespace-nowrap text-[#f4f2fa]"
           >
-            <User className="h-4 w-4" />
-            Configurações
-          </a>
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem
-          onClick={() => logout.mutate()}
-          className="text-destructive focus:text-destructive flex cursor-pointer items-center gap-2"
-        >
-          <LogOut className="h-4 w-4" />
-          Sair
-        </DropdownMenuItem>
-      </DropdownMenuContent>
+            {user?.name?.split(" ")[0] ?? "..."}
+          </motion.span>
+          <motion.div
+            animate={{ opacity: expanded ? 1 : 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <ChevronRight className="h-3.5 w-3.5 shrink-0 text-[#5f5b78]" />
+          </motion.div>
+        </div>
+      </DropdownMenuTrigger>
+      {menuContent}
     </DropdownMenu>
   );
 }

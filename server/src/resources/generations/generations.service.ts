@@ -4,8 +4,6 @@ import { AppError } from '../../errors/app-error.js'
 import type { CreateGenerationInput, FavoriteUpdateInput, ListGenerationsQuery } from './generations.types.js'
 import { Prisma } from '@prisma/client'
 
-const IA_SERVICE_URL = process.env.IA_SERVICE_URL
-
 interface IaServiceResponse {
   nicho_solicitado: string
   nicho_utilizado: string
@@ -42,13 +40,15 @@ export async function createGeneration(userId: string, input: CreateGenerationIn
     throw new AppError('Niche not linked to your account.', StatusCodes.NOT_FOUND)
   }
 
-  if (!IA_SERVICE_URL) {
+  const iaServiceUrl = process.env.IA_SERVICE_URL
+
+  if (!iaServiceUrl) {
     throw new AppError('IA service is not configured.', StatusCodes.INTERNAL_SERVER_ERROR)
   }
 
   let response: Response
   try {
-    response = await fetch(`${IA_SERVICE_URL}/analisar-nicho`, {
+    response = await fetch(`${iaServiceUrl}/analisar-nicho`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

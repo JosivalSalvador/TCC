@@ -1,20 +1,16 @@
+// layout.tsx
 import { ReactNode } from "react";
-import { Sidebar } from "./_components/sidebar";
-import { Header } from "./_components/header";
+import { Dock } from "./_components/dock";
 
 export default function SandboxLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-background flex min-h-screen">
-      {/* Sidebar fixa — escondida em mobile */}
-      <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-        <Sidebar />
-      </aside>
+    <div className="bg-background min-h-screen">
+      <Dock />
 
-      {/* Conteúdo principal */}
-      <div className="flex flex-1 flex-col lg:pl-64">
-        <Header />
-        <main className="flex-1 px-6 py-8">{children}</main>
-      </div>
+      {/* Padding fixo pro estado compacto do dock (76px + respiro de 24px) */}
+      <main className="min-h-screen px-6 py-8 pb-28 lg:pb-8 lg:pl-32">
+        {children}
+      </main>
     </div>
   );
 }

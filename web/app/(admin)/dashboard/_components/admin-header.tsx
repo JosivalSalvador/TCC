@@ -15,7 +15,7 @@ export function AdminHeader() {
       <div className="hidden lg:block" />
 
       {/* Usuário */}
-      <UserDropdown />
+      <UserDropdown variant="badge" expanded={false} />
     </header>
   );
 }

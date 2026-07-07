@@ -16,6 +16,12 @@ export default function HomeLoading() {
         ))}
       </div>
 
+      {/* Atividade recente + Nichos */}
+      <div className="grid gap-4 lg:grid-cols-5">
+        <Skeleton className="h-72 w-full rounded-xl lg:col-span-3" />
+        <Skeleton className="h-72 w-full rounded-xl lg:col-span-2" />
+      </div>
+
       {/* CTA */}
       <Skeleton className="h-32 w-full rounded-xl" />
     </div>

@@ -2,265 +2,322 @@
 
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Clock, Hash, FileText, Zap } from "lucide-react";
+import { ArrowRight, Loader2, Play, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { hoverScale, tapScale } from "@/lib/animations/fade";
 
 // ==========================================
-// Simulação de output real da IA
-// O criador precisa VER o que vai receber.
+// Demonstração baseada no output real do pipeline
+// para o nicho "esquetes de comédia".
+//
+// O pipeline nunca devolve um roteiro pronto: devolve
+// o padrão encontrado em vídeos que já viralizaram
+// (structure_content / script_content). A peça mostra
+// isso como anotações sobre um vídeo real, do jeito que
+// um editor marcaria com post-its o que funciona nele,
+// em vez de simular um "resultado final" com chips de
+// hashtag e listas prontas pra copiar.
 // ==========================================
 
-const NICHES = [
-  {
-    niche: "finanças pessoais",
-    flag: "🇧🇷",
-    output: {
-      title: "Você gasta R$300/mês sem perceber (veja onde)",
-      hook: "A maioria das pessoas não sabe que esse gasto invisível existe...",
-      hashtags: ["#financaspessoais", "#dinheiro", "#economizar", "#shorts"],
-      postTime: "Ter · 19h",
-      duration: "52s",
-    },
-  },
-  {
-    niche: "receitas fitness",
-    flag: "🇧🇷",
-    output: {
-      title: "3 ovos + 1 ingrediente = 40g de proteína em 5 min",
-      hook: "Esse café da manhã mudou meu shape sem precisar de suplemento...",
-      hashtags: ["#receitafit", "#proteina", "#fitness", "#shorts"],
-      postTime: "Seg · 07h",
-      duration: "45s",
-    },
-  },
-  {
-    niche: "produtividade",
-    flag: "🇧🇷",
-    output: {
-      title: "O método que eliminou minha procrastinação em 3 dias",
-      hook: "Eu tentei tudo. Pomodoro, GTD, bullet journal. Nada funcionou até...",
-      hashtags: ["#produtividade", "#focoo", "#rotina", "#shorts"],
-      postTime: "Qua · 12h",
-      duration: "58s",
-    },
-  },
-] as const;
+const NICHE_LABEL = "esquetes de comédia";
+const NICHE_FLAG = "🤣";
 
-const PHASES = ["input", "generating", "output"] as const;
-type Phase = (typeof PHASES)[number];
+type Callout = {
+  id: string;
+  side: "left" | "right";
+  top: string;
+  anchorTop: string;
+  anchorSide: string;
+  label: string;
+  detail: string;
+};
 
-function OutputCard() {
-  const [nicheIndex, setNicheIndex] = useState(0);
-  const [phase, setPhase] = useState<Phase>("input");
+const CALLOUTS: Callout[] = [
+  {
+    id: "title",
+    side: "left",
+    top: "8%",
+    anchorTop: "10%",
+    anchorSide: "38%",
+    label: "título",
+    detail: "73 car. · emoji no meio",
+  },
+  {
+    id: "hook",
+    side: "right",
+    top: "24%",
+    anchorTop: "26%",
+    anchorSide: "62%",
+    label: "gancho",
+    detail: "15 palavras · tom neutro",
+  },
+  {
+    id: "rhythm",
+    side: "left",
+    top: "46%",
+    anchorTop: "48%",
+    anchorSide: "34%",
+    label: "ritmo",
+    detail: "1.8 palavras/seg",
+  },
+  {
+    id: "vocab",
+    side: "right",
+    top: "62%",
+    anchorTop: "63%",
+    anchorSide: "60%",
+    label: "vocabulário",
+    detail: "irmã · sogra · vem · olha",
+  },
+  {
+    id: "post-time",
+    side: "left",
+    top: "82%",
+    anchorTop: "84%",
+    anchorSide: "40%",
+    label: "horário",
+    detail: "sex · manhã e tarde",
+  },
+];
+
+const TYPE_INTERVAL_MS = 60;
+const HOLD_AFTER_TYPING_MS = 550;
+const SCANNING_DURATION_MS = 1300;
+const ANNOTATED_DURATION_MS = 6000;
+
+type Phase = "typing" | "scanning" | "annotated";
+
+/**
+ * Digita o texto do nicho caractere a caractere.
+ *
+ * A "reinicialização" do estado ao trocar de texto NÃO é feita chamando
+ * setState no corpo de um efeito (o padrão que gera o aviso de cascading
+ * renders). Em vez disso, o componente que usa esse hook é remontado via
+ * `key={text}` — o React já entrega `typed` zerado de fábrica, porque é
+ * uma instância nova. O único setState dentro do efeito é o do próprio
+ * timer (subscription a um relógio externo), que é o caso que a doc do
+ * React recomenda.
+ */
+function useTypewriter(text: string, onDone: () => void) {
+  const [typed, setTyped] = useState("");
 
   useEffect(() => {
-    let t: ReturnType<typeof setTimeout>;
+    let i = 0;
+    const typing = setInterval(() => {
+      i += 1;
+      setTyped(text.slice(0, i));
+      if (i >= text.length) clearInterval(typing);
+    }, TYPE_INTERVAL_MS);
 
-    if (phase === "input") {
-      t = setTimeout(() => setPhase("generating"), 1800);
-    } else if (phase === "generating") {
-      t = setTimeout(() => setPhase("output"), 1400);
-    } else {
-      // fica no output por 4s, depois troca de nicho
-      t = setTimeout(() => {
-        setNicheIndex((i) => (i + 1) % NICHES.length);
-        setPhase("input");
-      }, 4000);
+    const advance = setTimeout(
+      onDone,
+      text.length * TYPE_INTERVAL_MS + HOLD_AFTER_TYPING_MS,
+    );
+
+    return () => {
+      clearInterval(typing);
+      clearTimeout(advance);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text]);
+
+  return typed;
+}
+
+function TypingHeader({ onDone }: { onDone: () => void }) {
+  const typed = useTypewriter(NICHE_LABEL, onDone);
+  return (
+    <span className="text-sm text-[#f4f2fa]">
+      {typed}
+      <motion.span
+        animate={{ opacity: [1, 0] }}
+        transition={{ repeat: Infinity, duration: 0.6 }}
+        className="ml-0.5 inline-block h-[0.9em] w-0.5 translate-y-0.5 bg-[#8b5cf6]"
+      />
+    </span>
+  );
+}
+
+/**
+ * Ciclo typing -> scanning -> annotated -> typing.
+ * Cada fase agenda no máximo um timer de avanço dentro do próprio efeito.
+ * A fase "typing" não tem timer aqui: quem avança é o TypingHeader, via
+ * onDone, assim que termina de digitar.
+ */
+function usePhaseCycle() {
+  const [phase, setPhase] = useState<Phase>("typing");
+  const [cycle, setCycle] = useState(0);
+
+  useEffect(() => {
+    if (phase === "scanning") {
+      const id = setTimeout(() => setPhase("annotated"), SCANNING_DURATION_MS);
+      return () => clearTimeout(id);
     }
-
-    return () => clearTimeout(t);
+    if (phase === "annotated") {
+      const id = setTimeout(() => {
+        setCycle((c) => c + 1);
+        setPhase("typing");
+      }, ANNOTATED_DURATION_MS);
+      return () => clearTimeout(id);
+    }
   }, [phase]);
 
-  const current = NICHES[nicheIndex];
+  return { phase, setPhase, cycle };
+}
+
+function PhoneMock() {
+  return (
+    <div className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-[1.75rem] bg-linear-to-br from-[#1a1230] via-[#150f24] to-[#0f0f18] p-5">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(139,92,246,0.16),transparent_60%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(255,107,94,0.10),transparent_55%)]" />
+
+      <div className="relative z-10 flex items-center justify-between">
+        <span className="rounded-full bg-black/30 px-2.5 py-1 text-[10px] font-medium text-white/70 backdrop-blur-sm">
+          {NICHE_FLAG} shorts
+        </span>
+        <span className="rounded-full bg-black/30 px-2.5 py-1 text-[10px] font-medium text-white/70 backdrop-blur-sm">
+          0:14
+        </span>
+      </div>
+
+      <div className="relative z-10 flex flex-col items-center gap-3">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm">
+          <Play className="h-5 w-5 translate-x-0.5 fill-white text-white" />
+        </div>
+      </div>
+
+      <div className="relative z-10 flex items-end justify-between gap-3">
+        <div className="h-1 flex-1 overflow-hidden rounded-full bg-white/15">
+          <motion.div
+            className="h-full rounded-full bg-white/70"
+            initial={{ width: "0%" }}
+            animate={{ width: "64%" }}
+            transition={{ duration: 1.4, ease: "easeOut", delay: 0.3 }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AnnotatedPhone() {
+  const { phase, setPhase, cycle } = usePhaseCycle();
 
   return (
-    <div className="relative w-full max-w-105 rounded-2xl border border-[#2a2a3d] bg-[#0d0d14] shadow-[0_0_60px_rgba(124,58,237,0.15)]">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#1e1e30] px-5 py-3.5">
-        <div className="flex items-center gap-2">
-          <div className="flex gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-[#2a2a3d]" />
-            <span className="h-2 w-2 rounded-full bg-[#2a2a3d]" />
-            <span className="h-2 w-2 rounded-full bg-[#2a2a3d]" />
-          </div>
-          <span className="ml-1 font-mono text-[11px] text-[#4a4a6a]">
-            nicho.app
-          </span>
-        </div>
-        <AnimatePresence mode="wait">
-          {phase === "generating" ? (
+    <div className="relative mx-auto flex h-136 w-full max-w-104 items-center justify-center">
+      {/* linhas de conexão dos callouts */}
+      <svg
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        viewBox="0 0 400 544"
+        preserveAspectRatio="none"
+      >
+        <AnimatePresence>
+          {phase === "annotated" &&
+            CALLOUTS.map((c, i) => {
+              const anchorX = (parseFloat(c.anchorSide) / 100) * 400;
+              const anchorY = (parseFloat(c.anchorTop) / 100) * 544;
+              const lineX = c.side === "left" ? 92 : 308;
+              const lineY = (parseFloat(c.top) / 100) * 544 + 14;
+              return (
+                <motion.line
+                  key={c.id}
+                  x1={lineX}
+                  y1={lineY}
+                  x2={anchorX}
+                  y2={anchorY}
+                  stroke="#8b5cf6"
+                  strokeWidth="1"
+                  strokeDasharray="3 3"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: 0.5 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4, delay: 0.5 + i * 0.12 }}
+                />
+              );
+            })}
+        </AnimatePresence>
+      </svg>
+
+      {/* callouts */}
+      <AnimatePresence>
+        {phase === "annotated" &&
+          CALLOUTS.map((c, i) => (
             <motion.div
-              key="generating"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex items-center gap-1.5"
+              key={c.id}
+              initial={{
+                opacity: 0,
+                scale: 0.85,
+                x: c.side === "left" ? 12 : -12,
+              }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3, delay: 0.5 + i * 0.12 }}
+              className={`absolute z-20 flex w-36 flex-col gap-0.5 rounded-lg border border-[#8b5cf6]/25 bg-[#14101f]/95 px-2.5 py-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.4)] backdrop-blur-sm ${
+                c.side === "left" ? "left-0 text-right" : "right-0 text-left"
+              }`}
+              style={{ top: c.top }}
             >
-              <motion.span
-                animate={{ opacity: [1, 0.3, 1] }}
-                transition={{ repeat: Infinity, duration: 0.8 }}
-                className="h-1.5 w-1.5 rounded-full bg-[#7c3aed]"
-              />
-              <span className="font-mono text-[10px] text-[#7c3aed]">
-                analisando virais...
+              <span className="text-[9px] font-semibold tracking-wide text-[#a78bfa] uppercase">
+                {c.label}
+              </span>
+              <span className="text-[10px] leading-snug text-[#c9c6db]">
+                {c.detail}
               </span>
             </motion.div>
-          ) : (
+          ))}
+      </AnimatePresence>
+
+      {/* device */}
+      <div className="relative z-10 h-full w-54 rounded-[1.75rem] border-4 border-[#22222f] bg-[#0f0f18] shadow-[0_0_70px_rgba(139,92,246,0.18)]">
+        <PhoneMock />
+
+        <AnimatePresence>
+          {phase === "scanning" && (
             <motion.div
-              key="idle"
+              key="scan"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex items-center gap-1.5"
+              className="absolute inset-0 z-20 overflow-hidden rounded-3xl"
             >
-              <span
-                className={`h-1.5 w-1.5 rounded-full ${phase === "output" ? "bg-[#10b981]" : "bg-[#2a2a3d]"}`}
+              <div className="absolute inset-0 bg-black/40" />
+              <motion.div
+                className="absolute inset-x-0 h-16 bg-linear-to-b from-transparent via-[#8b5cf6]/40 to-transparent"
+                initial={{ top: "-10%" }}
+                animate={{ top: "110%" }}
+                transition={{
+                  duration: 1.1,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
               />
-              <span className="font-mono text-[10px] text-[#4a4a6a]">
-                {phase === "output" ? "pronto" : "aguardando"}
-              </span>
+              <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center justify-center gap-1.5">
+                <Loader2 className="h-3 w-3 animate-spin text-[#c4b5fd]" />
+                <span
+                  style={{ fontFamily: "var(--font-mono)" }}
+                  className="text-[10px] text-[#c4b5fd]"
+                >
+                  lendo o padrão
+                </span>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
 
-      {/* Body */}
-      <div className="p-5">
-        <AnimatePresence mode="wait">
-          {/* FASE: Input */}
-          {phase === "input" && (
+        <AnimatePresence>
+          {phase === "typing" && (
             <motion.div
-              key={`input-${nicheIndex}`}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.3 }}
-              className="flex flex-col gap-4"
+              key={`typing-${cycle}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 rounded-3xl bg-[#0f0f18]/92 px-4 text-center backdrop-blur-sm"
             >
-              <p className="text-xs font-medium tracking-widest text-[#4a4a6a] uppercase">
-                nova geração
-              </p>
-              <div className="flex flex-col gap-2">
-                <label className="text-[11px] text-[#8b8ba8]">Nicho</label>
-                <div className="flex items-center gap-2 rounded-lg border border-[#2a2a3d] bg-[#12121c] px-3 py-2.5">
-                  <span className="text-sm">{current.flag}</span>
-                  <span className="text-sm text-[#f0f0f8]">
-                    {current.niche}
-                    <motion.span
-                      animate={{ opacity: [1, 0] }}
-                      transition={{ repeat: Infinity, duration: 0.6 }}
-                      className="ml-0.5 inline-block h-[0.9em] w-0.5 translate-y-0.5 bg-[#7c3aed]"
-                    />
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <label className="text-[11px] text-[#8b8ba8]">Público</label>
-                <div className="flex items-center gap-2 rounded-lg border border-[#2a2a3d] bg-[#12121c] px-3 py-2.5">
-                  <span className="text-sm text-[#f0f0f8]">Brasil</span>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* FASE: Generating */}
-          {phase === "generating" && (
-            <motion.div
-              key="generating-body"
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.3 }}
-              className="flex flex-col gap-3 py-4"
-            >
-              {[
-                "Cruzando padrões de virais do nicho...",
-                "Analisando títulos de maior CTR...",
-                "Montando estrutura e roteiro...",
-              ].map((text, i) => (
-                <motion.div
-                  key={text}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.35 }}
-                  className="flex items-center gap-2.5"
-                >
-                  <motion.span
-                    animate={{ opacity: [1, 0.3, 1] }}
-                    transition={{
-                      repeat: Infinity,
-                      duration: 1,
-                      delay: i * 0.2,
-                    }}
-                    className="h-1 w-1 rounded-full bg-[#7c3aed]"
-                  />
-                  <span className="font-mono text-xs text-[#8b8ba8]">
-                    {text}
-                  </span>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
-
-          {/* FASE: Output */}
-          {phase === "output" && (
-            <motion.div
-              key={`output-${nicheIndex}`}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.3 }}
-              className="flex flex-col gap-4"
-            >
-              {/* Título */}
-              <div className="flex flex-col gap-1.5">
-                <span className="flex items-center gap-1.5 text-[10px] font-semibold tracking-widest text-[#7c3aed] uppercase">
-                  <Zap className="h-3 w-3" />
-                  Título
-                </span>
-                <p className="text-sm leading-snug font-medium text-[#f0f0f8]">
-                  {current.output.title}
-                </p>
-              </div>
-
-              {/* Hook */}
-              <div className="flex flex-col gap-1.5">
-                <span className="flex items-center gap-1.5 text-[10px] font-semibold tracking-widest text-[#8b8ba8] uppercase">
-                  <FileText className="h-3 w-3" />
-                  Hook do roteiro
-                </span>
-                <p className="text-xs leading-relaxed text-[#8b8ba8]">
-                  {current.output.hook}
-                </p>
-              </div>
-
-              {/* Linha divisória */}
-              <div className="h-px bg-[#1e1e30]" />
-
-              {/* Meta */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-[11px] text-[#4a4a6a]">
-                  <Clock className="h-3 w-3" />
-                  <span>Postar: {current.output.postTime}</span>
-                </div>
-                <div className="flex items-center gap-1.5 text-[11px] text-[#4a4a6a]">
-                  <span>{current.output.duration} ideal</span>
-                </div>
-              </div>
-
-              {/* Hashtags */}
-              <div className="flex flex-wrap gap-1.5">
-                {current.output.hashtags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-flex items-center gap-0.5 rounded-md bg-[#7c3aed]/10 px-2 py-0.5 text-[11px] text-[#a78bfa]"
-                  >
-                    <Hash className="h-2.5 w-2.5" />
-                    {tag.replace("#", "")}
-                  </span>
-                ))}
-              </div>
+              <span className="text-[10px] tracking-widest text-[#5a5a72] uppercase">
+                nicho
+              </span>
+              <TypingHeader onDone={() => setPhase("scanning")} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -275,67 +332,75 @@ function OutputCard() {
 
 export function HeroSection() {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden px-6 py-20">
-      {/* Glow de fundo */}
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-150 w-150 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#7c3aed] opacity-[0.04] blur-[120px]" />
-      <div className="pointer-events-none absolute top-1/4 right-0 h-100 w-100 rounded-full bg-[#6366f1] opacity-[0.05] blur-[100px]" />
+    <section className="bg-grid-subtle relative flex min-h-screen items-center overflow-hidden py-20">
+      <div className="pointer-events-none absolute top-1/2 left-1/2 h-150 w-150 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#8b5cf6] opacity-[0.05] blur-[120px]" />
+      <div className="pointer-events-none absolute top-1/4 right-0 h-100 w-100 rounded-full bg-[#ff6b5e] opacity-[0.04] blur-[100px]" />
+      <div className="pointer-events-none absolute top-2/3 left-0 h-100 w-100 -translate-x-1/3 rounded-full bg-[#8b5cf6] opacity-[0.035] blur-[110px]" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-16">
-        {/* ── Texto ── */}
+      <div className="relative z-10 mx-auto flex w-[90%] max-w-400 flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-16 2xl:gap-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.25, 1, 0.35, 1] }}
-          className="flex max-w-xl flex-col gap-6 text-center lg:text-left"
+          className="flex max-w-3xl flex-col gap-6 text-center lg:max-w-none lg:flex-[1.15] lg:text-left"
         >
-          <span className="badge-ai mx-auto inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-1 text-xs font-medium lg:mx-0">
-            ✦ Para criadores de YouTube Shorts
+          <span className="mx-auto inline-flex w-fit items-center gap-2 rounded-full border border-[#8b5cf6]/20 bg-[#8b5cf6]/10 px-3.5 py-1 text-xs font-medium text-[#c4b5fd] lg:mx-0">
+            <Sparkles className="h-3 w-3" />
+            Baseado em padrões reais de vídeos que viralizaram
           </span>
 
-          <h1 className="text-[2.75rem] leading-[1.08] font-bold tracking-tight md:text-6xl">
-            Título, hashtags e roteiro{" "}
-            <span className="text-gradient">
-              baseados nos virais do seu nicho
+          <h1 className="font-sans text-[3rem] leading-[1.06] font-bold tracking-tight text-[#f4f2fa] md:text-[4.25rem] 2xl:text-8xl">
+            Pare de adivinhar.{" "}
+            <span className="text-[#8b5cf6]">
+              Copie o padrão de quem já viralizou.
             </span>
           </h1>
 
-          <p className="text-muted-foreground text-base leading-relaxed md:text-lg">
-            A IA analisa o que já bombou no seu nicho e entrega a estrutura
-            completa do vídeo — título, hook, hashtags, horário de postagem e
-            roteiro — em segundos. Sem achismo, sem travar na tela em branco.
+          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-[#9995b0] md:text-xl lg:mx-0">
+            Escolha o nicho. A IA acha os vídeos que já viralizaram e te mostra
+            exatamente o que fizeram funcionar: título, gancho, ritmo,
+            vocabulário e horário certo pra postar.
           </p>
 
-          {/* Social proof mínimo */}
-          <p className="text-muted-foreground/60 text-sm">
+          <p className="text-sm text-[#9995b0]/60">
             Grátis para começar · Sem cartão de crédito
           </p>
 
           <div className="flex flex-col items-center gap-3 sm:flex-row lg:items-start">
-            <Button asChild size="lg" className="glow-primary w-full sm:w-auto">
-              <Link href="/register">
-                Gerar meu primeiro conteúdo
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            <motion.div whileHover={hoverScale} whileTap={tapScale}>
+              <Button
+                asChild
+                size="lg"
+                className="glow-primary w-full border-0 bg-[#8b5cf6] text-white hover:bg-[#8b5cf6]/90 sm:w-auto"
+              >
+                <Link href="/register">
+                  Gerar meu primeiro conteúdo
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </motion.div>
             <Button
               asChild
               variant="ghost"
               size="lg"
-              className="text-muted-foreground w-full sm:w-auto"
+              className="w-full text-[#9995b0] hover:text-[#f4f2fa] sm:w-auto"
             >
               <Link href="/login">Já tenho conta</Link>
             </Button>
           </div>
         </motion.div>
 
-        {/* ── Card de output ── */}
         <motion.div
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.65, delay: 0.15, ease: [0.25, 1, 0.35, 1] }}
-          className="w-full lg:ml-auto lg:max-w-105"
+          transition={{
+            duration: 0.65,
+            delay: 0.15,
+            ease: [0.25, 1, 0.35, 1],
+          }}
+          className="w-full shrink-0 lg:ml-auto lg:w-88 xl:w-[24rem] 2xl:w-108"
         >
-          <OutputCard />
+          <AnnotatedPhone />
         </motion.div>
       </div>
     </section>
