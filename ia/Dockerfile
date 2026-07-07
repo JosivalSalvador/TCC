@@ -13,6 +13,14 @@ ENV UV_LINK_MODE=copy
 
 WORKDIR /app
 
+# [FIX BUILD ARM64]: hdbscan tem partes em C/Cython e não tem wheel pronta
+# pra linux/arm64 no PyPI, então o uv precisa compilar do zero — o que exige
+# um compilador C instalado na imagem (a slim não vem com isso por padrão).
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
 # --- ETAPA DE CACHE 1: DEPENDÊNCIAS ---
 # Copia APENAS os locks primeiro
 COPY pyproject.toml uv.lock ./
