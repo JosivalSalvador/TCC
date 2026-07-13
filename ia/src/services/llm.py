@@ -31,10 +31,16 @@ from typing import Optional
 
 from google import genai
 from google.genai import types
+from groq import Groq
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL = "gemini-3.5-flash"
 
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_MODEL = "llama-3.3-70b-versatile"  # nome do modelo Groq, você escolhe/troca aqui
+
+LLM_PROVIDER = "gemini"  # troca pra "groq" quando quiser usar o Groq
 
 # ════════════════════════════════════════════════════════════════════════════
 # BLOCO 1 — INSTRUÇÃO DA CHAMADA 1 (LIMPEZA)
@@ -478,6 +484,7 @@ def montar_prompt_final(padroes_limpos: dict, audience_country: Optional[str]) -
 # ════════════════════════════════════════════════════════════════════════════
 
 
+# Gemini
 def _cliente_gemini() -> genai.Client:
     """Instancia e retorna o cliente Gemini."""
     return genai.Client(api_key=GEMINI_API_KEY)
@@ -488,7 +495,8 @@ def chamar_gemini_limpeza(prompt: str) -> str:
     Chamada de limpeza — filtro campo a campo, sem interpretação.
     Thinking budget moderado/alto, temperature baixa (tarefa mecânica
     mas que exige julgamento contextual em alguns casos, ex: termo
-    ambíguo que pode ou não ser nome próprio).
+    ambíguo que pode ou não ser nome próprio). response_mime_type
+    força saída em JSON puro.
     Retorna JSON puro (mesma estrutura recebida, dados filtrados).
     """
     cliente = _cliente_gemini()
@@ -500,6 +508,17 @@ def chamar_gemini_limpeza(prompt: str) -> str:
             temperature=0.2,
             thinking_config=types.ThinkingConfig(
                 thinking_budget=2048,
+            ),
+            response_mime_type="application/json",
+            http_options=types.HttpOptions(
+                retry_options=types.HttpRetryOptions(
+                    attempts=6,
+                    initial_delay=1.0,
+                    max_delay=20.0,
+                    exp_base=2.0,
+                    jitter=0.3,
+                    http_status_codes=[408, 429, 500, 502, 503, 504],
+                ),
             ),
         ),
     )
@@ -518,6 +537,7 @@ def chamar_gemini_final(prompt: str) -> str:
     incompleto, e decisão de schema na mesma passada), temperature
     moderada (precisa de alguma criatividade pra generalizar quando
     o dado limpo ficou pobre, mas sem fugir do que os dados sustentam).
+    response_mime_type força saída em JSON puro.
     Retorna JSON puro com structure_content e script_content.
     """
     cliente = _cliente_gemini()
@@ -530,6 +550,17 @@ def chamar_gemini_final(prompt: str) -> str:
             thinking_config=types.ThinkingConfig(
                 thinking_budget=4096,
             ),
+            response_mime_type="application/json",
+            http_options=types.HttpOptions(
+                retry_options=types.HttpRetryOptions(
+                    attempts=6,
+                    initial_delay=1.0,
+                    max_delay=20.0,
+                    exp_base=2.0,
+                    jitter=0.3,
+                    http_status_codes=[408, 429, 500, 502, 503, 504],
+                ),
+            ),
         ),
     )
 
@@ -537,6 +568,70 @@ def chamar_gemini_final(prompt: str) -> str:
         raise ValueError("[llm] Resposta vazia do Gemini na chamada de geração final.")
 
     return resposta.text
+
+
+# Groq
+def _cliente_groq() -> Groq:
+    """Instancia e retorna o cliente Groq."""
+    return Groq(api_key=GROQ_API_KEY)
+
+
+def chamar_groq_limpeza(prompt: str) -> str:
+    """
+    Chamada de limpeza — filtro campo a campo, sem interpretação.
+    Temperature baixa (tarefa mecânica mas que exige julgamento
+    contextual em alguns casos, ex: termo ambíguo que pode ou não
+    ser nome próprio). response_format força saída em JSON puro.
+    max_completion_tokens no teto do modelo — a saída da limpeza
+    espelha ~o tamanho do dado bruto de entrada, então precisa de
+    margem alta pra não truncar no meio do JSON.
+    Retorna JSON puro (mesma estrutura recebida, dados filtrados).
+    """
+    cliente = _cliente_groq()
+
+    resposta = cliente.chat.completions.create(
+        model=GROQ_MODEL,
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.1,
+        max_completion_tokens=7000,
+        response_format={"type": "json_object"},
+    )
+
+    texto = resposta.choices[0].message.content
+
+    if not texto:
+        raise ValueError("[llm] Resposta vazia do Groq na chamada de limpeza.")
+
+    return texto
+
+
+def chamar_groq_final(prompt: str) -> str:
+    """
+    Chamada de geração final — única chamada que decide conteúdo
+    e já devolve no formato JSON do schema de saída.
+    Temperature moderada (precisa de alguma criatividade pra
+    generalizar quando o dado limpo ficou pobre, mas sem fugir
+    do que os dados sustentam). response_format força saída em
+    JSON puro. max_completion_tokens no teto do modelo, mesma
+    margem de segurança da chamada de limpeza.
+    Retorna JSON puro com structure_content e script_content.
+    """
+    cliente = _cliente_groq()
+
+    resposta = cliente.chat.completions.create(
+        model=GROQ_MODEL,
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.4,
+        max_completion_tokens=7000,
+        response_format={"type": "json_object"},
+    )
+
+    texto = resposta.choices[0].message.content
+
+    if not texto:
+        raise ValueError("[llm] Resposta vazia do Groq na chamada de geração final.")
+
+    return texto
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -687,22 +782,17 @@ def parsear_resposta_limpeza(texto: str) -> dict:
 
 
 def gerar_conteudo(padroes: dict, audience_country: Optional[str] = None) -> dict:
-    """
-    Ponto de entrada principal.
-    Fluxo:
-        1. Monta prompt de limpeza
-        2. Chama Gemini para limpar o JSON bruto do ML
-        3. Parseia padroes_limpos
-        4. Monta prompt de geração final (com padroes_limpos + audience)
-        5. Chama Gemini para gerar e formatar em JSON na mesma passada
-        6. Parseia e valida structure_content e script_content
-        7. Retorna o dict final
-    """
     prompt_limpeza = montar_prompt_limpeza(padroes)
-    texto_limpeza = chamar_gemini_limpeza(prompt_limpeza)
+    if LLM_PROVIDER == "groq":
+        texto_limpeza = chamar_groq_limpeza(prompt_limpeza)
+    else:
+        texto_limpeza = chamar_gemini_limpeza(prompt_limpeza)
     padroes_limpos = parsear_resposta_limpeza(texto_limpeza)
 
     prompt_final = montar_prompt_final(padroes_limpos, audience_country)
-    texto_final = chamar_gemini_final(prompt_final)
+    if LLM_PROVIDER == "groq":
+        texto_final = chamar_groq_final(prompt_final)
+    else:
+        texto_final = chamar_gemini_final(prompt_final)
 
     return parsear_resposta(texto_final)

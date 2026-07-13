@@ -38,7 +38,7 @@ def carregar_padroes_nicho(nicho: str) -> dict | None:
     Normaliza o nome do nicho (lowercase, espaços → underscore).
     Retorna None se o nicho não existir.
     """
-    nicho_normalizado = nicho.lower().replace(" ", "_")
+    nicho_normalizado = nicho.lower()
     caminho = os.path.join(PASTA_PADROES, f"{nicho_normalizado}.json")
 
     if not os.path.exists(caminho):
@@ -104,7 +104,7 @@ def inferir(nicho: str) -> dict:
        fallback_usado)
     Em caso de falha total retorna dict com chave 'erro'.
     """
-    nicho_normalizado = nicho.lower().replace(" ", "_")
+    nicho_normalizado = nicho.lower()
 
     padroes = carregar_padroes_nicho(nicho_normalizado)
     fallback_usado = False

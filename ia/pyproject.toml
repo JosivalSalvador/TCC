@@ -11,6 +11,7 @@ dependencies = [
     "fast-langdetect>=1.0.1",
     "fastapi[standard]>=0.135.1",
     "google-genai>=2.9.0",
+    "groq>=1.5.0",
     "hdbscan>=0.8.44",
     "langdetect>=1.0.9",
     "lingua-language-detector>=2.2.0",
