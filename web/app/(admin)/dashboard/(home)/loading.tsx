@@ -1,4 +1,6 @@
+// dashboard/(home)/loading.tsx
 import { Skeleton } from "@/components/ui/skeleton";
+import { StatCardSkeleton } from "../_components/stats/stat-card-skeleton";
 
 export default function DashboardHomeLoading() {
   return (
@@ -11,9 +13,10 @@ export default function DashboardHomeLoading() {
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-32 w-full rounded-xl" />
-        ))}
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+        <StatCardSkeleton />
       </div>
     </div>
   );
