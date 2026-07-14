@@ -1,6 +1,8 @@
-// dashboard/(home)/loading.tsx
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatCardSkeleton } from "../_components/stats/stat-card-skeleton";
+import { UsersRoleSkeleton } from "../_components/users/users-role-skeleton";
+import { GenerationsByNicheSkeleton } from "../_components/generations/generations-by-niche-skeleton";
+import { FeedbackUsefulnessSkeleton } from "../_components/feedbacks/feedback-usefulness-skeleton";
 
 export default function DashboardHomeLoading() {
   return (
@@ -13,11 +15,22 @@ export default function DashboardHomeLoading() {
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCardSkeleton />
-        <StatCardSkeleton />
-        <StatCardSkeleton />
-        <StatCardSkeleton />
+        {Array.from({ length: 4 }).map((_, i) => (
+          <StatCardSkeleton key={i} />
+        ))}
       </div>
+
+      {/* Taxa de utilidade */}
+      <FeedbackUsefulnessSkeleton />
+
+      {/* Usuários por cargo + Gerações por nicho */}
+      <div className="grid gap-4 lg:grid-cols-2">
+        <UsersRoleSkeleton />
+        <GenerationsByNicheSkeleton />
+      </div>
+
+      {/* Crescimento mensal de nichos */}
+      <StatCardSkeleton />
     </div>
   );
 }
